@@ -1,0 +1,108 @@
+.button {
+  position: relative;
+  display: flex;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: ivory;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.button:hover {
+  border-color: var(--primary-color-8);
+}
+.button:focus,
+.button:focus-visible {
+  outline: 4px auto var(--primary-color);
+}
+.button svg,
+.button:focus-visible svg {
+  stroke: var(--primary-color-8);
+  fill: var(--primary-color-8);
+}
+.disabled svg {
+  stroke: hsl(0, 0%, 46%);
+}
+.button:hover svg {
+  stroke: var(--primary-color-8);
+}
+
+.fx-panel button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.channel-checkbox {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.channels label,
+.fx-panel label,
+.power-button label,
+.channel-checkbox label {
+  padding-bottom: 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: ivory;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+  color: var(--primary-color);
+  padding: 4px 8px;
+  font-weight: 900;
+}
+
+.channel-checkbox label {
+  width: 50% label;
+}
+
+.fx-panel input[type="radio"],
+.power-button input[type="checkbox"],
+.channels input[type="radio"],
+.channel-checkbox input[type="checkbox"] {
+  position: absolute;
+  appearance: none;
+  padding: 4px;
+}
+
+.channels input[type="radio"]:checked + label,
+.fx-panel input[type="radio"]:checked + label,
+.channel-checkbox input[type="checkbox"]:checked + label {
+  background: var(--primary-color);
+  color: ivory;
+  transition: all 0.2s;
+}
+
+.power-button input[type="checkbox"]:checked + label {
+  color: hsl(0, 0%, 46%);
+  transition: all 0.2s;
+}
+
+.fx-panel input[type="radio"]:hover + label,
+.channels input[type="radio"]:hover + label,
+.channel-checkbox input[type="checkbox"]:hover + label {
+  border: 1px solid var(--primary-color);
+  transition: all 0.2s;
+}
+
+.fx-mode-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 8px 8px 0;
+}
+
+.track-mode-select {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
