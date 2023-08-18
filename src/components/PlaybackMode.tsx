@@ -37,7 +37,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
         checked={playbackMode === "write"}
         value="write"
       >
-        WRITE
+        WR
       </CheckBox>
       <CheckBox
         type="radio"
@@ -47,7 +47,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
         checked={playbackMode === "read"}
         value="read"
       >
-        READ
+        RD
       </CheckBox>
       <CheckBox
         type="radio"
@@ -57,7 +57,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
         checked={playbackMode === "static"}
         value="static"
       >
-        STATIC
+        BP
       </CheckBox>
     </div>
   );
