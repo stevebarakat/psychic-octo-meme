@@ -106,7 +106,7 @@ function TrackChannel({ track, trackId, channels, busChannels }: Props) {
           param4: boolean;
         }
       ) {
-        t.schedule((time) => {
+        t.schedule(() => {
           if (playbackMode !== "read") return;
 
           console.log("data.param1", data.param1);

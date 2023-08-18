@@ -60,7 +60,7 @@ function useRecord({
           data,
         });
       }
-    }, 0.075).start(0);
+    }, 0.25).start(0);
 
     return () => {
       t.off;
