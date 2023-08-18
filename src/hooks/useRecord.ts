@@ -51,11 +51,6 @@ function useRecord({
           id: `${param}Data${id}`,
           data,
         });
-      } else if (channelType === "currentBuses") {
-        db[`bus${upperFirst(param.toString())}Data` as keyof typeof db].put({
-          id: `${param}Data${id}`,
-          data,
-        });
       }
     }, 0.25).start(0);
 

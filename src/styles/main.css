@@ -168,24 +168,6 @@
   padding: 8px;
 }
 
-.bus {
-  height: 265px;
-  width: 265px;
-  top: -10px;
-}
-
-.bus.volume::-webkit-slider-runnable-track {
-  height: 30px;
-  border: 8px solid ivory;
-  border-radius: 20px;
-}
-
-.bus.volume::-webkit-slider-thumb {
-  top: -8.5px;
-  border-width: 8px;
-  padding: 8px;
-}
-
 .window {
   border: 1px solid var(--primary-color-4);
   padding: 8px;
