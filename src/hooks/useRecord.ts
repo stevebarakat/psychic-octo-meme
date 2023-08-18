@@ -2,13 +2,11 @@ import { useRef, useEffect } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
-import upperFirst from "lodash/upperFirst";
 import { db } from "@/db";
 
 type Props = {
   id: number;
   fxId: number;
-  channelType: string;
   param: string | number;
   param1: number;
   param2?: number;
@@ -26,19 +24,10 @@ type Data = {
 };
 
 const data = new Map<number, Data>();
-function useRecord({
-  id,
-  fxId,
-  channelType,
-  param,
-  param1,
-  param2,
-  param3,
-  param4,
-}: Props) {
+function useRecord({ id, fxId, param, param1, param2, param3, param4 }: Props) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context[channelType][id][`${param}Mode`]
+    (state) => state.context["currentTracks"][id][`${param}Mode`]
   );
 
   useEffect(() => {
@@ -46,12 +35,10 @@ function useRecord({
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, param1, param2, param3, param4 });
-      if (channelType === "currentTracks") {
-        db[`${param}Data` as keyof typeof db].put({
-          id: `${param}Data${id}`,
-          data,
-        });
-      }
+      db[`${param}Data` as keyof typeof db].put({
+        id: `${param}Data${id}`,
+        data,
+      });
     }, 0.25).start(0);
 
     return () => {

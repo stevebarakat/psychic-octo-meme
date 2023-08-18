@@ -109,7 +109,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   const data = useRecord({
     id: trackId,
     fxId,
-    channelType: "currentTracks",
     param: "pitchShift",
     param1: pitchShiftMix,
     param2: pitchShiftPitch,

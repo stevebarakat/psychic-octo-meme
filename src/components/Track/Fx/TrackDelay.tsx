@@ -130,7 +130,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   const data = useRecord({
     id: trackId,
     fxId,
-    channelType: "currentTracks",
     param: "delay",
     param1: delayMix,
     param2: delayTime,

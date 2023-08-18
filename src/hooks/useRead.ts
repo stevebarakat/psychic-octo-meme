@@ -68,7 +68,6 @@ function useRead(trackId: number, channels: Channel[]) {
   useRecord({
     id: trackId,
     fxId: 0,
-    channelType: "currentTracks",
     param: "volume",
     param1: volume,
     param2: pan,

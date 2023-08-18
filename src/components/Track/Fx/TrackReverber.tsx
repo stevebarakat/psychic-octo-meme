@@ -130,7 +130,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   const data = useRecord({
     id: trackId,
     fxId,
-    channelType: "currentTracks",
     param: "reverb",
     param1: reverbMix,
     param2: reverbPreDelay,
