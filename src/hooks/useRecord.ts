@@ -1,12 +1,9 @@
 import { useRef, useEffect } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { Loop, Transport as t } from "tone";
+import { roundFourth } from "@/utils";
 import upperFirst from "lodash/upperFirst";
 import { db } from "@/db";
-
-function roundHalf(num) {
-  return (Math.round(num * 4) / 4).toFixed(2);
-}
 
 type Props = {
   id: number;
@@ -47,7 +44,7 @@ function useRecord({
   useEffect(() => {
     if (playbackMode[fxId] !== "write") return;
     writeLoop.current = new Loop(() => {
-      const time: number = roundHalf(t.seconds);
+      const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, param1, param2, param3, param4 });
       if (channelType === "currentTracks") {
         db[`${param}Data` as keyof typeof db].put({
