@@ -1,5 +1,5 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { localStorageSet, localStorageGet } from "../../utils";
+import { localStorageSet, localStorageGet } from "@/utils";
 
 type Props = {
   trackId: number;

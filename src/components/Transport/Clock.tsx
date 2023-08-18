@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { Transport as t } from "tone";
-import { formatMilliseconds } from "../../utils";
+import { formatMilliseconds } from "@/utils";
 import "./style.css";
 
 type Props = {

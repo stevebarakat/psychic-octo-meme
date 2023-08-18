@@ -1,7 +1,7 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import BusPanels from "./BusPanels";
 import ChannelButton from "../Buttons/ChannelButton";
-import { localStorageGet, array } from "../../utils";
+import { localStorageGet, array } from "@/utils";
 
 type Props = {
   busId: number;

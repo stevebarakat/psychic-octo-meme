@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { localStorageGet } from "../../../utils";
+import { localStorageGet } from "@/utils";
 import {
   Reverb,
   FeedbackDelay,
@@ -9,7 +9,7 @@ import {
   InputNode,
 } from "tone";
 import { Reverber, Delay, PitchShifter, NoFx } from "../Fx";
-import { array } from "../../../utils";
+import { array } from "@/utils";
 
 type BusFx = {
   nofx: Gain | null;

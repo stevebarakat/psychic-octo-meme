@@ -1,7 +1,7 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import TrackPanels from "./TrackPanels";
 import ChannelButton from "../Buttons/ChannelButton";
-import { localStorageGet, array } from "../../utils";
+import { localStorageGet, array } from "@/utils";
 
 type Props = {
   trackId: number;

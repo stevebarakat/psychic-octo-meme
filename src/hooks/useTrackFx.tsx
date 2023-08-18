@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { localStorageGet } from "../../../utils";
+import { localStorageGet } from "@/utils";
 import {
   Reverb,
   FeedbackDelay,
@@ -8,8 +8,8 @@ import {
   Destination,
   InputNode,
 } from "tone";
-import { Reverber, Delay, PitchShifter, NoFx } from "../Fx";
-import { array } from "../../../utils";
+import { Reverber, Delay, PitchShifter, NoFx } from "@/components/Track/Fx";
+import { array } from "@/utils";
 
 type TrackFx = {
   nofx: Gain | null;
