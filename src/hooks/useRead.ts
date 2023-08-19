@@ -29,7 +29,7 @@ function useRead({ trackId, channels, param }: Props) {
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
-    console.log("message");
+    console.log(`SET_TRACK_${param.toUpperCase()}`);
     const type = `SET_TRACK_${param.toUpperCase()}`;
     readEvent.current = new ToneEvent(() => {
       function setParam(
@@ -42,7 +42,6 @@ function useRead({ trackId, channels, param }: Props) {
         t.schedule(() => {
           if (playbackMode !== "read") return;
 
-          console.log("data.value", data.value);
           send({
             type,
             value: data.value,
@@ -59,6 +58,7 @@ function useRead({ trackId, channels, param }: Props) {
 
     return () => {
       readEvent.current?.dispose();
+      t.cancel();
     };
   }, [send, trackId, paramData, param, channels, playbackMode]);
 

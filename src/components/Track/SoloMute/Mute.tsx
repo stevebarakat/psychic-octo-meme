@@ -4,10 +4,10 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
   trackId: number;
-  channel: Channel;
+  channels: Channel[];
 };
 
-function Mute({ trackId, channel }: Props) {
+function Mute({ trackId, channels }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const mute = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].mute;
@@ -17,9 +17,9 @@ function Mute({ trackId, channel }: Props) {
     const checked = e.currentTarget.checked;
     send({
       type: "SET_TRACK_MUTE",
-      checked,
       trackId,
-      channel,
+      checked,
+      channels,
     });
   }
 

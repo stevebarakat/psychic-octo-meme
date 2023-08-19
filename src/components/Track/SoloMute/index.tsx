@@ -14,8 +14,8 @@ function SoloMute({ trackId, channels }: Props) {
   return (
     <div>
       <div className="solo-mute">
-        <Solo trackId={trackId} channel={channels[trackId]} />
-        <Mute trackId={trackId} channel={channels[trackId]} />
+        <Solo trackId={trackId} channels={channels} />
+        <Mute trackId={trackId} channels={channels} />
       </div>
       <PlaybackMode trackId={trackId} param="solo" />
     </div>

@@ -4,10 +4,10 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
   trackId: number;
-  channel: Channel;
+  channels: Channel[];
 };
 
-function Solo({ trackId, channel }: Props) {
+function Solo({ trackId, channels }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const solo = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].solo;
@@ -17,9 +17,9 @@ function Solo({ trackId, channel }: Props) {
     const checked = e.currentTarget.checked;
     send({
       type: "SET_TRACK_SOLO",
-      checked,
       trackId,
-      channel,
+      checked,
+      channels,
     });
   }
 

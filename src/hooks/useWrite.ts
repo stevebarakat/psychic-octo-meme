@@ -33,7 +33,7 @@ function useWrite({ id, param, value }: Props) {
       t.cancel();
       writeLoop.current?.dispose();
     };
-  });
+  }, [param, id, value, playbackMode]);
 
   return data;
 }
