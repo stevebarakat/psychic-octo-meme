@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
-import useRecord from "@/hooks/useRecord";
+import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/PlaybackMode";
 import type { Reverb } from "tone";
 import CheckBox from "@/components/CheckBox";
@@ -127,7 +127,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   }
 
   // !!! --- RECORD --- !!! //
-  const data = useRecord({
+  const data = useWrite({
     id: trackId,
     fxId,
     param: "reverb",

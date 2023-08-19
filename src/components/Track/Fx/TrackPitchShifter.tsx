@@ -3,7 +3,7 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import PlaybackMode from "@/components/PlaybackMode";
-import useRecord from "@/hooks/useRecord";
+import useWrite from "@/hooks/useWrite";
 import CheckBox from "@/components/CheckBox";
 import { Loop, Draw, Transport as t } from "tone";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -106,7 +106,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   }
 
   // !!! --- RECORD --- !!! //
-  const data = useRecord({
+  const data = useWrite({
     id: trackId,
     fxId,
     param: "pitchShift",

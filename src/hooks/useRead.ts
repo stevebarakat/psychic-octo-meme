@@ -10,7 +10,7 @@ import {
 import useTrackFx from "@/hooks/useTrackFx";
 import useSaveTrackFx from "@/hooks/useSaveTrackFx";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import useRecord from "@/hooks/useRecord";
+import useWrite from "@/hooks/useWrite";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 
@@ -65,7 +65,7 @@ function useRead(trackId: number, channels: Channel[]) {
   const saveTrackFx = useSaveTrackFx(trackId);
 
   // !!! --- WRITE --- !!! //
-  useRecord({
+  useWrite({
     id: trackId,
     fxId: 0,
     param: "volume",

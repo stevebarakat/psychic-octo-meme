@@ -24,7 +24,7 @@ type Data = {
 };
 
 const data = new Map<number, Data>();
-function useRecord({ id, fxId, param, param1, param2, param3, param4 }: Props) {
+function useWrite({ id, fxId, param, param1, param2, param3, param4 }: Props) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) => state.context["currentTracks"][id][`${param}Mode`]
@@ -50,4 +50,4 @@ function useRecord({ id, fxId, param, param1, param2, param3, param4 }: Props) {
   return data;
 }
 
-export default useRecord;
+export default useWrite;
