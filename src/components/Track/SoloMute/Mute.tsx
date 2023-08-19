@@ -18,7 +18,7 @@ function Mute({ trackId, channels }: Props) {
     send({
       type: "SET_TRACK_MUTE",
       trackId,
-      checked,
+      value: checked,
       channels,
     });
   }

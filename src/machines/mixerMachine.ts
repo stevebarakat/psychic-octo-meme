@@ -163,8 +163,8 @@ export const mixerMachine = createMachine(
         context.currentTracks[trackId].pan = value;
       }),
 
-      toggleMute: assign((context, { trackId, value, channel }: any): any => {
-        channel.mute = value;
+      toggleMute: assign((context, { trackId, value, channels }: any): any => {
+        channels[trackId].mute = value;
         context.currentTracks[trackId].mute = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].mute = value;

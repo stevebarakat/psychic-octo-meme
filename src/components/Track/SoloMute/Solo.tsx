@@ -18,7 +18,7 @@ function Solo({ trackId, channels }: Props) {
     send({
       type: "SET_TRACK_SOLO",
       trackId,
-      checked,
+      value: checked,
       channels,
     });
   }
