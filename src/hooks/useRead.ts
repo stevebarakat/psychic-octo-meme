@@ -26,15 +26,15 @@ function useRead({ trackId, channels, param }: Props) {
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db.volumeData
+    queryData = await db[`${param}Data`]
       .where("id")
       .equals(`${param}Data${trackId}`)
       .toArray();
     return queryData[0];
   });
 
-  const volume = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].volume;
+  const value = MixerMachineContext.useSelector((state) => {
+    return state.context.currentTracks[trackId][param];
   });
 
   type TrackFx = {
@@ -59,12 +59,13 @@ function useRead({ trackId, channels, param }: Props) {
     id: trackId,
     fxId: 0,
     param,
-    value: volume,
+    value,
   });
 
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
+    const type = `SET_TRACK_${param.toUpperCase()}`;
     readEvent.current = new ToneEvent(() => {
       function setParam(
         trackId: number,
@@ -78,7 +79,7 @@ function useRead({ trackId, channels, param }: Props) {
 
           console.log("data.value", data.value);
           send({
-            type: "SET_TRACK_VOLUME",
+            type,
             value: data.value,
             channels,
             trackId,

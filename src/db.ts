@@ -5,13 +5,34 @@ type VolumeData = {
   data: [];
 };
 
+type PanData = {
+  id?: string;
+  data: [];
+};
+
+type SoloData = {
+  id?: string;
+  data: [];
+};
+
+type MuteData = {
+  id?: string;
+  data: [];
+};
+
 export class DexieDb extends Dexie {
   volumeData!: Table<VolumeData>;
+  panData!: Table<PanData>;
+  soloData!: Table<SoloData>;
+  muteData!: Table<MuteData>;
 
   constructor() {
     super("mixerDb");
     this.version(1).stores({
       volumeData: "++id",
+      panData: "++id",
+      soloData: "++id",
+      muteData: "++id",
     });
   }
 }
