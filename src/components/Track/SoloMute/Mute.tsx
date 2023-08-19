@@ -16,7 +16,7 @@ function Mute({ trackId, channel }: Props) {
   function toggleMute(e: React.FormEvent<HTMLInputElement>): void {
     const checked = e.currentTarget.checked;
     send({
-      type: "TOGGLE_MUTE",
+      type: "SET_TRACK_MUTE",
       checked,
       trackId,
       channel,

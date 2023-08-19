@@ -16,7 +16,7 @@ function Solo({ trackId, channel }: Props) {
   function toggleSolo(e: React.FormEvent<HTMLInputElement>): void {
     const checked = e.currentTarget.checked;
     send({
-      type: "TOGGLE_SOLO",
+      type: "SET_TRACK_SOLO",
       checked,
       trackId,
       channel,

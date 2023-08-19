@@ -24,23 +24,14 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     (state) => state.context.currentTracks[trackId]["reverbMode"][fxId]
   );
 
-  useEffect(() => {
-    send({
-      type: "SET_GLOBAL_PLAYBACK_MODE",
-      playbackMode,
-    });
-  }, [send, playbackMode]);
-
   let queryData = [];
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const trackData =
-    useLiveQuery(async () => {
-      queryData = await db["reverbData"]
-        .where("id")
-        .equals(`reverbData${trackId}`)
-        .toArray();
-      return queryData[0];
-    }) ?? [];
+  const trackData = useLiveQuery(async () => {
+    queryData = await db["reverbData"]
+      .where("id")
+      .equals(`reverbData${trackId}`)
+      .toArray();
+    return queryData[0];
+  });
 
   const reverbBypass = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].reverbBypass[fxId];

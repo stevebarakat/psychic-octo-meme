@@ -21,7 +21,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
       <div className="channel">
         <Pan trackId={trackId} channels={channels} />
         <Fader trackId={trackId} channels={channels} />
-        <SoloMute trackId={trackId} channel={channels[trackId]} />
+        <SoloMute trackId={trackId} channels={channels} />
         <ChannelLabel channelName={track.name} />
       </div>
       <PlaybackMode trackId={trackId} param="volume" />

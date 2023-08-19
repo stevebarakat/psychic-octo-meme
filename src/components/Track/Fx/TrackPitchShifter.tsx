@@ -24,23 +24,14 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     (state) => state.context.currentTracks[trackId]["pitchShiftMode"][fxId]
   );
 
-  useEffect(() => {
-    send({
-      type: "SET_GLOBAL_PLAYBACK_MODE",
-      playbackMode,
-    });
-  }, [send, playbackMode]);
-
   let queryData = [];
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const trackData =
-    useLiveQuery(async () => {
-      queryData = await db["pitchShiftData"]
-        .where("id")
-        .equals(`pitchShiftData${trackId}`)
-        .toArray();
-      return queryData[0];
-    }) ?? [];
+  const trackData = useLiveQuery(async () => {
+    queryData = await db["pitchShiftData"]
+      .where("id")
+      .equals(`pitchShiftData${trackId}`)
+      .toArray();
+    return queryData[0];
+  });
 
   console.log("trackData", trackData);
 

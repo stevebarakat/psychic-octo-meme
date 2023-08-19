@@ -18,7 +18,6 @@ export interface Typegen0 {
     play: "PLAY";
     reset: "RESET";
     rewind: "REWIND";
-    rewindOverwrite: "REWIND_OVERWRITE";
     setActiveTrackPanels: "SET_ACTIVE_TRACK_PANELS";
     setMainVolume: "SET_MAIN_VOLUME";
     setPan: "SET_TRACK_PAN";
@@ -38,9 +37,8 @@ export interface Typegen0 {
     setTrackReverbMix: "SET_TRACK_REVERB_MIX";
     setTrackReverbPreDelay: "SET_TRACK_REVERB_PREDELAY";
     setTrackVolume: "SET_TRACK_VOLUME";
-    toggleMute: "TOGGLE_MUTE";
-    toggleSends: "TOGGLE_SENDS";
-    toggleSolo: "TOGGLE_SOLO";
+    toggleMute: "SET_TRACK_MUTE";
+    toggleSolo: "SET_TRACK_SOLO";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};

@@ -24,23 +24,14 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     (state) => state.context.currentTracks[trackId]["delayMode"][fxId]
   );
 
-  useEffect(() => {
-    send({
-      type: "SET_GLOBAL_PLAYBACK_MODE",
-      playbackMode,
-    });
-  }, [send, playbackMode]);
-
   let queryData = [];
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const trackData =
-    useLiveQuery(async () => {
-      queryData = await db["delayData"]
-        .where("id")
-        .equals(`delayData${trackId}`)
-        .toArray();
-      return queryData[0];
-    }) ?? [];
+  const trackData = useLiveQuery(async () => {
+    queryData = await db["delayData"]
+      .where("id")
+      .equals(`delayData${trackId}`)
+      .toArray();
+    return queryData[0];
+  });
 
   const delayMix = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].delayMix[fxId];

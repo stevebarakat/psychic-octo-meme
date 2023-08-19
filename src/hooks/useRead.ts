@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { ToneEvent, Transport as t } from "tone";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
+import { DexieDb, db } from "@/db";
 
 type Props = { trackId: number; channels: Channel[]; param: string };
 
@@ -11,12 +11,15 @@ function useRead({ trackId, channels, param }: Props) {
 
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId][`${param}Mode`]
+    (state) =>
+      state.context.currentTracks[trackId][
+        `${param}Mode` as keyof TrackSettings
+      ]
   );
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db[`${param}Data`]
+    queryData = await db[`${param}Data` as keyof DexieDb]
       .where("id")
       .equals(`${param}Data${trackId}`)
       .toArray();
@@ -26,13 +29,14 @@ function useRead({ trackId, channels, param }: Props) {
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
+    console.log("message");
     const type = `SET_TRACK_${param.toUpperCase()}`;
     readEvent.current = new ToneEvent(() => {
       function setParam(
         trackId: number,
         data: {
           time: number;
-          value: number;
+          value: number | string | boolean;
         }
       ) {
         t.schedule(() => {

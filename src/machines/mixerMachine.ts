@@ -22,18 +22,16 @@ const sourceSong = getSourceSong();
 const currentMain = localStorageGet("currentMain");
 const currentTracks = localStorageGet("currentTracks");
 
-export type Context = {
+export type MixerContext = {
   currentMain: MainSettings;
   currentTracks: TrackSettings[];
   sourceSong: SourceSong;
-  rewinding: boolean;
 };
 
-const initialContext: Context = {
+const initialContext: MixerContext = {
   currentMain,
   currentTracks,
   sourceSong,
-  rewinding: false,
 };
 
 export const mixerMachine = createMachine(
@@ -45,14 +43,12 @@ export const mixerMachine = createMachine(
     on: {
       RESET: { actions: "reset", target: "stopped" },
       REWIND: { actions: "rewind" },
-      REWIND_OVERWRITE: { actions: "rewindOverwrite" },
       FF: { actions: "fastForward" },
       SET_MAIN_VOLUME: { actions: "setMainVolume" },
       SET_TRACK_VOLUME: { actions: "setTrackVolume" },
       SET_TRACK_PAN: { actions: "setPan" },
-      TOGGLE_SOLO: { actions: "toggleSolo" },
-      TOGGLE_MUTE: { actions: "toggleMute" },
-      TOGGLE_SENDS: { actions: "toggleSends" },
+      SET_TRACK_SOLO: { actions: "toggleSolo" },
+      SET_TRACK_MUTE: { actions: "toggleMute" },
       SET_TRACK_FX_NAMES: { actions: "setTrackFxNames" },
       SET_ACTIVE_TRACK_PANELS: { actions: "setActiveTrackPanels" },
       SET_TRACK_DELAY_BYPASS: { actions: "setTrackDelayBypass" },
@@ -93,12 +89,10 @@ export const mixerMachine = createMachine(
         | { type: "PLAY" }
         | { type: "PAUSE" }
         | { type: "REWIND" }
-        | { type: "REWIND_OVERWRITE" }
         | { type: "FF" }
         | { type: "RESET" }
-        | { type: "TOGGLE_SOLO" }
-        | { type: "TOGGLE_MUTE" }
-        | { type: "TOGGLE_SENDS" }
+        | { type: "SET_TRACK_SOLO" }
+        | { type: "SET_TRACK_MUTE" }
         | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_TRACK_PAN" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
@@ -117,7 +111,6 @@ export const mixerMachine = createMachine(
         | { type: "SET_TRACK_PITCHSHIFT_PITCH" }
         | { type: "SET_TRACK_PANEL_SIZE" }
         | { type: "SET_TRACK_PANEL_POSITON" }
-        | { type: "SET_GLOBAL_PLAYBACK_MODE" }
         | { type: "SET_PLAYBACK_MODE" },
     },
     predictableActionArguments: true,
@@ -150,10 +143,6 @@ export const mixerMachine = createMachine(
           t.seconds > 10 + sourceSong.start
             ? t.seconds - 10
             : sourceSong.start),
-
-      rewindOverwrite: assign((context, { value }: any): any => {
-        context.rewinding = value;
-      }),
 
       setMainVolume: assign((context, { value }: any): any => {
         context.currentMain.volume = value;
@@ -189,26 +178,6 @@ export const mixerMachine = createMachine(
         currentTracks[trackId].solo = checked;
         localStorageSet("currentTracks", currentTracks);
       }),
-
-      toggleSends: assign(
-        (context, { trackId, channels, busChannels, target }: any): any => {
-          const busId = parseInt(target.id.at(-1), 10);
-          if (target.checked) {
-            channels[trackId].connect(busChannels[busId]);
-            context.currentTracks[trackId].sends[busId] = true;
-            const currentTracks = localStorageGet("currentTracks");
-            currentTracks[trackId].sends[busId] = true;
-            localStorageSet("currentTracks", currentTracks);
-          } else {
-            // channels[trackId].disconnect(busChannels[busId]);
-            channels[trackId].toDestination();
-            context.currentTracks[trackId].sends[busId] = false;
-            const currentTracks = localStorageGet("currentTracks");
-            currentTracks[trackId].sends[busId] = false;
-            localStorageSet("currentTracks", currentTracks);
-          }
-        }
-      ),
 
       setTrackFxNames: assign((context, { trackId, value }: any): any => {
         context.currentTracks[trackId].fxNames = value;

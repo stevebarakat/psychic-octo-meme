@@ -60,7 +60,7 @@ function PlaybackMode({ trackId, param }: Props) {
       </CheckBox>
       <CheckBox
         type="radio"
-        id={`track${trackId + 1}-${param}-playback`}
+        id={`track${trackId + 1}-${param}-read`}
         name={`track${trackId + 1}-${param}playbackMode`}
         onChange={setPlaybackMode}
         checked={playbackMode === "read"}
