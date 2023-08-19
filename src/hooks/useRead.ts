@@ -14,37 +14,27 @@ import useWrite from "@/hooks/useWrite";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 
-function useRead(trackId: number, channels: Channel[]) {
+type Props = { trackId: number; channels: Channel[]; param: string };
+
+function useRead({ trackId, channels, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId]["volumeMode"][0]
+    (state) => state.context.currentTracks[trackId][`${param}Mode`][0]
   );
 
   let queryData = [];
-  const volumeData = useLiveQuery(async () => {
+  const paramData = useLiveQuery(async () => {
     queryData = await db.volumeData
       .where("id")
-      .equals(`volumeData${trackId}`)
+      .equals(`${param}Data${trackId}`)
       .toArray();
     return queryData[0];
   });
 
   const volume = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].volume;
-  });
-
-  const pan = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].pan;
-  });
-
-  const solo = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].solo;
-  });
-
-  const mute = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].mute;
   });
 
   type TrackFx = {
@@ -68,11 +58,8 @@ function useRead(trackId: number, channels: Channel[]) {
   useWrite({
     id: trackId,
     fxId: 0,
-    param: "volume",
-    param1: volume,
-    param2: pan,
-    param3: solo,
-    param4: mute,
+    param,
+    value: volume,
   });
 
   // !!! --- READ --- !!! //
@@ -83,47 +70,23 @@ function useRead(trackId: number, channels: Channel[]) {
         trackId: number,
         data: {
           time: number;
-          param1: number;
-          param2: number;
-          param3: boolean;
-          param4: boolean;
+          value: number;
         }
       ) {
         t.schedule(() => {
           if (playbackMode !== "read") return;
 
-          console.log("data.param1", data.param1);
+          console.log("data.value", data.value);
           send({
             type: "SET_TRACK_VOLUME",
-            value: data.param1,
+            value: data.value,
             channels,
-            trackId,
-          });
-
-          send({
-            type: "SET_PAN",
-            value: data.param2,
-            channel: channels[trackId],
-            trackId,
-          });
-
-          send({
-            type: "TOGGLE_SOLO",
-            checked: data.param3,
-            channel: channels[trackId],
-            trackId,
-          });
-
-          send({
-            type: "TOGGLE_MUTE",
-            checked: data.param4,
-            channel: channels[trackId],
             trackId,
           });
         }, data.time);
       }
 
-      for (const value of volumeData!.data.values()) {
+      for (const value of paramData!.data.values()) {
         setParam(value.id, value);
       }
     }, 1).start("+0.1");
@@ -131,7 +94,7 @@ function useRead(trackId: number, channels: Channel[]) {
     return () => {
       readEvent.current?.dispose();
     };
-  }, [send, trackId, volumeData, channels, playbackMode]);
+  }, [send, trackId, paramData, channels, playbackMode]);
 
   return { fx, saveTrackFx };
 }

@@ -14,7 +14,7 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  const { fx, saveTrackFx } = useRead(trackId, channels);
+  const { fx, saveTrackFx } = useRead({ trackId, channels, param: "volume" });
   return (
     <div className="flex-y gap2">
       <TrackFxSelect trackId={trackId} fx={fx} saveTrackFx={saveTrackFx} />
