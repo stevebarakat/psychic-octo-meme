@@ -36,7 +36,7 @@ function useWrite({ id, fxId, param, value }: Props) {
     }, 0.25).start(0);
 
     return () => {
-      t.off;
+      t.cancel();
       writeLoop.current?.dispose();
     };
   });
