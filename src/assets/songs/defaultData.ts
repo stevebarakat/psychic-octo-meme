@@ -1,9 +1,9 @@
 export const defaultTrackData = {
   volume: -32,
-  volumeMode: ["static"],
-  panMode: ["static"],
-  soloMode: ["static"],
-  muteMode: ["static"],
+  volumeMode: "static",
+  panMode: "static",
+  soloMode: "static",
+  muteMode: "static",
   pan: 0,
   mute: false,
   solo: false,

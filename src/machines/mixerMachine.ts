@@ -339,10 +339,10 @@ export const mixerMachine = createMachine(
       }),
 
       setPlaybackMode: assign(
-        (context, { value, param, trackId, fxId }: any): any => {
-          context.currentTracks[trackId][`${param}Mode`][fxId] = value;
+        (context, { value, param, trackId }: any): any => {
+          context.currentTracks[trackId][`${param}Mode`] = value;
           const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId][`${param}Mode`][fxId] = value;
+          currentTracks[trackId][`${param}Mode`] = value;
           localStorageSet("currentTracks", currentTracks);
         }
       ),

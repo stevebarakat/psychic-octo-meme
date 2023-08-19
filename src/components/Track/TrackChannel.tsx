@@ -4,7 +4,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
 import ChannelLabel from "../ChannelLabel";
-import useRead from "@/hooks/useRead";
+import useRead2 from "@/hooks/useRead2";
 
 type Props = {
   track: SourceTrack;
@@ -14,7 +14,7 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  useRead({ trackId, channels, param: "volume" });
+  useRead2({ trackId, channels, param: "volume" });
   return (
     <div className="flex-y gap2">
       <TrackFxSelect trackId={trackId} channels={channels} />
@@ -24,7 +24,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
         <SoloMute trackId={trackId} channel={channels[trackId]} />
         <ChannelLabel channelName={track.name} />
       </div>
-      <PlaybackMode trackId={trackId} fxId={0} param="volume" />
+      <PlaybackMode trackId={trackId} param="volume" />
     </div>
   );
 }

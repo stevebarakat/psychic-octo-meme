@@ -1,7 +1,6 @@
 import { useRef, useEffect } from "react";
 import { ToneEvent, Transport as t } from "tone";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import useWrite from "@/hooks/useWrite";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 
@@ -24,18 +23,6 @@ function useRead({ trackId, channels, param }: Props) {
     return queryData[0];
   });
 
-  const value = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId][param];
-  });
-
-  // !!! --- WRITE --- !!! //
-  useWrite({
-    id: trackId,
-    fxId: 0,
-    param,
-    value,
-  });
-  console.log("playbackMode", playbackMode);
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;

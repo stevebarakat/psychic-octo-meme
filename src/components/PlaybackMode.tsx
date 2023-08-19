@@ -6,22 +6,20 @@ import {
   PlayCircle,
   CircleDotDashed,
   CircleDot,
-  Circle,
   MinusCircle,
 } from "lucide-react";
 import { db } from "@/db";
 
 type Props = {
   trackId: number;
-  fxId: number;
   param: string;
 };
 
-function PlaybackMode({ trackId, fxId, param }: Props) {
+function PlaybackMode({ trackId, param }: Props) {
   // const [state] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId][`${param}Mode`][fxId]
+    (state) => state.context.currentTracks[trackId][`${param}Mode`]
   );
 
   function setPlaybackMode(e: React.FormEvent<HTMLInputElement>): void {
@@ -31,7 +29,6 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
       value: e.currentTarget.value,
       param,
       trackId,
-      fxId,
     });
   }
 
@@ -47,10 +44,10 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
 
   return (
     <div className={isPanel ? "track-mode-select" : "fx-mode-select"}>
-      {playbackMode}
+      {/* {playbackMode} */}
       <CheckBox
         type="radio"
-        id={`track${trackId + 1}-${param}-fx${fxId + 1}-write`}
+        id={`track${trackId + 1}-${param}-write`}
         name={`track${trackId + 1}-${param}playbackMode`}
         onChange={setPlaybackMode}
         checked={playbackMode === "write"}
@@ -64,7 +61,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
       </CheckBox>
       <CheckBox
         type="radio"
-        id={`track${trackId + 1}-${param}-fx${fxId + 1}-playback`}
+        id={`track${trackId + 1}-${param}-playback`}
         name={`track${trackId + 1}-${param}playbackMode`}
         onChange={setPlaybackMode}
         checked={playbackMode === "read"}
@@ -74,7 +71,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
       </CheckBox>
       <CheckBox
         type="radio"
-        id={`track${trackId + 1}-${param}-fx${fxId + 1}-static`}
+        id={`track${trackId + 1}-${param}-static`}
         name={`track${trackId + 1}-${param}playbackMode`}
         onChange={setPlaybackMode}
         checked={playbackMode === "static"}

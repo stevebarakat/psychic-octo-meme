@@ -1,5 +1,5 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import useRead from "@/hooks/useRead";
+import useRead2 from "@/hooks/useRead2";
 import { localStorageSet, localStorageGet } from "@/utils";
 import PlaybackMode from "../PlaybackMode";
 
@@ -14,7 +14,7 @@ function Pan({ trackId, channels }: Props) {
     return state.context.currentTracks[trackId].pan;
   });
 
-  useRead({ trackId, channels, param: "pan" });
+  useRead2({ trackId, channels, param: "pan" });
 
   function setPan(e: React.FormEvent<HTMLInputElement>): void {
     send({
@@ -45,7 +45,7 @@ function Pan({ trackId, channels }: Props) {
         onChange={setPan}
         onPointerUp={savePan}
       />
-      <PlaybackMode trackId={trackId} fxId={0} param="pan" />
+      <PlaybackMode trackId={trackId} param="pan" />
     </>
   );
 }
