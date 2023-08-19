@@ -95,7 +95,7 @@ function useRead({ trackId, channels, param }: Props) {
     return () => {
       readEvent.current?.dispose();
     };
-  }, [send, trackId, paramData, channels, playbackMode]);
+  }, [send, trackId, paramData, param, channels, playbackMode]);
 
   return { fx, saveTrackFx };
 }

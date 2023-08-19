@@ -1,17 +1,36 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import TrackPanels from "./TrackPanels";
 import ChannelButton from "../Buttons/ChannelButton";
+import useSaveTrackFx from "@/hooks/useSaveTrackFx";
 import { localStorageGet, array } from "@/utils";
+import useTrackFx from "@/hooks/useTrackFx";
 
 type Props = {
   trackId: number;
-  fx: Fx;
-  saveTrackFx: React.ChangeEventHandler<HTMLSelectElement>;
+  channels: Channel[];
+  // fx: Fx;
 };
 
-function TrackFxSelect({ trackId, fx, saveTrackFx }: Props) {
+type TrackFx = {
+  nofx: Gain | null;
+  reverb: Reverb | null;
+  delay: FeedbackDelay | null;
+  pitchShift: PitchShift | null;
+};
+
+const trackFx: TrackFx = {
+  nofx: null,
+  reverb: null,
+  delay: null,
+  pitchShift: null,
+};
+
+function TrackFxSelect({ trackId, channels }: Props) {
   const [, send] = MixerMachineContext.useActor();
   const currentTracks = localStorageGet("currentTracks");
+  const saveTrackFx = useSaveTrackFx(trackId);
+
+  const fx = useTrackFx(trackId, channels[trackId], trackFx);
 
   const disabled = currentTracks[trackId].fxNames.every(
     (item: string) => item === "nofx"

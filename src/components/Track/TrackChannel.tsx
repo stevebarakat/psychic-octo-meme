@@ -14,17 +14,16 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  const { fx, saveTrackFx } = useRead({ trackId, channels, param: "pan" });
+  // const { fx } = useRead({ trackId, channels, param: "pan" });
   return (
     <div className="flex-y gap2">
-      <TrackFxSelect trackId={trackId} fx={fx} saveTrackFx={saveTrackFx} />
+      <TrackFxSelect trackId={trackId} channels={channels} />
       <div className="channel">
-        <Pan trackId={trackId} channel={channels[trackId]} />
+        <Pan trackId={trackId} channels={channels} />
         <Fader trackId={trackId} channels={channels} />
         <SoloMute trackId={trackId} channel={channels[trackId]} />
         <ChannelLabel channelName={track.name} />
       </div>
-      <PlaybackMode trackId={trackId} fxId={0} param="pan" />
     </div>
   );
 }

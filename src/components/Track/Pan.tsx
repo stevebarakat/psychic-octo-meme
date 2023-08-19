@@ -1,12 +1,14 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
+import useRead from "@/hooks/useRead";
 import { localStorageSet, localStorageGet } from "@/utils";
+import PlaybackMode from "../PlaybackMode";
 
 type Props = {
   trackId: number;
-  channel: Channel;
+  channels: Channel[];
 };
 
-function Pan({ trackId, channel }: Props) {
+function Pan({ trackId, channels }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const pan = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pan;
@@ -17,7 +19,7 @@ function Pan({ trackId, channel }: Props) {
       type: "SET_TRACK_PAN",
       value: parseFloat(e.currentTarget.value),
       trackId,
-      channel,
+      channels,
     });
   }
 
@@ -27,6 +29,7 @@ function Pan({ trackId, channel }: Props) {
     currentTracks[trackId].pan = value;
     localStorageSet("currentTracks", currentTracks);
   }
+  const { fx } = useRead({ trackId, channels, param: "pan" });
 
   return (
     <>
@@ -41,6 +44,7 @@ function Pan({ trackId, channel }: Props) {
         onChange={setPan}
         onPointerUp={savePan}
       />
+      <PlaybackMode trackId={trackId} fxId={0} param="pan" />
     </>
   );
 }
