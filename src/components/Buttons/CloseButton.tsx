@@ -1,18 +1,9 @@
-import "./styles.css";
+import "./button.css";
 import { xIcon } from "../../assets/icons/xIcon";
 
 function CloseButton({ ...props }) {
   return (
-    <button
-      className="button disabled"
-      style={{
-        margin: "8px",
-        padding: "4px",
-        right: "4px",
-        top: "2px",
-      }}
-      {...props}
-    >
+    <button className="close-button" {...props}>
       {xIcon}
     </button>
   );

@@ -1,41 +1,49 @@
 .button {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}
+
+.button:hover {
+  border: none;
+}
+
+.transport-button {
+  background: ivory;
+  color: var(--primary-color);
   position: relative;
   display: flex;
+  padding: 1.025em;
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: none;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: ivory;
   cursor: pointer;
   transition: all 0.25s;
 }
-.button:hover {
-  border-color: var(--primary-color-8);
-}
-.button:focus,
-.button:focus-visible {
+.transport-button:hover {
   outline: 4px auto var(--primary-color);
 }
-.button svg,
-.button:focus-visible svg {
+.transport-button:focus,
+.transport-button:focus-visible {
+  outline: 4px auto var(--primary-color);
+}
+.transport-button svg,
+.transport-button:focus-visible svg {
   stroke: var(--primary-color-8);
   fill: var(--primary-color-8);
 }
-.disabled svg {
-  stroke: hsl(0, 0%, 46%);
-}
-.button:hover svg {
-  stroke: var(--primary-color-8);
-}
 
-.fx-panel button {
+.fx-panel .close-button {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 8px;
+  right: 8px;
 }
 
-.channel-checkbox {
+.solo-mute {
   width: 100%;
   height: fit-content;
   display: flex;
@@ -43,11 +51,9 @@
   gap: 8px;
 }
 
-.channels label,
 .fx-panel label,
 .power-button label,
-.channel-checkbox label {
-  padding-bottom: 12px;
+.solo-mute label {
   border: 1px solid transparent;
   border-radius: 8px;
   background: ivory;
@@ -61,25 +67,39 @@
   font-weight: 900;
 }
 
-.channel-checkbox label {
-  width: 50% label;
-}
-
 .fx-panel input[type="radio"],
 .power-button input[type="checkbox"],
 .channels input[type="radio"],
-.channel-checkbox input[type="checkbox"] {
+.solo-mute input[type="checkbox"] {
   position: absolute;
   appearance: none;
   padding: 4px;
 }
 
-.channels input[type="radio"]:checked + label,
-.fx-panel input[type="radio"]:checked + label,
-.channel-checkbox input[type="checkbox"]:checked + label {
+.channel input[type="checkbox"]:checked + label {
   background: var(--primary-color);
   color: ivory;
   transition: all 0.2s;
+  height: fit-content;
+  line-height: 1;
+}
+
+.channels input[type="radio"]:checked + label svg,
+.fx-panel input[type="radio"]:checked + label svg,
+.solo-mute input[type="checkbox"]:checked + label svg {
+  background: var(--primary-color);
+  color: ivory;
+  transition: all 0.2s;
+  border-radius: 100%;
+  padding: 0;
+  height: fit-content;
+  line-height: 0;
+}
+
+.channel input[type="radio"] + label svg,
+.channel .button svg {
+  width: 16px;
+  height: 16px;
 }
 
 .power-button input[type="checkbox"]:checked + label {
@@ -87,12 +107,12 @@
   transition: all 0.2s;
 }
 
-.fx-panel input[type="radio"]:hover + label,
+/* .fx-panel input[type="radio"]:hover + label,
 .channels input[type="radio"]:hover + label,
-.channel-checkbox input[type="checkbox"]:hover + label {
+.solo-mute input[type="checkbox"]:hover + label {
   border: 1px solid var(--primary-color);
   transition: all 0.2s;
-}
+} */
 
 .fx-mode-select {
   display: flex;
@@ -103,6 +123,6 @@
 
 .track-mode-select {
   display: flex;
-  flex-direction: column;
+  justify-content: space-evenly;
   gap: 2px;
 }

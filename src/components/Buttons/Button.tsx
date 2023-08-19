@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import "./button.css";
 
 type Props = {
@@ -6,6 +6,7 @@ type Props = {
   id?: string;
   name?: string;
   title?: string;
+  value?: string | number | undefined;
   disabled?: boolean;
   className?: string;
   onClick?:
@@ -13,12 +14,12 @@ type Props = {
     | ((e: React.MouseEvent<HTMLButtonElement>) => void);
 };
 
-function TransportButton({ children, ...props }: Props) {
+function Button({ children, ...props }: Props) {
   return (
-    <button className="transport-button" {...props}>
+    <button className="button" {...props}>
       {children}
     </button>
   );
 }
 
-export default TransportButton;
+export default Button;

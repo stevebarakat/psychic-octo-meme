@@ -1,5 +1,15 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import CheckBox from "./CheckBox";
+import Button from "./Buttons/Button";
+import {
+  XCircle,
+  PlayCircle,
+  CircleDotDashed,
+  CircleDot,
+  Circle,
+  MinusCircle,
+} from "lucide-react";
+import { db } from "@/db";
 
 type Props = {
   trackId: number;
@@ -25,8 +35,19 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
     });
   }
 
+  function clearData() {
+    db[`${param}Data`].where("id").equals(`${param}Data${trackId}`).delete();
+  }
+
+  const isPanel =
+    param === "volume" ||
+    param === "pan" ||
+    param === "solo" ||
+    param === "mute";
+
   return (
-    <div className={param ? "track-mode-select" : "fx-mode-select"}>
+    <div className={isPanel ? "track-mode-select" : "fx-mode-select"}>
+      {/* {playbackMode} */}
       <CheckBox
         type="radio"
         id={`track${trackId + 1}-${param}-fx${fxId + 1}-write`}
@@ -35,7 +56,11 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
         checked={playbackMode === "write"}
         value="write"
       >
-        WRITE
+        {playbackMode === "write" ? (
+          <CircleDotDashed className="rotate" />
+        ) : (
+          <CircleDot />
+        )}
       </CheckBox>
       <CheckBox
         type="radio"
@@ -45,7 +70,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
         checked={playbackMode === "read"}
         value="read"
       >
-        READ
+        <PlayCircle />
       </CheckBox>
       <CheckBox
         type="radio"
@@ -55,8 +80,11 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
         checked={playbackMode === "static"}
         value="static"
       >
-        STATIC
+        <MinusCircle />
       </CheckBox>
+      <Button onClick={clearData}>
+        <XCircle />
+      </Button>
     </div>
   );
 }
