@@ -11,13 +11,6 @@ import {
 import { Reverber, Delay, PitchShifter, NoFx } from "@/components/Track/Fx";
 import { array } from "@/utils";
 
-type TrackFx = {
-  nofx: Gain | null;
-  reverb: Reverb | null;
-  delay: FeedbackDelay | null;
-  pitchShift: PitchShift | null;
-};
-
 function useTrackFx(trackId: number, channel: Channel, trackFx: TrackFx) {
   const currentTracks = localStorageGet("currentTracks");
   const ct = currentTracks[trackId];

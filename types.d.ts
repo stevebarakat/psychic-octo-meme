@@ -12,6 +12,13 @@ declare global {
     2: JSX.Element;
   };
 
+  type TrackFx = {
+    nofx: Gain | null;
+    reverb: Reverb | null;
+    delay: FeedbackDelay | null;
+    pitchShift: PitchShift | null;
+  };
+
   type SourceSong = {
     id: string;
     slug: string;

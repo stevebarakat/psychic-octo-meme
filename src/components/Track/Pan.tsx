@@ -1,5 +1,5 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import useRead2 from "@/hooks/useRead2";
+import useAutomationData from "@/hooks/useAutomationData";
 import { localStorageSet, localStorageGet } from "@/utils";
 import PlaybackMode from "../PlaybackMode";
 
@@ -14,7 +14,7 @@ function Pan({ trackId, channels }: Props) {
     return state.context.currentTracks[trackId].pan;
   });
 
-  useRead2({ trackId, channels, param: "pan" });
+  useAutomationData({ trackId, channels, param: "pan" });
 
   function setPan(e: React.FormEvent<HTMLInputElement>): void {
     send({

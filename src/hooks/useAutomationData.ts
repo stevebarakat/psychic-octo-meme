@@ -4,15 +4,14 @@ import useRead from "@/hooks/useRead";
 
 type Props = { trackId: number; channels: Channel[]; param: string };
 
-function useRead2({ trackId, channels, param }: Props) {
-  const value = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId][param];
+function useAutomationData({ trackId, channels, param }: Props) {
+  const value: number = MixerMachineContext.useSelector((state) => {
+    return state.context.currentTracks[trackId][param as keyof TrackSettings];
   });
 
   // !!! --- WRITE --- !!! //
   useWrite({
     id: trackId,
-    fxId: 0,
     param,
     value,
   });
@@ -23,4 +22,4 @@ function useRead2({ trackId, channels, param }: Props) {
   return null;
 }
 
-export default useRead2;
+export default useAutomationData;

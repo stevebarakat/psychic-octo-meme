@@ -10,13 +10,6 @@ type Props = {
   channels: Channel[];
 };
 
-type TrackFx = {
-  nofx: Gain | null;
-  reverb: Reverb | null;
-  delay: FeedbackDelay | null;
-  pitchShift: PitchShift | null;
-};
-
 const trackFx: TrackFx = {
   nofx: null,
   reverb: null,

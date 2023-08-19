@@ -11,7 +11,7 @@ function useRead({ trackId, channels, param }: Props) {
 
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId][`${param}Mode`][0]
+    (state) => state.context.currentTracks[trackId][`${param}Mode`]
   );
 
   let queryData = [];

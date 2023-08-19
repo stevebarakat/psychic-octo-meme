@@ -4,7 +4,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
 import ChannelLabel from "../ChannelLabel";
-import useRead2 from "@/hooks/useRead2";
+import useAutomationData from "@/hooks/useAutomationData";
 
 type Props = {
   track: SourceTrack;
@@ -14,7 +14,7 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  useRead2({ trackId, channels, param: "volume" });
+  useAutomationData({ trackId, channels, param: "volume" });
   return (
     <div className="flex-y gap2">
       <TrackFxSelect trackId={trackId} channels={channels} />

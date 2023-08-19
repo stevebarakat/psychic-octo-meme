@@ -6,26 +6,20 @@ import { db } from "@/db";
 
 type Props = {
   id: number;
-  fxId: number;
-  param: string | number;
+  param: string;
   value: number;
 };
 
-type Data = {
-  id: number;
-  time: number;
-  value: number;
-};
-
-const data = new Map<number, Data>();
-function useWrite({ id, fxId, param, value }: Props) {
+const data = new Map<number, object>();
+function useWrite({ id, param, value }: Props) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context["currentTracks"][id][`${param}Mode`]
+    (state) =>
+      state.context["currentTracks"][id][`${param}Mode` as keyof TrackSettings]
   );
 
   useEffect(() => {
-    if (playbackMode[fxId] !== "write") return;
+    if (playbackMode !== "write") return;
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, value });
