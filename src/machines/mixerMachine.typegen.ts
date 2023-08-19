@@ -21,7 +21,7 @@ export interface Typegen0 {
     rewindOverwrite: "REWIND_OVERWRITE";
     setActiveTrackPanels: "SET_ACTIVE_TRACK_PANELS";
     setMainVolume: "SET_MAIN_VOLUME";
-    setPan: "SET_PAN";
+    setPan: "SET_TRACK_PAN";
     setPlaybackMode: "SET_PLAYBACK_MODE";
     setTrackDelayBypass: "SET_TRACK_DELAY_BYPASS";
     setTrackDelayFeedback: "SET_TRACK_DELAY_FEEDBACK";

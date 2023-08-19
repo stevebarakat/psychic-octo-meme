@@ -14,7 +14,7 @@ function Pan({ trackId, channel }: Props) {
 
   function setPan(e: React.FormEvent<HTMLInputElement>): void {
     send({
-      type: "SET_PAN",
+      type: "SET_TRACK_PAN",
       value: parseFloat(e.currentTarget.value),
       trackId,
       channel,

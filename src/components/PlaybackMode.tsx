@@ -26,9 +26,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
   }
 
   return (
-    <div
-      className={param === "volume" ? "track-mode-select" : "fx-mode-select"}
-    >
+    <div className={param ? "track-mode-select" : "fx-mode-select"}>
       <CheckBox
         type="radio"
         id={`track${trackId + 1}-${param}-fx${fxId + 1}-write`}

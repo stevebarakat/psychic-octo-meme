@@ -20,11 +20,47 @@ type MuteData = {
   data: [];
 };
 
+type DelayData = {
+  id?: string;
+  data: [];
+};
+
+type ReverbData = {
+  id?: string;
+  data: [];
+};
+
+type PitchShiftData = {
+  id?: string;
+  data: [];
+};
+
+type BusDelayData = {
+  id?: string;
+  data: [];
+};
+
+type BusReverbData = {
+  id?: string;
+  data: [];
+};
+
+type BusPitchShiftData = {
+  id?: string;
+  data: [];
+};
+
 export class DexieDb extends Dexie {
   volumeData!: Table<VolumeData>;
   panData!: Table<PanData>;
   soloData!: Table<SoloData>;
   muteData!: Table<MuteData>;
+  delayData!: Table<DelayData>;
+  reverbData!: Table<ReverbData>;
+  pitchShiftData!: Table<PitchShiftData>;
+  busDelayData!: Table<BusDelayData>;
+  busReverbData!: Table<BusReverbData>;
+  busPitchShiftData!: Table<BusPitchShiftData>;
 
   constructor() {
     super("mixerDb");
@@ -33,6 +69,12 @@ export class DexieDb extends Dexie {
       panData: "++id",
       soloData: "++id",
       muteData: "++id",
+      delayData: "++id",
+      reverbData: "++id",
+      pitchShiftData: "++id",
+      busDelayData: "++id",
+      busReverbData: "++id",
+      busPitchShiftData: "++id",
     });
   }
 }

@@ -49,7 +49,7 @@ export const mixerMachine = createMachine(
       FF: { actions: "fastForward" },
       SET_MAIN_VOLUME: { actions: "setMainVolume" },
       SET_TRACK_VOLUME: { actions: "setTrackVolume" },
-      SET_PAN: { actions: "setPan" },
+      SET_TRACK_PAN: { actions: "setPan" },
       TOGGLE_SOLO: { actions: "toggleSolo" },
       TOGGLE_MUTE: { actions: "toggleMute" },
       TOGGLE_SENDS: { actions: "toggleSends" },
@@ -100,7 +100,7 @@ export const mixerMachine = createMachine(
         | { type: "TOGGLE_MUTE" }
         | { type: "TOGGLE_SENDS" }
         | { type: "SET_TRACK_FX_NAMES" }
-        | { type: "SET_PAN" }
+        | { type: "SET_TRACK_PAN" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
         | { type: "SET_MAIN_VOLUME" }
         | { type: "SET_TRACK_VOLUME" }
@@ -169,8 +169,8 @@ export const mixerMachine = createMachine(
         }
       ),
 
-      setPan: assign((context, { value, trackId, channel }: any): any => {
-        channel.pan.value = value;
+      setPan: assign((context, { value, trackId, channels }: any): any => {
+        channels[trackId].pan.value = value;
         context.currentTracks[trackId].pan = value;
       }),
 

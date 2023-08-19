@@ -41,12 +41,10 @@ declare global {
     name: string;
     path: string;
     volume: number;
-    volumeMode: {
-      param1: number;
-      param2?: number;
-      param3?: number | boolean;
-      param4?: number | boolean;
-    };
+    volumeMode: string;
+    panMode: string;
+    soloMode: string;
+    muteMode: string;
     solo: boolean;
     mute: boolean;
     pan: number;
