@@ -22,6 +22,7 @@ function CheckBox({
   return (
     <>
       <input
+        className="toggle"
         type={type || "checkbox"}
         id={id}
         name={name}

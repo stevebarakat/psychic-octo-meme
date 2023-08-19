@@ -1,6 +1,6 @@
 import Solo from "./Solo";
 import Mute from "./Mute";
-import { Channel } from "tone";
+import PlaybackMode from "../../PlaybackMode";
 
 type Props = {
   trackId: number;
@@ -9,9 +9,12 @@ type Props = {
 
 function index({ trackId, channel }: Props) {
   return (
-    <div className="solo-mute">
-      <Solo trackId={trackId} channel={channel} />
-      <Mute trackId={trackId} channel={channel} />
+    <div>
+      <div className="solo-mute">
+        <Solo trackId={trackId} channel={channel} />
+        <Mute trackId={trackId} channel={channel} />
+      </div>
+      <PlaybackMode trackId={trackId} param="solo" />
     </div>
   );
 }
