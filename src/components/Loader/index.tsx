@@ -7,7 +7,7 @@ type Props = {
 };
 
 const Spinner = ({ song }: Props) => {
-  const [, send] = MixerMachineContext.useActor();
+  const { send } = MixerMachineContext.useActorRef();
 
   loaded().then(() => send("LOADED"));
 

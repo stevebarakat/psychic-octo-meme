@@ -16,7 +16,6 @@ type Props = {
 };
 
 function PlaybackMode({ trackId, param }: Props) {
-  // const [state] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId][`${param}Mode`]

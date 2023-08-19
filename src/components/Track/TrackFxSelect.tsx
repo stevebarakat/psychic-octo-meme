@@ -8,7 +8,6 @@ import useTrackFx from "@/hooks/useTrackFx";
 type Props = {
   trackId: number;
   channels: Channel[];
-  // fx: Fx;
 };
 
 type TrackFx = {
