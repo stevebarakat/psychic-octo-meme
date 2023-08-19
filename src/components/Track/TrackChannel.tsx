@@ -14,7 +14,7 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  // const { fx } = useRead({ trackId, channels, param: "pan" });
+  useRead({ trackId, channels, param: "volume" });
   return (
     <div className="flex-y gap2">
       <TrackFxSelect trackId={trackId} channels={channels} />
@@ -24,6 +24,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
         <SoloMute trackId={trackId} channel={channels[trackId]} />
         <ChannelLabel channelName={track.name} />
       </div>
+      <PlaybackMode trackId={trackId} fxId={0} param="volume" />
     </div>
   );
 }

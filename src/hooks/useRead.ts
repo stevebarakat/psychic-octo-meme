@@ -1,14 +1,5 @@
 import { useRef, useEffect } from "react";
-import {
-  Reverb,
-  FeedbackDelay,
-  PitchShift,
-  Gain,
-  ToneEvent,
-  Transport as t,
-} from "tone";
-import useTrackFx from "@/hooks/useTrackFx";
-import useSaveTrackFx from "@/hooks/useSaveTrackFx";
+import { ToneEvent, Transport as t } from "tone";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import useWrite from "@/hooks/useWrite";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -37,23 +28,6 @@ function useRead({ trackId, channels, param }: Props) {
     return state.context.currentTracks[trackId][param];
   });
 
-  type TrackFx = {
-    nofx: Gain | null;
-    reverb: Reverb | null;
-    delay: FeedbackDelay | null;
-    pitchShift: PitchShift | null;
-  };
-
-  const trackFx: TrackFx = {
-    nofx: null,
-    reverb: null,
-    delay: null,
-    pitchShift: null,
-  };
-
-  const fx = useTrackFx(trackId, channels[trackId], trackFx);
-  const saveTrackFx = useSaveTrackFx(trackId);
-
   // !!! --- WRITE --- !!! //
   useWrite({
     id: trackId,
@@ -61,7 +35,7 @@ function useRead({ trackId, channels, param }: Props) {
     param,
     value,
   });
-
+  console.log("playbackMode", playbackMode);
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
@@ -97,7 +71,7 @@ function useRead({ trackId, channels, param }: Props) {
     };
   }, [send, trackId, paramData, param, channels, playbackMode]);
 
-  return { fx, saveTrackFx };
+  return null;
 }
 
 export default useRead;

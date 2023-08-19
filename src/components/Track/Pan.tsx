@@ -14,6 +14,8 @@ function Pan({ trackId, channels }: Props) {
     return state.context.currentTracks[trackId].pan;
   });
 
+  useRead({ trackId, channels, param: "pan" });
+
   function setPan(e: React.FormEvent<HTMLInputElement>): void {
     send({
       type: "SET_TRACK_PAN",
@@ -29,7 +31,6 @@ function Pan({ trackId, channels }: Props) {
     currentTracks[trackId].pan = value;
     localStorageSet("currentTracks", currentTracks);
   }
-  const { fx } = useRead({ trackId, channels, param: "pan" });
 
   return (
     <>
