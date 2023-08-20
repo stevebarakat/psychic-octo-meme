@@ -52,7 +52,6 @@ declare global {
     pan: number;
     soloMuteMode: string;
     soloMute: boolean[];
-    sends: boolean[];
     fxNames: string[];
     delayMode: string[];
     delayBypass: boolean[];
