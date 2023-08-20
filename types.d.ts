@@ -50,13 +50,9 @@ declare global {
     volume: number;
     volumeMode: string;
     panMode: string;
-    soloMode: string;
-    muteMode: string;
-    soloMuteMode: string;
-    solo: boolean;
-    mute: boolean;
-    soloMute: boolean[];
     pan: number;
+    soloMuteMode: string;
+    soloMute: boolean[];
     sends: boolean[];
     fxNames: string[];
     delayMode: string[];

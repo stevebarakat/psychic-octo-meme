@@ -10,16 +10,16 @@ type Props = {
 function Solo({ trackId, channels }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const solo = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].solo;
+    return state.context.currentTracks[trackId].soloMute[0];
   });
 
   function toggleSolo(e: React.FormEvent<HTMLInputElement>): void {
     const checked = e.currentTarget.checked;
     send({
-      type: "SET_TRACK_SOLO",
+      type: "SET_TRACK_SOLOMUTE",
       trackId,
-      value: checked,
       channels,
+      value: checked,
     });
   }
 

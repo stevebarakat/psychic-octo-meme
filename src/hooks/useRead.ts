@@ -47,10 +47,10 @@ function useRead({ trackId, channels, param }: Props) {
 
           send({
             type,
+            trackId,
+            channels,
             value: data.value,
             value2: data.value2,
-            channels,
-            trackId,
           });
         }, data.time);
       }

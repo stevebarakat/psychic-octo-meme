@@ -6,11 +6,11 @@ type Props = { trackId: number; channels: Channel[]; param: string };
 
 function useAutomationData({ trackId, channels, param }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId]["solo"];
+    return state.context.currentTracks[trackId].soloMute[0];
   });
 
   const value2: number | boolean = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId]["mute"];
+    return state.context.currentTracks[trackId].soloMute[1];
   });
 
   // !!! --- WRITE --- !!! //

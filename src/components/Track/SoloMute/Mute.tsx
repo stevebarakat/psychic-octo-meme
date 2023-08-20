@@ -10,16 +10,16 @@ type Props = {
 function Mute({ trackId, channels }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const mute = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].mute;
+    return state.context.currentTracks[trackId].soloMute[1];
   });
 
   function toggleMute(e: React.FormEvent<HTMLInputElement>): void {
     const checked = e.currentTarget.checked;
     send({
-      type: "SET_TRACK_MUTE",
+      type: "SET_TRACK_SOLOMUTE",
       trackId,
-      value: checked,
       channels,
+      value2: checked,
     });
   }
 

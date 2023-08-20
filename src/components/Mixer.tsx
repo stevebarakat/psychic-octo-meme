@@ -36,8 +36,8 @@ export const Mixer = ({ sourceSong }: Props) => {
       if (channels[trackId]) {
         channels[trackId].set({ volume: scaled });
         channels[trackId].set({ pan: currentTrack.pan });
-        channels[trackId].set({ solo: currentTrack.solo });
-        channels[trackId].set({ mute: currentTrack.mute });
+        channels[trackId].set({ solo: currentTrack.soloMute[0] });
+        channels[trackId].set({ mute: currentTrack.soloMute[1] });
       }
     });
   })();

@@ -10,16 +10,6 @@ type PanData = {
   data: [];
 };
 
-type SoloData = {
-  id?: string;
-  data: [];
-};
-
-type MuteData = {
-  id?: string;
-  data: [];
-};
-
 type SoloMuteData = {
   id?: string[];
   data: [];
@@ -58,8 +48,6 @@ type BusPitchShiftData = {
 export class DexieDb extends Dexie {
   volumeData!: Table<VolumeData>;
   panData!: Table<PanData>;
-  soloData!: Table<SoloData>;
-  muteData!: Table<MuteData>;
   soloMuteData!: Table<SoloMuteData>;
   delayData!: Table<DelayData>;
   reverbData!: Table<ReverbData>;
@@ -73,8 +61,6 @@ export class DexieDb extends Dexie {
     this.version(1).stores({
       volumeData: "++id",
       panData: "++id",
-      soloData: "++id",
-      muteData: "++id",
       soloMuteData: "++id",
       delayData: "++id",
       reverbData: "++id",

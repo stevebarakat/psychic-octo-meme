@@ -185,11 +185,11 @@ export const mixerMachine = createMachine(
         (context, { trackId, value, value2, channels }: any): any => {
           channels[trackId].solo = value;
           channels[trackId].mute = value2;
-          context.currentTracks[trackId].solo = value;
-          context.currentTracks[trackId].mute = value2;
+          context.currentTracks[trackId].soloMute[0] = value;
+          context.currentTracks[trackId].soloMute[1] = value2;
           const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId].solo = value;
-          currentTracks[trackId].mute = value2;
+          currentTracks[trackId].soloMute[0] = value;
+          currentTracks[trackId].soloMute[1] = value2;
           localStorageSet("currentTracks", currentTracks);
         }
       ),
