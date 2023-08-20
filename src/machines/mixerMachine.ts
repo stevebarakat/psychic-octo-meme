@@ -183,17 +183,13 @@ export const mixerMachine = createMachine(
 
       toggleSoloMute: assign(
         (context, { trackId, value, value2, channels }: any): any => {
-          console.log("value", value);
-          console.log("value2", value2);
-          const currentTracks = localStorageGet("currentTracks");
           channels[trackId].solo = value;
+          channels[trackId].mute = value2;
           context.currentTracks[trackId].solo = value;
+          context.currentTracks[trackId].mute = value2;
+          const currentTracks = localStorageGet("currentTracks");
           currentTracks[trackId].solo = value;
-          if (value2) {
-            channels[trackId].mute = value2;
-            context.currentTracks[trackId].mute = value2;
-            currentTracks[trackId].mute = value2;
-          }
+          currentTracks[trackId].mute = value2;
           localStorageSet("currentTracks", currentTracks);
         }
       ),
