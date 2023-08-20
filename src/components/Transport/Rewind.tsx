@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import TransportButton from "../Buttons/TransportButton";
-import { rewIcon } from "../../assets/icons";
+import { TransportButton } from "../Buttons";
+import { rewIcon } from "@/assets/icons";
 
 function Rewind() {
   const { send } = MixerMachineContext.useActorRef();

@@ -1,8 +1,7 @@
-import { useEffect } from "react";
 import { Destination, Transport as t } from "tone";
 import { log, dbToPercent, localStorageGet } from "../utils";
 import SongSelect from "./SongSelect";
-import useTracks from "../hooks/useTracks";
+import useTracks from "@/hooks/useTracks";
 import Transport from "./Transport";
 import Loader from "./Loader";
 import SongInfo from "./SongInfo";

@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import TransportButton from "../Buttons/TransportButton";
-import { playIcon, pauseIcon } from "../../assets/icons";
+import { TransportButton } from "../Buttons";
+import { playIcon, pauseIcon } from "@/assets/icons";
 
 function Play() {
   const { send } = MixerMachineContext.useActorRef();

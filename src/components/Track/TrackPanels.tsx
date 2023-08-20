@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import CloseButton from "@/components/Buttons/CloseButton";
+import { CloseButton } from "@/components/Buttons";
 import { Rnd as FxPanel } from "react-rnd";
 import { localStorageGet } from "@/utils";
 

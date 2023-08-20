@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import TrackPanels from "./TrackPanels";
-import ChannelButton from "../Buttons/ChannelButton";
+import { ChannelButton } from "../Buttons";
 import useSaveTrackFx from "@/hooks/useSaveTrackFx";
 import { localStorageGet, array } from "@/utils";
 import useTrackFx from "@/hooks/useTrackFx";

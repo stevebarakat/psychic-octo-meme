@@ -1,5 +1,5 @@
 import type { Channel } from "tone";
-import CheckBox from "@/components/CheckBox";
+import { Toggle } from "@/components/Buttons";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
@@ -24,9 +24,9 @@ function Solo({ trackId, channels }: Props) {
   }
 
   return (
-    <CheckBox id={`trackSolo${trackId}`} checked={solo} onChange={toggleSolo}>
+    <Toggle id={`trackSolo${trackId}`} checked={solo} onChange={toggleSolo}>
       S
-    </CheckBox>
+    </Toggle>
   );
 }
 

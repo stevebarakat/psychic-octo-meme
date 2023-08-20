@@ -1,7 +1,6 @@
 import { createMachine, assign } from "xstate";
-import { localStorageGet, localStorageSet } from "../utils";
-import { dbToPercent, log } from "../utils/scale";
-import { roxanne } from "../assets/songs";
+import { localStorageGet, localStorageSet, dbToPercent, log } from "@/utils";
+import { roxanne } from "@/assets/songs";
 import {
   start as initializeAudio,
   getContext as getAudioContext,

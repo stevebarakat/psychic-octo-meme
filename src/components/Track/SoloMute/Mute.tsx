@@ -1,5 +1,5 @@
 import type { Channel } from "tone";
-import CheckBox from "@/components/CheckBox";
+import { Toggle } from "@/components/Buttons";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
@@ -24,9 +24,9 @@ function Mute({ trackId, channels }: Props) {
   }
 
   return (
-    <CheckBox id={`trackMute${trackId}`} checked={mute} onChange={toggleMute}>
+    <Toggle id={`trackMute${trackId}`} checked={mute} onChange={toggleMute}>
       M
-    </CheckBox>
+    </Toggle>
   );
 }
 

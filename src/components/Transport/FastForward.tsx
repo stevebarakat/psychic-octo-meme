@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import TransportButton from "../Buttons/TransportButton";
-import { ffwdIcon } from "../../assets/icons";
+import { TransportButton } from "../Buttons";
+import { ffwdIcon } from "@/assets/icons";
 
 export function FastForward() {
   const { send } = MixerMachineContext.useActorRef();

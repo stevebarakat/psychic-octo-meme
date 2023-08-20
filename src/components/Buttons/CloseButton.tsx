@@ -1,5 +1,5 @@
 import "./button.css";
-import { xIcon } from "../../assets/icons/xIcon";
+import { xIcon } from "@/assets/icons/xIcon";
 
 function CloseButton({ ...props }) {
   return (

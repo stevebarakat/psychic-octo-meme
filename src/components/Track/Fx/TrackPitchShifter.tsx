@@ -4,7 +4,7 @@ import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import PlaybackMode from "@/components/PlaybackMode";
 import useWrite from "@/hooks/useWrite";
-import CheckBox from "@/components/CheckBox";
+import { Toggle } from "@/components/Buttons";
 import { Loop, Draw, Transport as t } from "tone";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
@@ -150,13 +150,13 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       <div className="flex gap12">
         <h3>Pitch Shift</h3>
         <div className="power-button">
-          <CheckBox
+          <Toggle
             id={`track${trackId}pitchShiftBypass`}
             onChange={toggleBypass}
             checked={pitchShiftBypass}
           >
             {powerIcon}
-          </CheckBox>
+          </Toggle>
         </div>
       </div>
       <div className="flex-y">

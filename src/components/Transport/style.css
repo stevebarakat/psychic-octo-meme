@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Digital";
-  src: url("../../assets/fonts/digital-7.woff") format("woff");
+  src: url("@/assets/fonts/digital-7.woff") format("woff");
 }
 
 .ghost,

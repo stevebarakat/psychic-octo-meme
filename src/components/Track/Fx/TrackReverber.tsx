@@ -5,7 +5,7 @@ import { powerIcon } from "@/assets/icons";
 import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/PlaybackMode";
 import type { Reverb } from "tone";
-import CheckBox from "@/components/CheckBox";
+import { Toggle } from "@/components/Buttons";
 import { Loop, Draw, Transport as t } from "tone";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
@@ -180,13 +180,13 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       <div className="flex gap12">
         <h3>Reverb</h3>
         <div className="power-button">
-          <CheckBox
+          <Toggle
             id={`reverbBypass-track${trackId}fx${fxId}`}
             onChange={toggleBypass}
             checked={reverbBypass}
           >
             {powerIcon}
-          </CheckBox>
+          </Toggle>
         </div>
       </div>
       <div className="flex-y">

@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import CheckBox from "./CheckBox";
-import Button from "./Buttons/Button";
+import Toggle from "./Buttons/Toggle";
+import { Button } from "./Buttons";
 import {
   XCircle,
   PlayCircle,
@@ -38,7 +38,7 @@ function PlaybackMode({ trackId, param }: Props) {
   return (
     <div className="flex gap4">
       {/* {playbackMode} */}
-      <CheckBox
+      <Toggle
         type="radio"
         id={`track${trackId + 1}-${param}-write`}
         name={`track${trackId + 1}-${param}playbackMode`}
@@ -51,8 +51,8 @@ function PlaybackMode({ trackId, param }: Props) {
         ) : (
           <CircleDot />
         )}
-      </CheckBox>
-      <CheckBox
+      </Toggle>
+      <Toggle
         type="radio"
         id={`track${trackId + 1}-${param}-read`}
         name={`track${trackId + 1}-${param}playbackMode`}
@@ -61,8 +61,8 @@ function PlaybackMode({ trackId, param }: Props) {
         value="read"
       >
         <PlayCircle />
-      </CheckBox>
-      <CheckBox
+      </Toggle>
+      <Toggle
         type="radio"
         id={`track${trackId + 1}-${param}-static`}
         name={`track${trackId + 1}-${param}playbackMode`}
@@ -71,7 +71,7 @@ function PlaybackMode({ trackId, param }: Props) {
         value="static"
       >
         <MinusCircle />
-      </CheckBox>
+      </Toggle>
       <Button onClick={clearData}>
         <XCircle />
       </Button>

@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import TransportButton from "../Buttons/TransportButton";
-import { restartIcon } from "../../assets/icons";
+import { TransportButton } from "../Buttons";
+import { restartIcon } from "@/assets/icons";
 
 function Reset() {
   const { send } = MixerMachineContext.useActorRef();

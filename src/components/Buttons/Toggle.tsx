@@ -10,15 +10,7 @@ type Props = {
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
 };
 
-function CheckBox({
-  children,
-  id,
-  name,
-  type,
-  value,
-  checked,
-  onChange,
-}: Props) {
+function Toggle({ children, id, name, type, value, checked, onChange }: Props) {
   return (
     <>
       <input
@@ -35,4 +27,4 @@ function CheckBox({
   );
 }
 
-export default CheckBox;
+export default Toggle;
