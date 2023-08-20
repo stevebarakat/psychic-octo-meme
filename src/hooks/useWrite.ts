@@ -7,11 +7,12 @@ import { db } from "@/db";
 type Props = {
   id: number;
   param: string;
-  value: number;
+  value: number | string | boolean;
+  value2: number | string | boolean;
 };
 
 const data = new Map<number, object>();
-function useWrite({ id, param, value }: Props) {
+function useWrite({ id, param, value, value2 }: Props) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
@@ -22,7 +23,7 @@ function useWrite({ id, param, value }: Props) {
     if (playbackMode !== "write") return;
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
-      data.set(time, { id, time, value });
+      data.set(time, { id, time, value, value2 });
       db[`${param}Data` as keyof typeof db].put({
         id: `${param}Data${id}`,
         data,
@@ -33,7 +34,7 @@ function useWrite({ id, param, value }: Props) {
       t.cancel();
       writeLoop.current?.dispose();
     };
-  }, [param, id, value, playbackMode]);
+  }, [param, id, value, value2, playbackMode]);
 
   return data;
 }

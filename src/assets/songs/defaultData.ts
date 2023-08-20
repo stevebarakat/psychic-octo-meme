@@ -8,6 +8,7 @@ export const defaultTrackData = {
   pan: 0,
   mute: false,
   solo: false,
+  soloMute: [false, false],
   fxNames: ["nofx", "nofx"],
   sends: [false, false],
   panelPosition: { x: 0, y: 0 },

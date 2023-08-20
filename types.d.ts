@@ -55,6 +55,7 @@ declare global {
     soloMuteMode: string;
     solo: boolean;
     mute: boolean;
+    soloMute: boolean[];
     pan: number;
     sends: boolean[];
     fxNames: string[];

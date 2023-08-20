@@ -35,14 +35,8 @@ function PlaybackMode({ trackId, param }: Props) {
     db[`${param}Data`].where("id").equals(`${param}Data${trackId}`).delete();
   }
 
-  const isPanel =
-    param === "volume" ||
-    param === "pan" ||
-    param === "solo" ||
-    param === "mute";
-
   return (
-    <div className={isPanel ? "track-mode-select" : "fx-mode-select"}>
+    <div className="flex gap4">
       {/* {playbackMode} */}
       <CheckBox
         type="radio"

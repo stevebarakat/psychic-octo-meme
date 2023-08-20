@@ -9,7 +9,7 @@ type Props = {
 };
 
 function SoloMute({ trackId, channels }: Props) {
-  useAutomationData({ trackId, channels, param: "mute" });
+  useAutomationData({ trackId, channels, param: "soloMute" });
 
   return (
     <div>
@@ -17,7 +17,7 @@ function SoloMute({ trackId, channels }: Props) {
         <Solo trackId={trackId} channels={channels} />
         <Mute trackId={trackId} channels={channels} />
       </div>
-      <PlaybackMode trackId={trackId} param="mute" />
+      <PlaybackMode trackId={trackId} param="soloMute" />
     </div>
   );
 }

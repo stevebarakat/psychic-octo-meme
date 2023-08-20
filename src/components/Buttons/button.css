@@ -106,18 +106,11 @@
   transition: all 0.2s;
 }
 
-/* .fx-panel input[type="radio"]:hover + label,
+.fx-panel input[type="radio"]:hover + label,
 .channels input[type="radio"]:hover + label,
 .solo-mute input[type="checkbox"]:hover + label {
-  border: 1px solid var(--primary-color);
+  scale: 1.2;
   transition: all 0.2s;
-} */
-
-.fx-mode-select {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 8px 8px 8px 0;
 }
 
 .track-mode-select {

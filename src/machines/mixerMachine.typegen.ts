@@ -39,7 +39,7 @@ export interface Typegen0 {
     setTrackVolume: "SET_TRACK_VOLUME";
     toggleMute: "SET_TRACK_MUTE";
     toggleSolo: "SET_TRACK_SOLO";
-    toggleSoloMute: "SET_TRACK_SOLO_MUTE";
+    toggleSoloMute: "SET_TRACK_SOLOMUTE";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};

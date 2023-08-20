@@ -20,6 +20,11 @@ type MuteData = {
   data: [];
 };
 
+type SoloMuteData = {
+  id?: string[];
+  data: [];
+};
+
 type DelayData = {
   id?: string;
   data: [];
@@ -55,6 +60,7 @@ export class DexieDb extends Dexie {
   panData!: Table<PanData>;
   soloData!: Table<SoloData>;
   muteData!: Table<MuteData>;
+  soloMuteData!: Table<SoloMuteData>;
   delayData!: Table<DelayData>;
   reverbData!: Table<ReverbData>;
   pitchShiftData!: Table<PitchShiftData>;
@@ -69,6 +75,7 @@ export class DexieDb extends Dexie {
       panData: "++id",
       soloData: "++id",
       muteData: "++id",
+      soloMuteData: "++id",
       delayData: "++id",
       reverbData: "++id",
       pitchShiftData: "++id",
