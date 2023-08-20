@@ -62,9 +62,19 @@
   transition: all 0.2s;
 }
 
-.channel input[type="checkbox"]:checked + label {
+.channel input[type="checkbox"]:checked + label div span {
   background: var(--primary-color);
   color: ivory;
+  padding: 2px 5px;
+  border-radius: 100%;
+  height: min-content;
+  width: 24px;
+}
+
+.solo input[type="checkbox"] + label:after {
+  content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjY2YjMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jb3JuZXItcmlnaHQtdXAiPjxwb2x5bGluZSBwb2ludHM9IjEwIDkgMTUgNCAyMCA5Ii8+PHBhdGggZD0iTTQgMjBoN2E0IDQgMCAwIDAgNC00VjQiLz48L3N2Zz4=");
+  /* position: absolute; */
+  color: var(--primary-color);
 }
 
 .toggle {
@@ -76,14 +86,13 @@
 }
 
 .channels input[type="radio"]:checked + label svg,
-.fx-panel input[type="radio"]:checked + label svg,
-.solo-mute input[type="checkbox"]:checked + label svg {
+.fx-panel input[type="radio"]:checked + label svg {
   background: var(--primary-color);
   color: ivory;
   transition: all 0.2s;
   border-radius: 100%;
   padding: 0;
-  height: fit-content;
+  height: min-content;
   line-height: 0;
 }
 

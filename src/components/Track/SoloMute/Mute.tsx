@@ -1,5 +1,6 @@
 import type { Channel } from "tone";
 import CheckBox from "@/components/CheckBox";
+import { CornerLeftDown } from "lucide-react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
