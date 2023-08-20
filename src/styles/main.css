@@ -35,9 +35,13 @@
   color-scheme: light dark;
 }
 
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("../../assets/fonts/bricolage-grotesque.woff2") format("woff2");
+}
+
 body {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-weight: 400;
+  font-family: "Bricolage Grotesque", system-ui, Helvetica, Arial, sans-serif;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 }
@@ -194,7 +198,6 @@ body {
   box-shadow: var(--shadow-elevation-high);
 }
 .fx-panel h3 {
-  /* border-bottom: 3px solid black; */
   text-decoration: underline;
 }
 select[id="song-select"] {
