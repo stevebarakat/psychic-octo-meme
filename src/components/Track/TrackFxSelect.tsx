@@ -48,8 +48,8 @@ function TrackFxSelect({ trackId, channels }: Props) {
         {disabled
           ? "No "
           : currentTracks[trackId].panelActive !== false
-          ? "Close"
-          : "Open"}
+          ? "Close "
+          : "Open "}
         FX
       </ChannelButton>
       {array(2).map((_, fxId) => (
