@@ -46,29 +46,47 @@ declare global {
     id: string;
     name: string;
     path: string;
+
+    // MAIN
     volume: number;
     volumeMode: string;
-    panMode: string;
     pan: number;
-    soloMuteMode: string;
+    panMode: string;
     soloMute: boolean[];
+    soloMuteMode: string;
+
+    // FX
     fxNames: string[];
+    delaySettings: DelaySettings;
+    reverbSettings: ReverbSettings;
+    pitchShiftSettings: PitchShiftSettings;
+
+    // PANELS
+    panelPosition: { x: number; y: number };
+    panelSize: { width: string; height: string };
+    panelActive: boolean;
+  };
+
+  type DelaySettings = {
     delayMode: string[];
     delayBypass: boolean[];
     delayMix: number[];
     delayTime: number[];
     delayFeedback: number[];
+  };
+
+  type ReverbSettings = {
     reverbMode: string[];
     reverbBypass: boolean[];
     reverbMix: number[];
     reverbPreDelay: number[];
     reverbDecay: number[];
+  };
+
+  type PitchShiftSettings = {
     pitchShiftMode: string[];
     pitchShiftBypass: boolean[];
     pitchShiftMix: number[];
     pitchShiftPitch: number[];
-    panelPosition: { x: number; y: number };
-    panelSize: { width: string; height: string };
-    panelActive: boolean;
   };
 }
