@@ -5,7 +5,6 @@ declare global {
   type Destination = ToneDestination;
   type Channel = ToneChannel;
   type Gain = ToneGain;
-  type BusChannel = Volume | null;
 
   type Fx = {
     1: JSX.Element;
@@ -66,27 +65,6 @@ declare global {
     reverbPreDelay: number[];
     reverbDecay: number[];
     pitchShiftMode: string[];
-    pitchShiftBypass: boolean[];
-    pitchShiftMix: number[];
-    pitchShiftPitch: number[];
-    panelPosition: { x: number; y: number };
-    panelSize: { width: string; height: string };
-    panelActive: boolean;
-  };
-
-  type BusSettings = {
-    id: string;
-    name: string;
-    volume: number;
-    fxNames: string[];
-    delayBypass: boolean[];
-    delayMix: number[];
-    delayTime: number[];
-    delayFeedback: number[];
-    reverbBypass: boolean[];
-    reverbMix: number[];
-    reverbPreDelay: number[];
-    reverbDecay: number[];
     pitchShiftBypass: boolean[];
     pitchShiftMix: number[];
     pitchShiftPitch: number[];

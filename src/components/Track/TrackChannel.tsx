@@ -10,7 +10,6 @@ type Props = {
   track: SourceTrack;
   trackId: number;
   channels: Channel[];
-  busChannels: BusChannel[];
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {

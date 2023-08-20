@@ -1,9 +1,7 @@
 import { useEffect, useCallback, useRef, useState } from "react";
 import { Meter } from "tone";
 
-export default function useMeter(
-  channels: (Destination | Channel | BusChannel)[]
-) {
+export default function useMeter(channels: (Destination | Channel)[]) {
   const [meterVals, setMeterVals] = useState<Float32Array>(
     () => new Float32Array(channels.length)
   );

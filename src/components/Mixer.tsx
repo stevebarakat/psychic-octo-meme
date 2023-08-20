@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Destination, Transport as t } from "tone";
-import useBuses from "../hooks/useBuses";
 import { log, dbToPercent, localStorageGet } from "../utils";
 import SongSelect from "./SongSelect";
 import useTracks from "../hooks/useTracks";
@@ -9,7 +8,6 @@ import Loader from "./Loader";
 import SongInfo from "./SongInfo";
 import { TrackChannel } from "./Track";
 import Main from "./Main";
-import BusChannel from "./Bus/BusChannel";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
@@ -21,7 +19,6 @@ export const Mixer = ({ sourceSong }: Props) => {
   const currentMain = localStorageGet("currentMain");
   const tracks = sourceSong.tracks;
   const { channels } = useTracks({ tracks });
-  const [busChannels] = useBuses();
 
   (function loadSettings() {
     t.bpm.value = sourceSong.bpm;
@@ -42,16 +39,6 @@ export const Mixer = ({ sourceSong }: Props) => {
     });
   })();
 
-  useEffect(() => {
-    currentTracks.forEach((currentTrack: TrackSettings, trackId: number) => {
-      currentTrack.sends?.forEach((send, busId) => {
-        if (send === true && busChannels.current[busId] && channels[trackId]) {
-          channels[trackId].connect(busChannels.current[busId]!);
-        }
-      });
-    });
-  }, [busChannels, channels, currentTracks]);
-
   const isLoading = MixerMachineContext.useSelector((state) =>
     state.matches("loading")
   );
@@ -69,12 +56,8 @@ export const Mixer = ({ sourceSong }: Props) => {
                 track={track}
                 trackId={i}
                 channels={channels}
-                busChannels={busChannels.current}
               />
             ))}
-            {/* {busChannels.current.map((_: BusChannel, i: number) => (
-              <BusChannel key={i} channels={busChannels.current} busId={i} />
-            ))} */}
             <Main />
           </div>
           <Transport song={sourceSong} />

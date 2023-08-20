@@ -30,21 +30,6 @@ type PitchShiftData = {
   data: [];
 };
 
-type BusDelayData = {
-  id?: string;
-  data: [];
-};
-
-type BusReverbData = {
-  id?: string;
-  data: [];
-};
-
-type BusPitchShiftData = {
-  id?: string;
-  data: [];
-};
-
 export class DexieDb extends Dexie {
   volumeData!: Table<VolumeData>;
   panData!: Table<PanData>;
@@ -52,9 +37,6 @@ export class DexieDb extends Dexie {
   delayData!: Table<DelayData>;
   reverbData!: Table<ReverbData>;
   pitchShiftData!: Table<PitchShiftData>;
-  busDelayData!: Table<BusDelayData>;
-  busReverbData!: Table<BusReverbData>;
-  busPitchShiftData!: Table<BusPitchShiftData>;
 
   constructor() {
     super("mixerDb");
@@ -65,9 +47,6 @@ export class DexieDb extends Dexie {
       delayData: "++id",
       reverbData: "++id",
       pitchShiftData: "++id",
-      busDelayData: "++id",
-      busReverbData: "++id",
-      busPitchShiftData: "++id",
     });
   }
 }
