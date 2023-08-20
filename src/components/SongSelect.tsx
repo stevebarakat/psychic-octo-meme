@@ -6,7 +6,7 @@ import {
   ninteenOne,
 } from "@/assets/songs";
 import { localStorageSet } from "@/utils";
-import { defaultTrackData, defaultBusData } from "@/assets/songs/defaultData";
+import { defaultTrackData } from "@/assets/songs/defaultData";
 
 function SongSelect() {
   function onChange(e: React.FormEvent<HTMLSelectElement>): void {
@@ -21,7 +21,6 @@ function SongSelect() {
           ...defaultTrackData,
         }));
         localStorageSet("currentTracks", currentTracks);
-        localStorageSet("currentBuses", defaultBusData);
         break;
       }
       case "roxanne": {
@@ -34,7 +33,6 @@ function SongSelect() {
           ...defaultTrackData,
         }));
         localStorageSet("currentTracks", currentTracks);
-        localStorageSet("currentBuses", defaultBusData);
         break;
       }
       case "aDayInTheLife": {
@@ -47,7 +45,6 @@ function SongSelect() {
           ...defaultTrackData,
         }));
         localStorageSet("currentTracks", currentTracks);
-        localStorageSet("currentBuses", defaultBusData);
         break;
       }
       case "blueMonday": {
@@ -60,7 +57,6 @@ function SongSelect() {
           ...defaultTrackData,
         }));
         localStorageSet("currentTracks", currentTracks);
-        localStorageSet("currentBuses", defaultBusData);
         break;
       }
       case "justDance": {
@@ -73,7 +69,6 @@ function SongSelect() {
           ...defaultTrackData,
         }));
         localStorageSet("currentTracks", currentTracks);
-        localStorageSet("currentBuses", defaultBusData);
         break;
       }
 

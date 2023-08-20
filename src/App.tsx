@@ -3,7 +3,7 @@ import { Mixer } from "./components/Mixer";
 import { roxanne } from "./assets/songs";
 import { localStorageGet, localStorageSet } from "./utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { defaultTrackData, defaultBusData } from "./assets/songs/defaultData";
+import { defaultTrackData } from "./assets/songs/defaultData";
 import { db } from "./db";
 import download from "downloadjs";
 import "dexie-export-import";
@@ -37,16 +37,8 @@ const getCurrentTracks = () => {
   return currentTracks;
 };
 
-const getCurrentBuses = () => {
-  let defaultCurrentBuses;
-  const currentBuses = localStorageGet("currentBuses");
-  if (!currentBuses) localStorageSet("currentBuses", defaultBusData);
-  return defaultCurrentBuses;
-};
-
 getCurrentMain();
 getCurrentTracks();
-getCurrentBuses();
 
 function progressCallback({ totalRows, completedRows }) {
   console.log(`Progress: ${completedRows} of ${totalRows} rows completed`);

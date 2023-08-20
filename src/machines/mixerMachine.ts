@@ -49,6 +49,7 @@ export const mixerMachine = createMachine(
       SET_TRACK_PAN: { actions: "setPan" },
       SET_TRACK_SOLO: { actions: "toggleSolo" },
       SET_TRACK_MUTE: { actions: "toggleMute" },
+      SET_TRACK_SOLO_MUTE: { actions: "toggleSoloMute" },
       SET_TRACK_FX_NAMES: { actions: "setTrackFxNames" },
       SET_ACTIVE_TRACK_PANELS: { actions: "setActiveTrackPanels" },
       SET_TRACK_DELAY_BYPASS: { actions: "setTrackDelayBypass" },
@@ -93,6 +94,7 @@ export const mixerMachine = createMachine(
         | { type: "RESET" }
         | { type: "SET_TRACK_SOLO" }
         | { type: "SET_TRACK_MUTE" }
+        | { type: "SET_TRACK_SOLO_MUTE" }
         | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_TRACK_PAN" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
@@ -178,6 +180,21 @@ export const mixerMachine = createMachine(
         currentTracks[trackId].solo = value;
         localStorageSet("currentTracks", currentTracks);
       }),
+
+      toggleSoloMute: assign(
+        (context, { trackId, value, value2, channels }: any): any => {
+          const currentTracks = localStorageGet("currentTracks");
+          channels[trackId].solo = value;
+          context.currentTracks[trackId].solo = value;
+          currentTracks[trackId].solo = value;
+          if (value2) {
+            channels[trackId].mute = value2;
+            context.currentTracks[trackId].mute = value2;
+            currentTracks[trackId].mute = value2;
+          }
+          localStorageSet("currentTracks", currentTracks);
+        }
+      ),
 
       setTrackFxNames: assign((context, { trackId, value }: any): any => {
         context.currentTracks[trackId].fxNames = value;

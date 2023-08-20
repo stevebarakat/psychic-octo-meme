@@ -37,14 +37,16 @@ function useRead({ trackId, channels, param }: Props) {
         data: {
           time: number;
           value: number | string | boolean;
+          value2?: number | string | boolean;
         }
       ) {
         t.schedule(() => {
-          if (playbackMode !== "read") return;
+          // if (playbackMode !== "read") return;
 
           send({
             type,
             value: data.value,
+            value2: data.value2,
             channels,
             trackId,
           });

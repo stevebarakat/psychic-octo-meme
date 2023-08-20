@@ -1,6 +1,5 @@
 import type { Channel } from "tone";
 import CheckBox from "@/components/CheckBox";
-import { CornerRightUp } from "lucide-react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
@@ -26,12 +25,7 @@ function Solo({ trackId, channels }: Props) {
 
   return (
     <CheckBox id={`trackSolo${trackId}`} checked={solo} onChange={toggleSolo}>
-      <div className="flex" style={{ width: "35px" }}>
-        <span style={{ position: "relative", top: "8px", left: "-4px" }}>
-          S
-        </span>
-        <CornerRightUp />
-      </div>
+      S
     </CheckBox>
   );
 }

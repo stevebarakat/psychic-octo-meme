@@ -52,6 +52,7 @@ declare global {
     panMode: string;
     soloMode: string;
     muteMode: string;
+    soloMuteMode: string;
     solo: boolean;
     mute: boolean;
     pan: number;
