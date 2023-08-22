@@ -1,5 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { localStorageGet, localStorageSet, dbToPercent, log } from "@/utils";
+import { produce } from "immer";
 import {
   start as initializeAudio,
   getContext as getAudioContext,
@@ -137,10 +138,13 @@ export const mixerMachine = createMachine(
             ? t.seconds - 10
             : sourceSong.start),
 
-      setMainVolume: assign((context, { value }: any): any => {
-        context.currentMain.volume = value;
-        const scaled = dbToPercent(log(value));
-        Destination.volume.value = scaled;
+      setMainVolume: assign((context, { value }) => {
+        const nextVolume = produce(context.currentMain.volume, (draft) => {
+          draft = value;
+          return draft;
+        });
+        context.currentMain.volume = nextVolume;
+        Destination.volume.value = dbToPercent(log(nextVolume));
       }),
 
       setTrackVolume: assign(
