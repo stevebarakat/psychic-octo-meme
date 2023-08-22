@@ -37,7 +37,7 @@
 
 @font-face {
   font-family: "Bricolage Grotesque";
-  src: url("../../assets/fonts/bricolage-grotesque.woff2") format("woff2");
+  src: url("../assets/fonts/bricolage-grotesque.woff2") format("woff2");
 }
 
 body {
