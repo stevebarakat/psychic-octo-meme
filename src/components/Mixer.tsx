@@ -9,10 +9,6 @@ import { TrackChannel } from "./Track";
 import Main from "./Main";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
-type Props = {
-  sourceSong: SourceSong;
-};
-
 export const Mixer = () => {
   const { currentTracks, currentMain, sourceSong } =
     MixerMachineContext.useSelector((state) => state.context);

@@ -4,30 +4,27 @@ import { localStorageGet, localStorageSet } from "./utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { defaultTrackData } from "./assets/songs/defaultData";
 
-// const sourceSong = localStorageGet("sourceSong") || roxanne;
-
-const getSourceSong = async () => {
-  let sourceSong = await localStorageGet("sourceSong");
+function setSourceSong() {
+  const sourceSong = localStorageGet("sourceSong");
   if (!sourceSong) {
-    sourceSong = roxanne;
     localStorageSet("sourceSong", roxanne);
-    // window.location.reload();
+    setCurrentMain();
+    setCurrentTracks();
+    window.location.reload();
   }
-  return sourceSong;
-};
+}
 
-const getCurrentMain = () => {
+function setCurrentMain() {
   const currentMain = localStorageGet("currentMain");
   if (!currentMain) {
     localStorageSet("currentMain", {
       volume: -32,
     });
   }
-  return currentMain;
-};
+}
 
-const getCurrentTracks = async () => {
-  const sourceSong = (await localStorageGet("sourceSong")) || roxanne;
+function setCurrentTracks() {
+  const sourceSong = localStorageGet("sourceSong") || roxanne;
   const currentTracks = localStorageGet("currentTracks");
 
   if (!currentTracks) {
@@ -40,14 +37,10 @@ const getCurrentTracks = async () => {
       })
     );
     localStorageSet("currentTracks", defaultCurrentTracks);
-    return defaultCurrentTracks;
   }
-  return currentTracks;
-};
+}
 
-getSourceSong();
-getCurrentMain();
-getCurrentTracks();
+setSourceSong();
 
 function App() {
   return (
