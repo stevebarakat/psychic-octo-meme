@@ -1,5 +1,5 @@
 import { Destination, Transport as t } from "tone";
-import { log, dbToPercent, localStorageGet } from "../utils";
+import { log, dbToPercent } from "../utils";
 import SongSelect from "./SongSelect";
 import useTracks from "@/hooks/useTracks";
 import Transport from "./Transport";
@@ -13,9 +13,9 @@ type Props = {
   sourceSong: SourceSong;
 };
 
-export const Mixer = ({ sourceSong }: Props) => {
-  const currentTracks = localStorageGet("currentTracks");
-  const currentMain = localStorageGet("currentMain");
+export const Mixer = () => {
+  const { currentTracks, currentMain, sourceSong } =
+    MixerMachineContext.useSelector((state) => state.context);
   const tracks = sourceSong.tracks;
   const { channels } = useTracks({ tracks });
 

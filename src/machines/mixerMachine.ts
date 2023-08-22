@@ -1,6 +1,5 @@
 import { createMachine, assign } from "xstate";
 import { localStorageGet, localStorageSet, dbToPercent, log } from "@/utils";
-import { roxanne } from "@/assets/songs";
 import {
   start as initializeAudio,
   getContext as getAudioContext,
@@ -9,15 +8,8 @@ import {
 } from "tone";
 
 const audioContext = getAudioContext();
-const getSourceSong = () => {
-  const sourceSong = localStorageGet("sourceSong");
-  if (!sourceSong) {
-    localStorageSet("sourceSong", roxanne);
-    window.location.reload();
-  }
-  return sourceSong;
-};
-const sourceSong = getSourceSong();
+
+const sourceSong = localStorageGet("sourceSong");
 const currentMain = localStorageGet("currentMain");
 const currentTracks = localStorageGet("currentTracks");
 
