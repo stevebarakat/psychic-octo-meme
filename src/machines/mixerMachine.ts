@@ -84,13 +84,13 @@ export const mixerMachine = createMachine(
         | { type: "REWIND" }
         | { type: "FF" }
         | { type: "RESET" }
+        | { type: "SET_TRACK_VOLUME"; value: number; trackId: string }
         | { type: "SET_TRACK_SOLO" }
         | { type: "SET_TRACK_MUTE" }
         | { type: "SET_TRACK_SOLOMUTE" }
         | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_TRACK_PAN" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
-        | { type: "SET_MAIN_VOLUME" }
         | { type: "SET_TRACK_VOLUME" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
         | { type: "SET_TRACK_DELAY_MIX" }
