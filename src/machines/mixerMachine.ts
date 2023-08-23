@@ -139,37 +139,27 @@ export const mixerMachine = createMachine(
             : sourceSong.start),
 
       setMainVolume: assign((context, { value }) => {
-        const nextVolume = produce(context.currentMain.volume, (draft) => {
-          draft = value;
-          return draft;
+        return produce(context, (draft) => {
+          draft.currentMain.volume = value;
         });
-        context.currentMain.volume = nextVolume;
-        Destination.volume.value = dbToPercent(log(nextVolume));
       }),
 
-      setTrackVolume: assign(
-        (context, { value, channels, trackId }: any): any => {
-          context.currentTracks[trackId].volume = value;
-          const scaled = dbToPercent(log(value));
-          channels[trackId].volume.value = scaled;
-        }
-      ),
+      setTrackVolume: assign((context, { value, channels, trackId }) => {
+        context.currentTracks[trackId].volume = value;
+      }),
 
-      setPan: assign((context, { value, trackId, channels }: any): any => {
-        channels[trackId].pan.value = value;
+      setPan: assign((context, { value, trackId, channels }) => {
         context.currentTracks[trackId].pan = value;
       }),
 
-      toggleMute: assign((context, { trackId, value, channels }: any): any => {
-        channels[trackId].mute = value;
+      toggleMute: assign((context, { trackId, value, channels }) => {
         context.currentTracks[trackId].mute = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].mute = value;
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      toggleSolo: assign((context, { trackId, value, channels }: any): any => {
-        channels[trackId].solo = value;
+      toggleSolo: assign((context, { trackId, value, channels }) => {
         context.currentTracks[trackId].solo = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].solo = value;
@@ -177,19 +167,15 @@ export const mixerMachine = createMachine(
       }),
 
       toggleSoloMute: assign(
-        (context, { trackId, value, value2, channels }: any): any => {
-          channels[trackId].solo = value;
-          channels[trackId].mute = value2;
-          context.currentTracks[trackId].soloMute[0] = value;
-          context.currentTracks[trackId].soloMute[1] = value2;
+        (context, { trackId, value, value2, channels }) => {
+          context.currentTracks[trackId].soloMute = [value, value2];
           const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId].soloMute[0] = value;
-          currentTracks[trackId].soloMute[1] = value2;
+          currentTracks[trackId].soloMute = [value, value2];
           localStorageSet("currentTracks", currentTracks);
         }
       ),
 
-      setTrackFxNames: assign((context, { trackId, value }: any): any => {
+      setTrackFxNames: assign((context, { trackId, value }) => {
         context.currentTracks[trackId].fxNames = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].fxNames = value;
@@ -197,7 +183,7 @@ export const mixerMachine = createMachine(
       }),
 
       setTrackReverbBypass: assign(
-        (context, { checked, reverb, trackId, fxId }: any): any => {
+        (context, { checked, reverb, trackId, fxId }) => {
           context.currentTracks[trackId].reverbBypass[fxId] = checked;
           if (checked) {
             reverb?.disconnect();
@@ -210,29 +196,27 @@ export const mixerMachine = createMachine(
         }
       ),
 
-      setTrackReverbMix: assign(
-        (context, { value, reverb, trackId, fxId }: any): any => {
-          context.currentTracks[trackId].reverbMix[fxId] = value;
-          reverb.wet.value = value;
-        }
-      ),
+      setTrackReverbMix: assign((context, { value, reverb, trackId, fxId }) => {
+        context.currentTracks[trackId].reverbMix[fxId] = value;
+        reverb.wet.value = value;
+      }),
 
       setTrackReverbPreDelay: assign(
-        (context, { value, reverb, trackId, fxId }: any): any => {
+        (context, { value, reverb, trackId, fxId }) => {
           context.currentTracks[trackId].reverbPreDelay[fxId] = value;
           reverb.preDelay = value;
         }
       ),
 
       setTrackReverbDecay: assign(
-        (context, { value, reverb, trackId, fxId }: any): any => {
+        (context, { value, reverb, trackId, fxId }) => {
           context.currentTracks[trackId].reverbDecay[fxId] = value;
           reverb.decay = value;
         }
       ),
 
       setTrackDelayBypass: assign(
-        (context, { checked, delay, trackId, fxId }: any): any => {
+        (context, { checked, delay, trackId, fxId }) => {
           context.currentTracks[trackId].delayBypass[fxId] = checked;
           if (checked) {
             delay?.disconnect();
@@ -245,29 +229,25 @@ export const mixerMachine = createMachine(
         }
       ),
 
-      setTrackDelayMix: assign(
-        (context, { value, delay, trackId, fxId }: any): any => {
-          context.currentTracks[trackId].delayMix[fxId] = value;
-          delay.wet.value = value;
-        }
-      ),
+      setTrackDelayMix: assign((context, { value, delay, trackId, fxId }) => {
+        context.currentTracks[trackId].delayMix[fxId] = value;
+        delay.wet.value = value;
+      }),
 
-      setTrackDelayTime: assign(
-        (context, { value, delay, trackId, fxId }: any): any => {
-          context.currentTracks[trackId].delayTime[fxId] = value;
-          delay.delayTime.value = value;
-        }
-      ),
+      setTrackDelayTime: assign((context, { value, delay, trackId, fxId }) => {
+        context.currentTracks[trackId].delayTime[fxId] = value;
+        delay.delayTime.value = value;
+      }),
 
       setTrackDelayFeedback: assign(
-        (context, { value, delay, trackId, fxId }: any): any => {
+        (context, { value, delay, trackId, fxId }) => {
           context.currentTracks[trackId].delayFeedback[fxId] = value;
           delay.feedback.value = value;
         }
       ),
 
       setTrackPitchShiftBypass: assign(
-        (context, { checked, pitchShift, trackId, fxId }: any): any => {
+        (context, { checked, pitchShift, trackId, fxId }) => {
           context.currentTracks[trackId].pitchShiftBypass[fxId] = checked;
           if (checked) {
             pitchShift?.disconnect();
@@ -281,34 +261,34 @@ export const mixerMachine = createMachine(
       ),
 
       setTrackPitchShiftMix: assign(
-        (context, { value, pitchShift, trackId, fxId }: any): any => {
+        (context, { value, pitchShift, trackId, fxId }) => {
           context.currentTracks[trackId].pitchShiftMix[fxId] = value;
           pitchShift.wet.value = value;
         }
       ),
 
       setTrackPitchShiftPitch: assign(
-        (context, { value, pitchShift, trackId, fxId }: any): any => {
+        (context, { value, pitchShift, trackId, fxId }) => {
           context.currentTracks[trackId].pitchShiftPitch[fxId] = value;
           pitchShift.pitch = value;
         }
       ),
 
-      setTrackPanelSize: assign((context, { width, trackId }: any): any => {
+      setTrackPanelSize: assign((context, { width, trackId }) => {
         context.currentTracks[trackId].panelSize.width = width;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].panelSize.width = width;
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      setTrackPanelPosition: assign((context, { x, y, trackId }: any): any => {
+      setTrackPanelPosition: assign((context, { x, y, trackId }) => {
         context.currentTracks[trackId].panelPosition = { x, y };
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].panelPosition = { x, y };
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      setActiveTrackPanels: assign((context, { trackId }: any): any => {
+      setActiveTrackPanels: assign((context, { trackId }) => {
         context.currentTracks[trackId].panelActive =
           !context.currentTracks[trackId].panelActive;
         const currentTracks = localStorageGet("currentTracks");
@@ -317,14 +297,12 @@ export const mixerMachine = createMachine(
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      setPlaybackMode: assign(
-        (context, { value, param, trackId }: any): any => {
-          context.currentTracks[trackId][`${param}Mode`] = value;
-          const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId][`${param}Mode`] = value;
-          localStorageSet("currentTracks", currentTracks);
-        }
-      ),
+      setPlaybackMode: assign((context, { value, param, trackId }) => {
+        context.currentTracks[trackId][`${param}Mode`] = value;
+        const currentTracks = localStorageGet("currentTracks");
+        currentTracks[trackId][`${param}Mode`] = value;
+        localStorageSet("currentTracks", currentTracks);
+      }),
     },
   }
 );
