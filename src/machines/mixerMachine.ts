@@ -1,10 +1,9 @@
 import { createMachine, assign } from "xstate";
-import { localStorageGet, localStorageSet, dbToPercent, log } from "@/utils";
+import { localStorageGet, localStorageSet } from "@/utils";
 import { produce } from "immer";
 import {
   start as initializeAudio,
   getContext as getAudioContext,
-  Destination,
   Transport as t,
 } from "tone";
 
@@ -84,6 +83,7 @@ export const mixerMachine = createMachine(
         | { type: "REWIND" }
         | { type: "FF" }
         | { type: "RESET" }
+        | { type: "SET_MAIN_VOLUME"; value: number }
         | { type: "SET_TRACK_VOLUME"; value: number; trackId: string }
         | { type: "SET_TRACK_SOLO" }
         | { type: "SET_TRACK_MUTE" }
@@ -144,36 +144,34 @@ export const mixerMachine = createMachine(
         });
       }),
 
-      setTrackVolume: assign((context, { value, channels, trackId }) => {
+      setTrackVolume: assign((context, { value, trackId }) => {
         context.currentTracks[trackId].volume = value;
       }),
 
-      setPan: assign((context, { value, trackId, channels }) => {
+      setPan: assign((context, { value, trackId }) => {
         context.currentTracks[trackId].pan = value;
       }),
 
-      toggleMute: assign((context, { trackId, value, channels }) => {
+      toggleMute: assign((context, { trackId, value }) => {
         context.currentTracks[trackId].mute = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].mute = value;
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      toggleSolo: assign((context, { trackId, value, channels }) => {
+      toggleSolo: assign((context, { trackId, value }) => {
         context.currentTracks[trackId].solo = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].solo = value;
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      toggleSoloMute: assign(
-        (context, { trackId, value, value2, channels }) => {
-          context.currentTracks[trackId].soloMute = [value, value2];
-          const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId].soloMute = [value, value2];
-          localStorageSet("currentTracks", currentTracks);
-        }
-      ),
+      toggleSoloMute: assign((context, { trackId, value, value2 }) => {
+        context.currentTracks[trackId].soloMute = [value, value2];
+        const currentTracks = localStorageGet("currentTracks");
+        currentTracks[trackId].soloMute = [value, value2];
+        localStorageSet("currentTracks", currentTracks);
+      }),
 
       setTrackFxNames: assign((context, { trackId, value }) => {
         context.currentTracks[trackId].fxNames = value;
