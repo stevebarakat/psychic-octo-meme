@@ -91,7 +91,6 @@ export const mixerMachine = createMachine(
         | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_TRACK_PAN" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
-        | { type: "SET_TRACK_VOLUME" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
         | { type: "SET_TRACK_DELAY_MIX" }
         | { type: "SET_TRACK_DELAY_TIME" }
@@ -145,7 +144,9 @@ export const mixerMachine = createMachine(
       }),
 
       setTrackVolume: assign((context, { value, trackId }) => {
-        context.currentTracks[trackId].volume = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[parseInt(trackId, 10)].volume = value;
+        });
       }),
 
       setPan: assign((context, { value, trackId }) => {
