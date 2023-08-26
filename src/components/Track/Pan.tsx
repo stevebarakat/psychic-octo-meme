@@ -21,7 +21,6 @@ function Pan({ trackId, channels }: Props) {
       type: "SET_TRACK_PAN",
       value: parseFloat(e.currentTarget.value),
       trackId,
-      channels,
     });
   }
 

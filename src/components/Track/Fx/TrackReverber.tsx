@@ -58,9 +58,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       trackId,
       fxId,
     });
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbBypass[fxId] = checked;
-    localStorageSet("currentTracks", currentTracks);
   }
 
   function setMix(e: React.FormEvent<HTMLInputElement>): void {

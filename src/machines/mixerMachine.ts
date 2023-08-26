@@ -8,7 +8,6 @@ import {
 } from "tone";
 
 const audioContext = getAudioContext();
-
 const sourceSong = localStorageGet("sourceSong");
 const currentMain = localStorageGet("currentMain");
 const currentTracks = localStorageGet("currentTracks");
@@ -38,8 +37,6 @@ export const mixerMachine = createMachine(
       SET_MAIN_VOLUME: { actions: "setMainVolume" },
       SET_TRACK_VOLUME: { actions: "setTrackVolume" },
       SET_TRACK_PAN: { actions: "setPan" },
-      SET_TRACK_SOLO: { actions: "toggleSolo" },
-      SET_TRACK_MUTE: { actions: "toggleMute" },
       SET_TRACK_SOLOMUTE: { actions: "toggleSoloMute" },
       SET_TRACK_FX_NAMES: { actions: "setTrackFxNames" },
       SET_ACTIVE_TRACK_PANELS: { actions: "setActiveTrackPanels" },
@@ -85,11 +82,9 @@ export const mixerMachine = createMachine(
         | { type: "RESET" }
         | { type: "SET_MAIN_VOLUME"; value: number }
         | { type: "SET_TRACK_VOLUME"; value: number; trackId: string }
-        | { type: "SET_TRACK_SOLO" }
-        | { type: "SET_TRACK_MUTE" }
-        | { type: "SET_TRACK_SOLOMUTE" }
-        | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_TRACK_PAN" }
+        | { type: "SET_TRACK_SOLOMUTE"; value: number; trackId: string }
+        | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
         | { type: "SET_TRACK_DELAY_MIX" }
@@ -150,21 +145,9 @@ export const mixerMachine = createMachine(
       }),
 
       setPan: assign((context, { value, trackId }) => {
-        context.currentTracks[trackId].pan = value;
-      }),
-
-      toggleMute: assign((context, { trackId, value }) => {
-        context.currentTracks[trackId].mute = value;
-        const currentTracks = localStorageGet("currentTracks");
-        currentTracks[trackId].mute = value;
-        localStorageSet("currentTracks", currentTracks);
-      }),
-
-      toggleSolo: assign((context, { trackId, value }) => {
-        context.currentTracks[trackId].solo = value;
-        const currentTracks = localStorageGet("currentTracks");
-        currentTracks[trackId].solo = value;
-        localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[parseInt(trackId, 10)].pan = value;
+        });
       }),
 
       toggleSoloMute: assign((context, { trackId, value, value2 }) => {
