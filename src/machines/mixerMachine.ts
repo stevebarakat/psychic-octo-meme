@@ -1,5 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { localStorageGet, localStorageSet } from "@/utils";
+import { setSourceSong } from "./init";
 import { produce } from "immer";
 import {
   start as initializeAudio,
@@ -7,6 +8,7 @@ import {
   Transport as t,
 } from "tone";
 
+setSourceSong();
 const audioContext = getAudioContext();
 const sourceSong = localStorageGet("sourceSong");
 const currentMain = localStorageGet("currentMain");
@@ -81,9 +83,13 @@ export const mixerMachine = createMachine(
         | { type: "FF" }
         | { type: "RESET" }
         | { type: "SET_MAIN_VOLUME"; value: number }
-        | { type: "SET_TRACK_VOLUME"; value: number; trackId: string }
-        | { type: "SET_TRACK_PAN" }
-        | { type: "SET_TRACK_SOLOMUTE"; value: number; trackId: string }
+        | { type: "SET_TRACK_VOLUME"; value: number; trackId: number }
+        | { type: "SET_TRACK_PAN"; value: number; trackId: number }
+        | {
+            type: "SET_TRACK_SOLOMUTE";
+            value: { solo: boolean; mute: boolean };
+            trackId: number;
+          }
         | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
@@ -140,20 +146,21 @@ export const mixerMachine = createMachine(
 
       setTrackVolume: assign((context, { value, trackId }) => {
         return produce(context, (draft) => {
-          draft.currentTracks[parseInt(trackId, 10)].volume = value;
+          draft.currentTracks[trackId].volume = value;
         });
       }),
 
       setPan: assign((context, { value, trackId }) => {
         return produce(context, (draft) => {
-          draft.currentTracks[parseInt(trackId, 10)].pan = value;
+          draft.currentTracks[trackId].pan = value;
         });
       }),
 
-      toggleSoloMute: assign((context, { trackId, value, value2 }) => {
-        context.currentTracks[trackId].soloMute = [value, value2];
+      toggleSoloMute: assign((context, { trackId, value }) => {
+        console.log("value", value);
+        context.currentTracks[trackId].soloMute = value;
         const currentTracks = localStorageGet("currentTracks");
-        currentTracks[trackId].soloMute = [value, value2];
+        currentTracks[trackId].soloMute = value;
         localStorageSet("currentTracks", currentTracks);
       }),
 

@@ -6,6 +6,11 @@ import { DexieDb, db } from "@/db";
 
 type Props = { trackId: number; channels: Channel[]; param: string };
 
+type SoloMuteType = {
+  solo: boolean;
+  mute: boolean;
+};
+
 function useRead({ trackId, channels, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
@@ -29,28 +34,23 @@ function useRead({ trackId, channels, param }: Props) {
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
-    console.log(`SET_TRACK_${param.toUpperCase()}`);
-    const type = `SET_TRACK_${param.toUpperCase()}`;
+
     readEvent.current = new ToneEvent(() => {
       function setParam(
         trackId: number,
         data: {
           time: number;
-          value: number | string | boolean;
-          value2?: number | string | boolean;
+          value: number | string | SoloMuteType;
         }
       ) {
         t.schedule(() => {
           // if (playbackMode !== "read") return;
           console.log("data", data);
-          console.log("type", type);
 
           send({
-            type,
+            type: "SET_TRACK_SOLOMUTE",
             trackId,
-            channels,
             value: data.value,
-            value2: data.value2,
           });
         }, data.time);
       }

@@ -5,7 +5,7 @@ export const defaultTrackData = {
   panMode: "static",
   soloMuteMode: "static",
   pan: 0,
-  soloMute: [false, false],
+  soloMute: { solo: false, mute: false },
 
   // FX
   fxNames: ["nofx", "nofx"],

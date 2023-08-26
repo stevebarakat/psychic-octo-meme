@@ -52,7 +52,7 @@ declare global {
     volumeMode: string;
     pan: number;
     panMode: string;
-    soloMute: boolean[];
+    soloMute: { solo: boolean; mute: boolean };
     soloMuteMode: string;
 
     // FX

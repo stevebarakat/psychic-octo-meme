@@ -26,10 +26,12 @@ export const Mixer = () => {
       const scaled = dbToPercent(log(value));
 
       if (channels[trackId]) {
-        channels[trackId].set({ volume: scaled });
-        channels[trackId].set({ pan: currentTrack.pan });
-        channels[trackId].set({ solo: currentTrack.soloMute[0] });
-        channels[trackId].set({ mute: currentTrack.soloMute[1] });
+        channels[trackId].set({
+          volume: scaled,
+          pan: currentTrack.pan,
+          solo: currentTrack.soloMute.solo,
+          mute: currentTrack.soloMute.mute,
+        });
       }
     });
   })();
