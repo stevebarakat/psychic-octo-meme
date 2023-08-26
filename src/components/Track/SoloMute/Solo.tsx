@@ -19,7 +19,7 @@ function Solo({ trackId, channels }: Props) {
       type: "SET_TRACK_SOLOMUTE",
       trackId,
       value: {
-        ...soloMute,
+        mute: soloMute.mute,
         solo: checked,
       },
     });

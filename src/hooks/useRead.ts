@@ -14,6 +14,9 @@ type SoloMuteType = {
 function useRead({ trackId, channels, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
+  const type = `SET_TRACK_${param.toUpperCase()}`;
+  console.log("type", type);
+
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
@@ -45,15 +48,17 @@ function useRead({ trackId, channels, param }: Props) {
       ) {
         t.schedule(() => {
           // if (playbackMode !== "read") return;
-          console.log("data", data);
+          console.log("data!", data);
 
           send({
-            type: "SET_TRACK_SOLOMUTE",
+            type,
             trackId,
             value: data.value,
           });
         }, data.time);
       }
+
+      console.log("paramData", paramData);
 
       for (const value of paramData!.data.values()) {
         setParam(value.id, value);
@@ -64,7 +69,7 @@ function useRead({ trackId, channels, param }: Props) {
       readEvent.current?.dispose();
       t.cancel();
     };
-  }, [send, trackId, paramData, param, channels, playbackMode]);
+  }, [send, trackId, paramData, param, type, channels, playbackMode]);
 
   return null;
 }

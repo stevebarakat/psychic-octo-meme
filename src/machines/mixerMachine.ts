@@ -1,11 +1,13 @@
 import { createMachine, assign } from "xstate";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { setSourceSong } from "./init";
+import { dbToPercent, log } from "../utils/scale";
 import { produce } from "immer";
 import {
   start as initializeAudio,
   getContext as getAudioContext,
   Transport as t,
+  Destination,
 } from "tone";
 
 setSourceSong();
@@ -138,22 +140,24 @@ export const mixerMachine = createMachine(
             ? t.seconds - 10
             : sourceSong.start),
 
-      setMainVolume: assign((context, { value }) => {
-        return produce(context, (draft) => {
-          draft.currentMain.volume = value;
-        });
+      setMainVolume: assign((context, { value }: any): any => {
+        context.currentMain.volume = value;
+        const scaled = dbToPercent(log(value));
+        Destination.volume.value = scaled;
       }),
 
-      setTrackVolume: assign((context, { value, trackId }) => {
-        return produce(context, (draft) => {
-          draft.currentTracks[trackId].volume = value;
-        });
-      }),
+      setTrackVolume: assign(
+        (context, { value, channels, trackId }: any): any => {
+          console.log("value", value);
+          context.currentTracks[trackId].volume = value;
+          const scaled = dbToPercent(log(value));
+          channels[trackId].volume.value = scaled;
+        }
+      ),
 
-      setPan: assign((context, { value, trackId }) => {
-        return produce(context, (draft) => {
-          draft.currentTracks[trackId].pan = value;
-        });
+      setPan: assign((context, { value, trackId, channels }: any): any => {
+        channels[trackId].pan.value = value;
+        context.currentTracks[trackId].pan = value;
       }),
 
       toggleSoloMute: assign((context, { trackId, value }) => {
@@ -287,6 +291,7 @@ export const mixerMachine = createMachine(
       }),
 
       setPlaybackMode: assign((context, { value, param, trackId }) => {
+        console.log("value!!!", value);
         context.currentTracks[trackId][`${param}Mode`] = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId][`${param}Mode`] = value;

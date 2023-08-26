@@ -19,6 +19,7 @@ function Fader({ trackId, channels }: Props) {
     send({
       type: "SET_TRACK_VOLUME",
       value: parseFloat(e.currentTarget.value),
+      channels,
       trackId,
     });
   }
