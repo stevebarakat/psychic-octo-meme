@@ -260,7 +260,7 @@ export const mixerMachine = createMachine(
           context.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
             fxId
           ] = value;
-          pitchShift.wet.value = value;
+          // pitchShift.wet.value = value;
         }
       ),
 
