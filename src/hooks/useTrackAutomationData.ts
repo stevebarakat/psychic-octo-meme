@@ -1,7 +1,6 @@
-import PlaybackMode from "@/components/PlaybackMode";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useRef, useEffect } from "react";
-import { ToneEvent, Draw, Loop, Transport as t } from "tone";
+import { useRef, useEffect, useCallback } from "react";
+import { ToneEvent, Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { DexieDb, db } from "@/db";
@@ -62,17 +61,35 @@ function useWrite({ id, value }: WriteProps) {
   return data;
 }
 
-function useRead({ trackId, channels }: Props) {
+function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
-
-  const type = `SET_TRACK_VOLUME`;
-  console.log("type", type);
-
-  const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
       state.context.currentTracks[trackId][`volumeMode` as keyof TrackSettings]
   );
+
+  const setParam = useCallback(
+    (
+      trackId: number,
+      data: {
+        time: number;
+        value: number;
+      }
+    ) => {
+      t.scheduleOnce(() => {
+        if (playbackMode !== "read") return;
+
+        send({
+          type: "SET_TRACK_VOLUME",
+          trackId,
+          value: data.value,
+        });
+      }, data.time);
+    },
+    [playbackMode, send]
+  );
+
+  const readEvent = useRef<ToneEvent | null>(null);
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
@@ -86,42 +103,18 @@ function useRead({ trackId, channels }: Props) {
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
+    if (!paramData) return;
 
-    readEvent.current = new ToneEvent(() => {
-      function setParam(
-        trackId: number,
-        data: {
-          time: number;
-          value: number;
-        }
-      ) {
-        t.scheduleOnce((time) => {
-          console.log("PlaybackMode", PlaybackMode);
-          if (playbackMode !== "read") return;
-          console.log("data!", data);
-
-          Draw.schedule(() => {
-            send({
-              type,
-              trackId,
-              value: data.value,
-            });
-          }, time);
-        }, data.time);
-      }
-
-      console.log("paramData", paramData);
-
-      for (const value of paramData!.data.values()) {
-        setParam(value.id, value);
-      }
-    }, 1).start("+0.1");
+    for (const value of paramData!.data.values()) {
+      setParam(value.id, value);
+    }
 
     return () => {
       readEvent.current?.dispose();
+      readEvent.current = null;
       // t.cancel();
     };
-  }, [send, trackId, paramData, type, channels, playbackMode]);
+  }, [paramData, setParam, playbackMode]);
 
   return null;
 }
