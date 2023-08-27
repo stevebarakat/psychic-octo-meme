@@ -33,8 +33,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     return queryData[0];
   });
 
-  console.log("trackData", trackData);
-
   const pitchShiftBypass = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pitchShiftBypass[fxId];
   });
@@ -110,7 +108,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     if (playbackMode !== "read") return;
     playbackLoop.current = new Loop(() => {
       if (!trackData.data) return;
-      console.log("automating!!!");
 
       function assignParam(trackId, data) {
         t.schedule((time) => {

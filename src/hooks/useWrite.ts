@@ -7,7 +7,7 @@ import { db } from "@/db";
 type Props = {
   id: number;
   param: string;
-  value: number | string | boolean;
+  value: number;
 };
 
 const data = new Map<number, object>();
@@ -23,7 +23,6 @@ function useWrite({ id, param, value }: Props) {
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, value });
-      // console.log("data", data);
       db[`${param}Data` as keyof typeof db].put({
         id: `${param}Data${id}`,
         data,

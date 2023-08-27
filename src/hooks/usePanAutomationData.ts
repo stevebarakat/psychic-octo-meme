@@ -34,7 +34,7 @@ function useAutomationData({ trackId, channels, param }: Props) {
 const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
-function useWrite({ id, param, value }: WriteProps) {
+function useWrite({ id, value }: WriteProps) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
@@ -54,10 +54,10 @@ function useWrite({ id, param, value }: WriteProps) {
     }, 0.25).start(0);
 
     return () => {
-      t.cancel();
+      // t.cancel();
       writeLoop.current?.dispose();
     };
-  }, [param, id, value, playbackMode]);
+  }, [id, value, playbackMode]);
 
   return data;
 }
@@ -68,7 +68,6 @@ function useRead({ trackId, channels, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
   const type = `SET_TRACK_PAN`;
-  console.log("type", type);
 
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
@@ -97,9 +96,8 @@ function useRead({ trackId, channels, param }: Props) {
           value: number;
         }
       ) {
-        t.schedule(() => {
+        t.scheduleOnce(() => {
           if (playbackMode !== "read") return;
-          console.log("data!", data);
 
           send({
             type,
@@ -108,8 +106,6 @@ function useRead({ trackId, channels, param }: Props) {
           });
         }, data.time);
       }
-
-      console.log("paramData", paramData);
 
       for (const value of paramData!.data.values()) {
         setParam(value.id, value);
@@ -120,7 +116,7 @@ function useRead({ trackId, channels, param }: Props) {
       readEvent.current?.dispose();
       // t.cancel();
     };
-  }, [send, trackId, paramData, param, type, channels, playbackMode]);
+  }, [send, trackId, paramData, type, playbackMode]);
 
   return null;
 }

@@ -15,7 +15,6 @@ function useRead({ trackId, channels, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
   const type = `SET_TRACK_${param.toUpperCase()}`;
-  console.log("type", type);
 
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
@@ -48,7 +47,6 @@ function useRead({ trackId, channels, param }: Props) {
       ) {
         t.schedule(() => {
           if (playbackMode !== "read") return;
-          console.log("data!", data);
 
           send({
             type,
@@ -58,8 +56,6 @@ function useRead({ trackId, channels, param }: Props) {
         }, data.time);
       }
 
-      console.log("paramData", paramData);
-
       for (const value of paramData!.data.values()) {
         setParam(value.id, value);
       }
@@ -67,7 +63,7 @@ function useRead({ trackId, channels, param }: Props) {
 
     return () => {
       readEvent.current?.dispose();
-      t.cancel();
+      // t.cancel();
     };
   }, [send, trackId, paramData, param, type, channels, playbackMode]);
 

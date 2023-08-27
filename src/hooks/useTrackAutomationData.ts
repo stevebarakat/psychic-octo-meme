@@ -1,6 +1,7 @@
+import PlaybackMode from "@/components/PlaybackMode";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useRef, useEffect } from "react";
-import { ToneEvent, Loop, Transport as t } from "tone";
+import { ToneEvent, Draw, Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { DexieDb, db } from "@/db";
@@ -53,15 +54,13 @@ function useWrite({ id, value }: WriteProps) {
     }, 0.25).start(0);
 
     return () => {
-      t.cancel();
+      // t.cancel();
       writeLoop.current?.dispose();
     };
   }, [id, value, playbackMode]);
 
   return data;
 }
-
-export default useAutomationData;
 
 function useRead({ trackId, channels }: Props) {
   const { send } = MixerMachineContext.useActorRef();
@@ -96,15 +95,18 @@ function useRead({ trackId, channels }: Props) {
           value: number;
         }
       ) {
-        t.schedule(() => {
+        t.scheduleOnce((time) => {
+          console.log("PlaybackMode", PlaybackMode);
           if (playbackMode !== "read") return;
           console.log("data!", data);
 
-          send({
-            type,
-            trackId,
-            value: data.value,
-          });
+          Draw.schedule(() => {
+            send({
+              type,
+              trackId,
+              value: data.value,
+            });
+          }, time);
         }, data.time);
       }
 
@@ -123,3 +125,5 @@ function useRead({ trackId, channels }: Props) {
 
   return null;
 }
+
+export default useAutomationData;
