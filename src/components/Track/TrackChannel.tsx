@@ -4,7 +4,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
 import ChannelLabel from "../ChannelLabel";
-import useAutomationData from "@/hooks/useAutomationData";
+import useAutomationData from "@/hooks/useTrackAutomationData";
 
 type Props = {
   track: SourceTrack;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  useAutomationData({ trackId, channels, param: "volume" });
+  useAutomationData({ trackId, channels });
   return (
     <div className="flex-y gap2">
       <TrackFxSelect trackId={trackId} channels={channels} />

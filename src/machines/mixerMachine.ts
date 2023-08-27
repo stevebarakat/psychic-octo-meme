@@ -146,17 +146,14 @@ export const mixerMachine = createMachine(
         Destination.volume.value = scaled;
       }),
 
-      setTrackVolume: assign(
-        (context, { value, channels, trackId }: any): any => {
-          console.log("value", value);
-          context.currentTracks[trackId].volume = value;
-          const scaled = dbToPercent(log(value));
-          channels[trackId].volume.value = scaled;
-        }
-      ),
+      setTrackVolume: assign((context, { value, trackId }: any): any => {
+        context.currentTracks[trackId].volume = value;
+        // const scaled = dbToPercent(log(value));
+        // channels[trackId].volume.value = scaled;
+      }),
 
       setPan: assign((context, { value, trackId, channels }: any): any => {
-        channels[trackId].pan.value = value;
+        // channels[trackId].pan.value = value;
         context.currentTracks[trackId].pan = value;
       }),
 

@@ -47,7 +47,7 @@ function useRead({ trackId, channels, param }: Props) {
         }
       ) {
         t.schedule(() => {
-          // if (playbackMode !== "read") return;
+          if (playbackMode !== "read") return;
           console.log("data!", data);
 
           send({

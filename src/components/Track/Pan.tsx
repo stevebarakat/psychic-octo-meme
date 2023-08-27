@@ -1,5 +1,5 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import useAutomationData from "@/hooks/useAutomationData";
+import useAutomationData from "@/hooks/usePanAutomationData";
 import { localStorageSet, localStorageGet } from "@/utils";
 import PlaybackMode from "../PlaybackMode";
 

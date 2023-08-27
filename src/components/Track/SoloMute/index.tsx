@@ -1,7 +1,7 @@
 import Solo from "./Solo";
 import Mute from "./Mute";
 import PlaybackMode from "../../PlaybackMode";
-import useAutomationData from "@/hooks/useAutomationData";
+import useAutomationData from "@/hooks/useSoloMuteAutomationData";
 
 type Props = {
   trackId: number;
