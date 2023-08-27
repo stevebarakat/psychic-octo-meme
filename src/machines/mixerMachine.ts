@@ -60,6 +60,7 @@ export const mixerMachine = createMachine(
       SET_TRACK_PANEL_SIZE: { actions: "setTrackPanelSize" },
       SET_TRACK_PANEL_POSITON: { actions: "setTrackPanelPosition" },
       SET_PLAYBACK_MODE: { actions: "setPlaybackMode" },
+      SET_FX_PLAYBACK_MODE: { actions: "setFxPlaybackMode" },
     },
     states: {
       loading: { on: { LOADED: "stopped" } },
@@ -107,7 +108,8 @@ export const mixerMachine = createMachine(
         | { type: "SET_TRACK_PITCHSHIFT_PITCH" }
         | { type: "SET_TRACK_PANEL_SIZE" }
         | { type: "SET_TRACK_PANEL_POSITON" }
-        | { type: "SET_PLAYBACK_MODE" },
+        | { type: "SET_PLAYBACK_MODE" }
+        | { type: "SET_FX_PLAYBACK_MODE" },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -295,10 +297,16 @@ export const mixerMachine = createMachine(
       }),
 
       setPlaybackMode: assign((context, { value, param, trackId }) => {
-        console.log("value!!!", value);
         context.currentTracks[trackId][`${param}Mode`] = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId][`${param}Mode`] = value;
+        localStorageSet("currentTracks", currentTracks);
+      }),
+
+      setFxPlaybackMode: assign((context, { value, param, trackId }) => {
+        context.currentTracks[trackId][`${param}Settings`].playbackMode = value;
+        const currentTracks = localStorageGet("currentTracks");
+        currentTracks[trackId][`${param}Settings`].playbackMode = value;
         localStorageSet("currentTracks", currentTracks);
       }),
     },

@@ -68,7 +68,7 @@ declare global {
   };
 
   type DelaySettings = {
-    delayMode: string[];
+    playbackMode: string;
     delayBypass: boolean[];
     delayMix: number[];
     delayTime: number[];
@@ -76,7 +76,7 @@ declare global {
   };
 
   type ReverbSettings = {
-    reverbMode: string[];
+    playbackMode: string;
     reverbBypass: boolean[];
     reverbMix: number[];
     reverbPreDelay: number[];
@@ -84,7 +84,7 @@ declare global {
   };
 
   type PitchShiftSettings = {
-    pitchShiftMode: string[];
+    playbackMode: string;
     pitchShiftBypass: boolean[];
     pitchShiftMix: number[];
     pitchShiftPitch: number[];

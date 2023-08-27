@@ -40,7 +40,6 @@ function useWrite({ id, value }: WriteProps) {
   );
 
   useEffect(() => {
-    console.log("playbackMode!", playbackMode);
     if (playbackMode !== "write") return;
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);

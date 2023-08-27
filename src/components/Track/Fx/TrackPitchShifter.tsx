@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
-import PlaybackMode from "@/components/PlaybackMode";
+import PlaybackMode from "@/components/FxPlaybackMode";
 import useWrite from "@/hooks/useWrite";
 import { Toggle } from "@/components/Buttons";
 import { ToneEvent, Transport as t } from "tone";
@@ -22,9 +22,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   const playbackEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
-      state.context.currentTracks[trackId].pitchShiftSettings.pitchShiftMode[
-        fxId
-      ]
+      state.context.currentTracks[trackId].pitchShiftSettings.playbackMode[fxId]
   );
 
   let queryData = [];

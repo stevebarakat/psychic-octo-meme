@@ -19,6 +19,7 @@ export interface Typegen0 {
     reset: "RESET";
     rewind: "REWIND";
     setActiveTrackPanels: "SET_ACTIVE_TRACK_PANELS";
+    setFxPlaybackMode: "SET_FX_PLAYBACK_MODE";
     setMainVolume: "SET_MAIN_VOLUME";
     setPan: "SET_TRACK_PAN";
     setPlaybackMode: "SET_PLAYBACK_MODE";

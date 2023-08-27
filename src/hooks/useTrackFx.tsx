@@ -65,7 +65,6 @@ function useTrackFx(trackId: number, channel: Channel, trackFx: TrackFx) {
 
           break;
         case "pitchShift":
-          console.log("ct", ct);
           trackFx.pitchShift = new PitchShift({
             wet: ct.pitchShiftSettings.pitchShiftMix[fxId],
             pitch: ct.pitchShiftSettings.pitchShiftPitch[fxId],
