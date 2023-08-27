@@ -11,7 +11,7 @@ function useTracks({ tracks }: Props) {
 
   useEffect(() => {
     tracks.forEach((track) => {
-      channels.current = [...channels.current, new Channel({ volume: 0 })];
+      channels.current = [...channels.current, new Channel()];
       players.current = [...players.current, new Player(track.path)];
     });
 

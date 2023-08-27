@@ -252,14 +252,18 @@ export const mixerMachine = createMachine(
 
       setTrackPitchShiftMix: assign(
         (context, { value, pitchShift, trackId, fxId }) => {
-          context.currentTracks[trackId].pitchShiftMix[fxId] = value;
+          context.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
+            fxId
+          ] = value;
           pitchShift.wet.value = value;
         }
       ),
 
       setTrackPitchShiftPitch: assign(
         (context, { value, pitchShift, trackId, fxId }) => {
-          context.currentTracks[trackId].pitchShiftPitch[fxId] = value;
+          context.currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[
+            fxId
+          ] = value;
           pitchShift.pitch = value;
         }
       ),

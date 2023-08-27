@@ -5,7 +5,7 @@ import { powerIcon } from "@/assets/icons";
 import PlaybackMode from "@/components/PlaybackMode";
 import useWrite from "@/hooks/useWrite";
 import { Toggle } from "@/components/Buttons";
-import { Loop, Draw, Transport as t } from "tone";
+import { ToneEvent, Transport as t } from "tone";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 import type { PitchShift } from "tone";
@@ -19,9 +19,12 @@ type Props = {
 export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
-  const playbackLoop = useRef<Loop | null>(null);
+  const playbackEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId]["pitchShiftMode"][fxId]
+    (state) =>
+      state.context.currentTracks[trackId].pitchShiftSettings.pitchShiftMode[
+        fxId
+      ]
   );
 
   let queryData = [];
@@ -34,15 +37,18 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   });
 
   const pitchShiftBypass = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].pitchShiftBypass[fxId];
+    return state.context.currentTracks[trackId].pitchShiftSettings
+      .pitchShiftBypass[fxId];
   });
 
   const pitchShiftMix = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].pitchShiftMix[fxId];
+    return state.context.currentTracks[trackId].pitchShiftSettings
+      .pitchShiftMix[fxId];
   });
 
   const pitchShiftPitch = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].pitchShiftPitch[fxId];
+    return state.context.currentTracks[trackId].pitchShiftSettings
+      .pitchShiftPitch[fxId];
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
@@ -72,7 +78,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   function saveMix(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pitchShiftMix[fxId] = value;
+    currentTracks[trackId].pitchShiftSettings.pitchShiftMix[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -90,7 +96,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   function savePitch(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pitchShiftPitch[fxId] = value;
+    currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -106,29 +112,27 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   // !!! --- PLAYBACK --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
-    playbackLoop.current = new Loop(() => {
-      if (!trackData.data) return;
+    playbackEvent.current = new ToneEvent(() => {
+      if (!trackData?.data) return;
 
       function assignParam(trackId, data) {
-        t.schedule((time) => {
+        t.schedule(() => {
           if (playbackMode !== "read") return;
-          Draw.schedule(() => {
-            send({
-              type: "SET_TRACK_PITCHSHIFT_MIX",
-              value: data.param1,
-              pitchShift,
-              trackId,
-              fxId,
-            });
+          send({
+            type: "SET_TRACK_PITCHSHIFT_MIX",
+            value: data.param1,
+            pitchShift,
+            trackId,
+            fxId,
+          });
 
-            send({
-              type: "SET_TRACK_PITCHSHIFT_PITCH",
-              value: data.param2,
-              pitchShift,
-              trackId,
-              fxId,
-            });
-          }, time);
+          send({
+            type: "SET_TRACK_PITCHSHIFT_PITCH",
+            value: data.param2,
+            pitchShift,
+            trackId,
+            fxId,
+          });
         }, data.time);
       }
 
@@ -138,7 +142,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     }, 1).start(0);
 
     return () => {
-      playbackLoop.current?.dispose();
+      playbackEvent.current?.dispose();
     };
   }, [send, trackId, trackData, pitchShift, fxId, data, playbackMode]);
 
