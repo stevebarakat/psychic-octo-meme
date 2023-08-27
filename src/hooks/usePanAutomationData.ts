@@ -1,19 +1,18 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { ToneEvent, Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { DexieDb, db } from "@/db";
 
-type Props = { trackId: number; channels: Channel[]; param: string };
+type Props = { trackId: number; channels: Channel[] };
 
 type WriteProps = {
   id: number;
-  param: string;
   value: number | string | boolean;
 };
 
-function useAutomationData({ trackId, channels, param }: Props) {
+function useAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pan;
   });
@@ -21,12 +20,11 @@ function useAutomationData({ trackId, channels, param }: Props) {
   // !!! --- WRITE --- !!! //
   useWrite({
     id: trackId,
-    param,
     value,
   });
 
   // !!! --- READ --- !!! //
-  useRead({ trackId, channels, param });
+  useRead({ trackId, channels });
 
   return null;
 }
@@ -42,11 +40,12 @@ function useWrite({ id, value }: WriteProps) {
   );
 
   useEffect(() => {
+    console.log("playbackMode!", playbackMode);
     if (playbackMode !== "write") return;
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, value });
-      // console.log("data", data);
+      console.log("data", data);
       db[`panData` as keyof typeof db].put({
         id: `panData${id}`,
         data,
@@ -54,7 +53,6 @@ function useWrite({ id, value }: WriteProps) {
     }, 0.25).start(0);
 
     return () => {
-      // t.cancel();
       writeLoop.current?.dispose();
     };
   }, [id, value, playbackMode]);
@@ -62,18 +60,35 @@ function useWrite({ id, value }: WriteProps) {
   return data;
 }
 
-export default useAutomationData;
-
-function useRead({ trackId, channels, param }: Props) {
+function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
-
-  const type = `SET_TRACK_PAN`;
-
-  const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
       state.context.currentTracks[trackId][`panMode` as keyof TrackSettings]
   );
+
+  const setParam = useCallback(
+    (
+      trackId: number,
+      data: {
+        time: number;
+        value: number;
+      }
+    ) => {
+      t.schedule(() => {
+        if (playbackMode !== "read") return;
+
+        send({
+          type: "SET_TRACK_PAN",
+          trackId,
+          value: data.value,
+        });
+      }, data.time);
+    },
+    [playbackMode, send]
+  );
+
+  const readEvent = useRef<ToneEvent | null>(null);
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
@@ -87,36 +102,20 @@ function useRead({ trackId, channels, param }: Props) {
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
+    if (!paramData) return;
 
-    readEvent.current = new ToneEvent(() => {
-      function setParam(
-        trackId: number,
-        data: {
-          time: number;
-          value: number;
-        }
-      ) {
-        t.scheduleOnce(() => {
-          if (playbackMode !== "read") return;
-
-          send({
-            type,
-            trackId,
-            value: data.value,
-          });
-        }, data.time);
-      }
-
-      for (const value of paramData!.data.values()) {
-        setParam(value.id, value);
-      }
-    }, 1).start("+0.1");
+    for (const value of paramData!.data.values()) {
+      setParam(value.id, value);
+    }
 
     return () => {
       readEvent.current?.dispose();
-      // t.cancel();
+      readEvent.current = null;
+      t.cancel();
     };
-  }, [send, trackId, paramData, type, playbackMode]);
+  }, [paramData, setParam, playbackMode]);
 
   return null;
 }
+
+export default useAutomationData;

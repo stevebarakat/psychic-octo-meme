@@ -53,7 +53,6 @@ function useWrite({ id, value }: WriteProps) {
     }, 0.25).start(0);
 
     return () => {
-      // t.cancel();
       writeLoop.current?.dispose();
     };
   }, [id, value, playbackMode]);
@@ -76,7 +75,7 @@ function useRead({ trackId }: Props) {
         value: number;
       }
     ) => {
-      t.scheduleOnce(() => {
+      t.schedule(() => {
         if (playbackMode !== "read") return;
 
         send({
@@ -112,7 +111,7 @@ function useRead({ trackId }: Props) {
     return () => {
       readEvent.current?.dispose();
       readEvent.current = null;
-      // t.cancel();
+      t.cancel();
     };
   }, [paramData, setParam, playbackMode]);
 
