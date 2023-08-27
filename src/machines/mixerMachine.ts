@@ -238,14 +238,17 @@ export const mixerMachine = createMachine(
 
       setTrackPitchShiftBypass: assign(
         (context, { checked, pitchShift, trackId, fxId }) => {
-          context.currentTracks[trackId].pitchShiftBypass[fxId] = checked;
+          context.currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[
+            fxId
+          ] = checked;
           if (checked) {
             pitchShift?.disconnect();
           } else {
             pitchShift?.toDestination();
           }
           const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId].pitchShiftBypass[fxId] = checked;
+          currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[fxId] =
+            checked;
           localStorageSet("currentTracks", currentTracks);
         }
       ),

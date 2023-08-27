@@ -10,21 +10,21 @@ export const defaultTrackData = {
   // FX
   fxNames: ["nofx", "nofx"],
   delaySettings: {
-    delayMode: ["static", "static"],
+    delayMode: "static",
     delayBypass: [false, false],
     delayMix: [0.5, 0.5],
     delayTime: [1, 1],
     delayFeedback: [0.5, 0.5],
   },
   reverbSettings: {
-    reverbMode: ["static", "static"],
+    reverbMode: "static",
     reverbBypass: [false, false],
     reverbMix: [0.5, 0.5],
     reverbPreDelay: [0.5, 0.5],
     reverbDecay: [0.5, 0.5],
   },
   pitchShiftSettings: {
-    pitchShiftMode: ["static", "static"],
+    pitchShiftMode: "static",
     pitchShiftBypass: [false, false],
     pitchShiftMix: [0.5, 0.5],
     pitchShiftPitch: [5, 5],

@@ -61,7 +61,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       fxId,
     });
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pitchShiftBypass[fxId] = checked;
+    currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[fxId] = checked;
     localStorageSet("currentTracks", currentTracks);
   }
 
