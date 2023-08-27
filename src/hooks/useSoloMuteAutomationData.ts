@@ -1,5 +1,5 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { ToneEvent, Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -9,16 +9,11 @@ type Props = { trackId: number; channels: Channel[] };
 
 type WriteProps = {
   id: number;
-  value: SoloMuteType;
-};
-
-type SoloMuteType = {
-  solo: boolean;
-  mute: boolean;
+  value: number | string | boolean;
 };
 
 function useAutomationData({ trackId, channels }: Props) {
-  const value: SoloMuteType = MixerMachineContext.useSelector((state) => {
+  const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].soloMute;
   });
 
@@ -45,11 +40,12 @@ function useWrite({ id, value }: WriteProps) {
   );
 
   useEffect(() => {
+    console.log("playbackMode!", playbackMode);
     if (playbackMode !== "write") return;
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, value });
-      // console.log("data", data);
+      console.log("data", data);
       db[`soloMuteData` as keyof typeof db].put({
         id: `soloMuteData${id}`,
         data,
@@ -57,7 +53,6 @@ function useWrite({ id, value }: WriteProps) {
     }, 0.25).start(0);
 
     return () => {
-      t.cancel();
       writeLoop.current?.dispose();
     };
   }, [id, value, playbackMode]);
@@ -65,20 +60,37 @@ function useWrite({ id, value }: WriteProps) {
   return data;
 }
 
-export default useAutomationData;
-
-function useRead({ trackId, channels }: Props) {
+function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
-
-  const type = `SET_TRACK_SOLOMUTE`;
-
-  const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
       state.context.currentTracks[trackId][
         `soloMuteMode` as keyof TrackSettings
       ]
   );
+
+  const setParam = useCallback(
+    (
+      trackId: number,
+      data: {
+        time: number;
+        value: number;
+      }
+    ) => {
+      t.schedule(() => {
+        if (playbackMode !== "read") return;
+
+        send({
+          type: "SET_TRACK_SOLOMUTE",
+          trackId,
+          value: data.value,
+        });
+      }, data.time);
+    },
+    [playbackMode, send]
+  );
+
+  const readEvent = useRef<ToneEvent | null>(null);
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
@@ -92,36 +104,20 @@ function useRead({ trackId, channels }: Props) {
   // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
+    if (!paramData) return;
 
-    readEvent.current = new ToneEvent(() => {
-      function setParam(
-        trackId: number,
-        data: {
-          time: number;
-          value: number | string | SoloMuteType;
-        }
-      ) {
-        t.schedule(() => {
-          if (playbackMode !== "read") return;
-
-          send({
-            type,
-            trackId,
-            value: data.value,
-          });
-        }, data.time);
-      }
-
-      for (const value of paramData!.data.values()) {
-        setParam(value.id, value);
-      }
-    }, 1).start("+0.1");
+    for (const value of paramData!.data.values()) {
+      setParam(value.id, value);
+    }
 
     return () => {
       readEvent.current?.dispose();
-      // t.cancel();
+      readEvent.current = null;
+      t.cancel();
     };
-  }, [send, trackId, paramData, type, channels, playbackMode]);
+  }, [paramData, setParam, playbackMode]);
 
   return null;
 }
+
+export default useAutomationData;
