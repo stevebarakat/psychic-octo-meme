@@ -33,7 +33,7 @@ const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
 function useWrite({ id, value }: WriteProps) {
-  const writeLoop = useRef<Loop | null>(null);
+  // const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
       state.context["currentTracks"][id][`volumeMode` as keyof TrackSettings]
@@ -41,18 +41,32 @@ function useWrite({ id, value }: WriteProps) {
 
   useEffect(() => {
     if (playbackMode !== "write") return;
-    writeLoop.current = new Loop(() => {
-      const time: number = roundFourth(t.seconds);
-      data.set(time, { id, time, value });
-      console.log("data", data);
-      db[`volumeData` as keyof typeof db].put({
-        id: `volumeData${id}`,
-        data,
-      });
-    }, 0.25).start(0);
+    // writeLoop.current = new Loop(() => {
+    //   const time: number = roundFourth(t.seconds);
+    //   data.set(time, { id, time, value });
+    //   console.log("data", data);
+    //   db[`volumeData` as keyof typeof db].put({
+    //     id: `volumeData${id}`,
+    //     data,
+    //   });
+    // }, 0.25).start(0);
+
+    const loop = t.scheduleRepeat(
+      () => {
+        const time: number = roundFourth(t.seconds);
+        data.set(time, { id, time, value });
+        db["volumeData" as keyof typeof db].put({
+          id: `volumeData${id}`,
+          data,
+        });
+      },
+      0.25,
+      0
+    );
 
     return () => {
-      writeLoop.current?.dispose();
+      t.clear(loop);
+      // writeLoop.current?.dispose();
     };
   }, [id, value, playbackMode]);
 

@@ -1,13 +1,8 @@
-import { useRef, useEffect } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import PlaybackMode from "@/components/FxPlaybackMode";
-import useWrite from "@/hooks/useWrite";
 import { Toggle } from "@/components/Buttons";
-import { ToneEvent, Transport as t } from "tone";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
 import type { PitchShift } from "tone";
 
 type Props = {
@@ -18,21 +13,6 @@ type Props = {
 
 export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
-
-  const playbackEvent = useRef<ToneEvent | null>(null);
-  const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context.currentTracks[trackId].pitchShiftSettings.playbackMode[fxId]
-  );
-
-  let queryData = [];
-  const trackData = useLiveQuery(async () => {
-    queryData = await db["pitchShiftData"]
-      .where("id")
-      .equals(`pitchShiftData${trackId}`)
-      .toArray();
-    return queryData[0];
-  });
 
   const pitchShiftBypass = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pitchShiftSettings
@@ -98,52 +78,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     localStorageSet("currentTracks", currentTracks);
   }
 
-  // !!! --- RECORD --- !!! //
-  const data = useWrite({
-    id: trackId,
-    fxId,
-    param: "pitchShift",
-    param1: pitchShiftMix,
-    param2: pitchShiftPitch,
-  });
-
-  // !!! --- PLAYBACK --- !!! //
-  useEffect(() => {
-    if (playbackMode !== "read") return;
-    playbackEvent.current = new ToneEvent(() => {
-      if (!trackData?.data) return;
-
-      function assignParam(trackId, data) {
-        t.schedule(() => {
-          if (playbackMode !== "read") return;
-          send({
-            type: "SET_TRACK_PITCHSHIFT_MIX",
-            value: data.param1,
-            pitchShift,
-            trackId,
-            fxId,
-          });
-
-          send({
-            type: "SET_TRACK_PITCHSHIFT_PITCH",
-            value: data.param2,
-            pitchShift,
-            trackId,
-            fxId,
-          });
-        }, data.time);
-      }
-
-      trackData.data?.forEach((data) => {
-        assignParam(trackId, data);
-      });
-    }, 1).start(0);
-
-    return () => {
-      playbackEvent.current?.dispose();
-    };
-  }, [send, trackId, trackData, pitchShift, fxId, data, playbackMode]);
-
   return (
     <div>
       <div className="flex gap12">
@@ -159,7 +93,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <PlaybackMode trackId={trackId} fxId={fxId} param="pitchShift" />
+        <PlaybackMode trackId={trackId} param="pitchShift" />
         <label htmlFor={`track${trackId}pitchShiftMix`}>Mix:</label>
         <input
           type="range"
