@@ -16,7 +16,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
   useAutomationData({ trackId, channels });
   return (
     <div className="flex-y gap2">
-      <TrackFxSelect trackId={trackId} channels={channels} />
+      {/* <TrackFxSelect trackId={trackId} channels={channels} /> */}
       <div className="channel">
         <Pan trackId={trackId} channels={channels} />
         <Fader trackId={trackId} channels={channels} />

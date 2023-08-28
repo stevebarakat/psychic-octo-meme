@@ -6,10 +6,7 @@ declare global {
   type Channel = ToneChannel;
   type Gain = ToneGain;
 
-  type Fx = {
-    1: JSX.Element;
-    2: JSX.Element;
-  };
+  type Fx = [JSX.Element, JSX.Element];
 
   type TrackFx = {
     nofx: Gain | null;

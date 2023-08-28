@@ -3,7 +3,7 @@ import TrackPanels from "./TrackPanels";
 import { ChannelButton } from "../Buttons";
 import useSaveTrackFx from "@/hooks/useSaveTrackFx";
 import { localStorageGet, array } from "@/utils";
-import useTrackFx from "@/hooks/useTrackFx";
+import useTrackFx from "@/components/Track/Fx/useTrackFx";
 
 type Props = {
   trackId: number;

@@ -21,7 +21,8 @@ export default function Delay({ delay, trackId, fxId }: Props) {
 
   const playbackLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId]["delayMode"][fxId]
+    (state) =>
+      state.context.currentTracks[trackId].delaySettings.playbackMode[fxId]
   );
 
   let queryData = [];
@@ -34,19 +35,21 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   });
 
   const delayMix = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delayMix[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayMix[fxId];
   });
 
   const delayBypass = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delayBypass[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayBypass[fxId];
   });
 
   const delayTime = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delayTime[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayTime[fxId];
   });
 
   const delayFeedback = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delayFeedback[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayFeedback[
+      fxId
+    ];
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
@@ -77,7 +80,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   function saveMix(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delayMix[fxId] = value;
+    currentTracks[trackId].delaySettings.delayMix[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -95,7 +98,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   function saveDelayTime(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delayTime[fxId] = value;
+    currentTracks[trackId].delaySettings.delayTime[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -113,7 +116,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   function saveFeedback(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delayFeedback[fxId] = value;
+    currentTracks[trackId].delaySettings.delayFeedback[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -131,7 +134,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   useEffect(() => {
     if (playbackMode !== "read") return;
     playbackLoop.current = new Loop(() => {
-      if (!trackData.data) return;
+      if (!trackData?.data) return;
 
       function assignParam(trackId, data) {
         t.schedule((time) => {
@@ -190,7 +193,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <PlaybackMode trackId={trackId} fxId={fxId} param="delay" />
+        <PlaybackMode trackId={trackId} param="delay" />
         <label htmlFor={`track${trackId}delayMix`}>Mix:</label>
         <input
           type="range"

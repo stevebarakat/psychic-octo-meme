@@ -209,7 +209,8 @@ export const mixerMachine = createMachine(
 
       setTrackDelayBypass: assign(
         (context, { checked, delay, trackId, fxId }) => {
-          context.currentTracks[trackId].delayBypass[fxId] = checked;
+          context.currentTracks[trackId].delaySettings.delayBypass[fxId] =
+            checked;
           if (checked) {
             delay?.disconnect();
           } else {
@@ -222,18 +223,19 @@ export const mixerMachine = createMachine(
       ),
 
       setTrackDelayMix: assign((context, { value, delay, trackId, fxId }) => {
-        context.currentTracks[trackId].delayMix[fxId] = value;
+        context.currentTracks[trackId].delaySettings.delayMix[fxId] = value;
         delay.wet.value = value;
       }),
 
       setTrackDelayTime: assign((context, { value, delay, trackId, fxId }) => {
-        context.currentTracks[trackId].delayTime[fxId] = value;
+        context.currentTracks[trackId].delaySettings.delayTime[fxId] = value;
         delay.delayTime.value = value;
       }),
 
       setTrackDelayFeedback: assign(
         (context, { value, delay, trackId, fxId }) => {
-          context.currentTracks[trackId].delayFeedback[fxId] = value;
+          context.currentTracks[trackId].delaySettings.delayFeedback[fxId] =
+            value;
           delay.feedback.value = value;
         }
       ),
@@ -260,7 +262,7 @@ export const mixerMachine = createMachine(
           context.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
             fxId
           ] = value;
-          // pitchShift.wet.value = value;
+          pitchShift.wet.value = value;
         }
       ),
 
