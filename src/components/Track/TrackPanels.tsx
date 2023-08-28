@@ -74,8 +74,8 @@ function TrackPanels({ fx, trackId }: PanelsProps) {
 
   return !panelsEmpty ? (
     <TrackPanel trackId={trackId}>
-      {fx["1"]}
-      {fx["2"]}
+      {fx[1]}
+      {fx[2]}
     </TrackPanel>
   ) : null;
 }
