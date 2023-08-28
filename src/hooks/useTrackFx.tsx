@@ -92,7 +92,7 @@ function useTrackFx(trackId: number, channel: Channel, trackFx: TrackFx) {
     const fxNodes = fxProps.map((prop) => Object.values(prop)[0]);
     channel.disconnect();
     channel.chain(fxNodes[0], fxNodes[1], Destination).toDestination();
-    return fxComponents;
+    return fxComponents.current;
   })();
 
   return fx;
