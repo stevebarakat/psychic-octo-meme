@@ -9,9 +9,15 @@ import useAutomationData from "@/hooks/useTrackAutomationData";
 import { ChannelButton } from "../Buttons";
 import { array, localStorageGet, localStorageSet } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useDelay } from "./Fx";
-import { Delay } from "./Fx";
 import { TrackPanel } from "./TrackPanels";
+import {
+  Delay,
+  Reverber,
+  PitchShifter,
+  useDelay,
+  useReverb,
+  usePitchShift,
+} from "./Fx";
 
 type Props = {
   track: SourceTrack;
@@ -21,13 +27,21 @@ type Props = {
 
 function TrackChannel({ track, trackId, channels }: Props) {
   useAutomationData({ trackId, channels });
+  const currentTracks = localStorageGet("currentTracks");
+  // const ct = currentTracks[trackId];
+  // const options = {
+  //   wet: ct.delaySettings.delayMix[0],
+  //   delayTime: ct.delaySettings.delayTime[0],
+  //   feedback: ct.delaySettings.delayFeedback[0],
+  // };
   const delay = useDelay();
+  const reverb = useReverb();
+  const pitchShift = usePitchShift();
   const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
   const trackFxNames = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId].fxNames
   );
-  const currentTracks = localStorageGet("currentTracks");
   const disabled = currentTracks[trackId].fxNames.every(
     (item: string) => item === "nofx"
   );
@@ -45,7 +59,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     const id = e.currentTarget.id.at(-1);
     const fxId = (id && parseInt(id, 10)) || 0;
 
-    channels[trackId].connect(delay);
+    channels[trackId].connect(pitchShift);
 
     trackFxNames[trackId] = fxName;
     send({
@@ -57,7 +71,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     currentTracks[trackId].fxNames[fxId] = e.currentTarget.value;
     localStorageSet("currentTracks", currentTracks);
   }
-
+  console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
   return (
     <div className="flex-y gap2">
       {/* <TrackFxSelect trackId={trackId} channels={channels} /> */}
@@ -65,7 +79,9 @@ function TrackChannel({ track, trackId, channels }: Props) {
       <>
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
-            <Delay delay={delay} trackId={trackId} fxId={0} />
+            {/* <Delay delay={delay} trackId={trackId} fxId={0} /> */}
+            {/* <Reverber reverb={reverb} trackId={trackId} fxId={0} /> */}
+            <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
           </TrackPanel>
         )}
 

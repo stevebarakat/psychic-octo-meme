@@ -53,9 +53,9 @@ function useTrackFx(trackId: number, channel: Channel, trackFx: TrackFx) {
           break;
         case "delay":
           trackFx.delay = delay({
-            wet: ct.delayMix[fxId],
-            delayTime: ct.delayTime[fxId],
-            feedback: ct.delayFeedback[fxId],
+            wet: ct.delaySettings.delayMix[fxId],
+            delayTime: ct.delaySettings.delayTime[fxId],
+            feedback: ct.delaySettings.delayFeedback[fxId],
           });
 
           // fxComponents.current = {

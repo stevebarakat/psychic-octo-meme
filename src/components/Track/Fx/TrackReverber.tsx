@@ -21,7 +21,8 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
   const playbackLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId]["reverbMode"][fxId]
+    (state) =>
+      state.context.currentTracks[trackId].reverbSettings.playbackMode[fxId]
   );
 
   let queryData = [];
@@ -34,19 +35,25 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   });
 
   const reverbBypass = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbBypass[fxId];
+    return state.context.currentTracks[trackId].reverbSettings.reverbBypass[
+      fxId
+    ];
   });
 
   const reverbMix = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbMix[fxId];
+    return state.context.currentTracks[trackId].reverbSettings.reverbMix[fxId];
   });
 
   const reverbPreDelay = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbPreDelay[fxId];
+    return state.context.currentTracks[trackId].reverbSettings.reverbPreDelay[
+      fxId
+    ];
   });
 
   const reverbDecay = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbDecay[fxId];
+    return state.context.currentTracks[trackId].reverbSettings.reverbDecay[
+      fxId
+    ];
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
@@ -74,7 +81,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   function saveMix(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbMix[fxId] = value;
+    currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -92,7 +99,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   function savePreDelay(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbPreDelay[fxId] = value;
+    currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
@@ -110,7 +117,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   function saveDecay(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbDecay[fxId] = value;
+    currentTracks[trackId].reverbSettings.reverbDecay[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
   }
 
