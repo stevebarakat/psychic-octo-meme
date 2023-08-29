@@ -176,33 +176,36 @@ export const mixerMachine = createMachine(
 
       setTrackReverbBypass: assign(
         (context, { checked, reverb, trackId, fxId }) => {
-          context.currentTracks[trackId].reverbBypass[fxId] = checked;
+          context.currentTracks[trackId].reverbSettings.reverbBypass[fxId] =
+            checked;
           if (checked) {
             reverb?.disconnect();
           } else {
             reverb?.toDestination();
           }
           const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId].reverbBypass[fxId] = checked;
+          currentTracks[trackId].reverbSettings.reverbBypass[fxId] = checked;
           localStorageSet("currentTracks", currentTracks);
         }
       ),
 
       setTrackReverbMix: assign((context, { value, reverb, trackId, fxId }) => {
-        context.currentTracks[trackId].reverbMix[fxId] = value;
+        context.currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
         reverb.wet.value = value;
       }),
 
       setTrackReverbPreDelay: assign(
         (context, { value, reverb, trackId, fxId }) => {
-          context.currentTracks[trackId].reverbPreDelay[fxId] = value;
+          context.currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] =
+            value;
           reverb.preDelay = value;
         }
       ),
 
       setTrackReverbDecay: assign(
         (context, { value, reverb, trackId, fxId }) => {
-          context.currentTracks[trackId].reverbDecay[fxId] = value;
+          context.currentTracks[trackId].reverbSettings.reverbDecay[fxId] =
+            value;
           reverb.decay = value;
         }
       ),

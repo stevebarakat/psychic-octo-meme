@@ -59,7 +59,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     const id = e.currentTarget.id.at(-1);
     const fxId = (id && parseInt(id, 10)) || 0;
 
-    channels[trackId].connect(pitchShift);
+    channels[trackId].connect(reverb);
 
     trackFxNames[trackId] = fxName;
     send({
@@ -80,8 +80,8 @@ function TrackChannel({ track, trackId, channels }: Props) {
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
             {/* <Delay delay={delay} trackId={trackId} fxId={0} /> */}
-            {/* <Reverber reverb={reverb} trackId={trackId} fxId={0} /> */}
-            <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
+            <Reverber reverb={reverb} trackId={trackId} fxId={0} />
+            {/* <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} /> */}
           </TrackPanel>
         )}
 
