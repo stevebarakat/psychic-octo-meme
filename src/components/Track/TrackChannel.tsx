@@ -39,9 +39,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const pitchShift = usePitchShift();
   const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
-  const trackFxNames = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId].fxNames
-  );
+
   const disabled = currentTracks[trackId].fxNames.every(
     (item: string) => item === "nofx"
   );
@@ -53,13 +51,31 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   }
 
+  const trackFxNames = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks[trackId].fxNames
+  );
+
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
-    const currentTracks = localStorageGet("currentTracks");
     const fxName = e.currentTarget.value;
     const id = e.currentTarget.id.at(-1);
     const fxId = (id && parseInt(id, 10)) || 0;
 
-    channels[trackId].connect(reverb);
+    switch (fxName) {
+      case "reverb":
+        reverb && channels[trackId].connect(reverb);
+        break;
+
+      case "delay":
+        delay && channels[trackId].connect(delay);
+        break;
+
+      case "pitchShift":
+        pitchShift && channels[trackId].connect(pitchShift);
+        break;
+
+      default:
+        break;
+    }
 
     trackFxNames[trackId] = fxName;
     send({
@@ -68,10 +84,14 @@ function TrackChannel({ track, trackId, channels }: Props) {
       value: [...trackFxNames],
     });
 
+    const currentTracks = localStorageGet("currentTracks");
     currentTracks[trackId].fxNames[fxId] = e.currentTarget.value;
     localStorageSet("currentTracks", currentTracks);
   }
   console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
+  const showReverb = trackFxNames.some((name) => name === "reverb");
+  const showDelay = trackFxNames.some((name) => name === "delay");
+  const showPitchShift = trackFxNames.some((name) => name === "pitchShift");
   return (
     <div className="flex-y gap2">
       {/* <TrackFxSelect trackId={trackId} channels={channels} /> */}
@@ -79,9 +99,17 @@ function TrackChannel({ track, trackId, channels }: Props) {
       <>
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
-            {/* <Delay delay={delay} trackId={trackId} fxId={0} /> */}
-            <Reverber reverb={reverb} trackId={trackId} fxId={0} />
-            {/* <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} /> */}
+            {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
+            {showReverb && (
+              <Reverber reverb={reverb} trackId={trackId} fxId={0} />
+            )}
+            {showPitchShift && (
+              <PitchShifter
+                pitchShift={pitchShift}
+                trackId={trackId}
+                fxId={0}
+              />
+            )}
           </TrackPanel>
         )}
 
@@ -103,7 +131,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
             id={`track${trackId}fx${fxId}`}
             className="fx-select"
             onChange={saveTrackFx}
-            value={name}
+            value={name || ""}
           >
             <option value={"nofx"}>{`FX ${fxId + 1}`}</option>
             <option value={"reverb"}>Reverb</option>
