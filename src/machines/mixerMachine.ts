@@ -290,11 +290,12 @@ export const mixerMachine = createMachine(
       }),
 
       setActiveTrackPanels: assign((context, { trackId }) => {
+        console.log("message");
         context.currentTracks[trackId].panelActive =
           !context.currentTracks[trackId].panelActive;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].panelActive =
-          context.currentTracks[trackId].panelActive;
+          !currentTracks[trackId].panelActive;
         localStorageSet("currentTracks", currentTracks);
       }),
 
