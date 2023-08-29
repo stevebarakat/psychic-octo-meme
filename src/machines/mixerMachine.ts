@@ -220,7 +220,7 @@ export const mixerMachine = createMachine(
             delay?.toDestination();
           }
           const currentTracks = localStorageGet("currentTracks");
-          currentTracks[trackId].delayBypass[fxId] = checked;
+          currentTracks[trackId].delaySettings.delayBypass[fxId] = checked;
           localStorageSet("currentTracks", currentTracks);
         }
       ),
