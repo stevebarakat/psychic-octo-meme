@@ -60,27 +60,28 @@ function TrackChannel({ track, trackId, channels }: Props) {
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const fxName = e.currentTarget.value;
-    const oldFxName = ["nofx"];
-    oldFxName.push(fxName);
-    oldFxName.pop();
     const id = e.currentTarget.id.at(-1);
     const fxId = (id && parseInt(id, 10)) || 0;
-    console.log("`${oldFxName}`", `${oldFxName}`);
+
     switch (fxName) {
       case "nofx":
-        channels[trackId].chain();
+        channels[trackId].disconnect();
+        channels[trackId].toDestination();
         break;
 
       case "reverb":
-        reverb && channels[trackId].chain(reverb);
+        channels[trackId].disconnect();
+        reverb && channels[trackId].connect(reverb).toDestination();
         break;
 
       case "delay":
-        delay && channels[trackId].chain(delay);
+        channels[trackId].disconnect();
+        delay && channels[trackId].connect(delay).toDestination();
         break;
 
       case "pitchShift":
-        pitchShift && channels[trackId].chain(pitchShift);
+        channels[trackId].disconnect();
+        pitchShift && channels[trackId].connect(pitchShift).toDestination();
         break;
 
       default:
@@ -91,7 +92,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     send({
       type: "SET_TRACK_FX_NAMES",
       trackId,
-      value: trackFxNames,
+      value: [...trackFxNames],
     });
 
     const currentTracks = localStorageGet("currentTracks");

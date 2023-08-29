@@ -15,7 +15,7 @@ function useSaveTrackFx(trackId: number) {
     send({
       type: "SET_TRACK_FX_NAMES",
       trackId,
-      value: [...trackFxNames],
+      value: trackFxNames,
     });
 
     currentTracks[trackId].fxNames[id] = e.currentTarget.value;
