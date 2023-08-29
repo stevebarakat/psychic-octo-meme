@@ -32,31 +32,12 @@ function TrackChannel({ track, trackId, channels }: Props) {
     (item: string) => item === "nofx"
   );
 
-  const [fxNames, setFxNames] = useState([
-    ["nofx", "nofx"],
-    ["nofx", "nofx"],
-    ["nofx", "nofx"],
-    ["nofx", "nofx"],
-  ]);
-
   function handleClick() {
     dispatch({
       type: "SET_ACTIVE_TRACK_PANELS",
       trackId,
     });
   }
-  // function saveTrackFx(e: React.FormEvent<HTMLSelectElement>): void {
-  //   const fxName = e.currentTarget.value;
-  //   switch (fxName) {
-  //     case "delay":
-  //       fxNames[trackId] = "delay";
-  //       setFxNames([...fxNames]);
-  //       channels[trackId].connect(delay);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const currentTracks = localStorageGet("currentTracks");
@@ -100,13 +81,13 @@ function TrackChannel({ track, trackId, channels }: Props) {
             : "Open "}
           FX
         </ChannelButton>
-        {array(2).map((_, fxId) => (
+        {currentTracks[trackId].fxNames.map((name: string, fxId: number) => (
           <select
             key={fxId}
             id={`track${trackId}fx${fxId}`}
             className="fx-select"
             onChange={saveTrackFx}
-            value={fxNames[trackId][fxId]}
+            value={name}
           >
             <option value={"nofx"}>{`FX ${fxId + 1}`}</option>
             <option value={"reverb"}>Reverb</option>
