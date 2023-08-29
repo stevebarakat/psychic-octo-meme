@@ -99,17 +99,19 @@ function TrackChannel({ track, trackId, channels }: Props) {
       <>
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
-            {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
-            {showReverb && (
+            {showDelay ? (
+              <Delay delay={delay} trackId={trackId} fxId={0} />
+            ) : null}
+            {showReverb ? (
               <Reverber reverb={reverb} trackId={trackId} fxId={0} />
-            )}
-            {showPitchShift && (
+            ) : null}
+            {showPitchShift ? (
               <PitchShifter
                 pitchShift={pitchShift}
                 trackId={trackId}
                 fxId={0}
               />
-            )}
+            ) : null}
           </TrackPanel>
         )}
 
@@ -125,13 +127,13 @@ function TrackChannel({ track, trackId, channels }: Props) {
             : "Open "}
           FX
         </ChannelButton>
-        {currentTracks[trackId].fxNames.map((name: string, fxId: number) => (
+        {array(1).map((name: string, fxId: number) => (
           <select
             key={fxId}
             id={`track${trackId}fx${fxId}`}
             className="fx-select"
             onChange={saveTrackFx}
-            value={name || ""}
+            value={trackFxNames[trackId] || ""}
           >
             <option value={"nofx"}>{`FX ${fxId + 1}`}</option>
             <option value={"reverb"}>Reverb</option>
