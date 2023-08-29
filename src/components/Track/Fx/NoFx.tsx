@@ -1,5 +1,5 @@
 type Props = {
-  nofx?: Gain | null;
+  nofx?: null;
 };
 
 export default function NoFx({ nofx }: Props) {

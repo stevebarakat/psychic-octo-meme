@@ -6,7 +6,7 @@ import { Toggle } from "@/components/Buttons";
 import type { PitchShift } from "tone";
 
 type Props = {
-  pitchShift: PitchShift | Gain;
+  pitchShift: PitchShift;
   trackId: number;
   fxId: number;
 };

@@ -1,15 +1,13 @@
 import type { Destination as ToneDestination } from "tone/build/esm/core/context/Destination";
-import type { Gain as ToneGain, Channel as ToneChannel } from "tone";
 
 declare global {
   type Destination = ToneDestination;
   type Channel = ToneChannel;
-  type Gain = ToneGain;
 
   type Fx = [JSX.Element, JSX.Element];
 
   type TrackFx = {
-    nofx: Gain | null;
+    nofx: null;
     reverb: Reverb | null;
     delay: FeedbackDelay | null;
     pitchShift: PitchShift | null;

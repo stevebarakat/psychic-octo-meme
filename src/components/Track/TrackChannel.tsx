@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TrackFxSelect from "./TrackFxSelect";
+import { Zero } from "tone";
 import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
@@ -11,6 +12,7 @@ import { array, localStorageGet, localStorageSet } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { TrackPanel } from "./TrackPanels";
 import {
+  NoFx,
   Delay,
   Reverber,
   PitchShifter,
@@ -34,6 +36,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
   //   delayTime: ct.delaySettings.delayTime[0],
   //   feedback: ct.delaySettings.delayFeedback[0],
   // };
+  const nofx = null;
   const delay = useDelay();
   const reverb = useReverb();
   const pitchShift = usePitchShift();
@@ -61,6 +64,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     const fxId = (id && parseInt(id, 10)) || 0;
 
     switch (fxName) {
+      case "nofx":
+        nofx && channels[trackId].connect(nofx);
+        break;
+
       case "reverb":
         reverb && channels[trackId].connect(reverb);
         break;
@@ -89,6 +96,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     localStorageSet("currentTracks", currentTracks);
   }
   console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
+  const showNofx = trackFxNames.some((name) => name === "nofx");
   const showReverb = trackFxNames.some((name) => name === "reverb");
   const showDelay = trackFxNames.some((name) => name === "delay");
   const showPitchShift = trackFxNames.some((name) => name === "pitchShift");
@@ -99,6 +107,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
       <>
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
+            {showNofx ? <NoFx nofx={nofx} trackId={trackId} fxId={0} /> : null}
             {showDelay ? (
               <Delay delay={delay} trackId={trackId} fxId={0} />
             ) : null}

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { localStorageGet } from "@/utils";
-import { Gain, Destination, InputNode } from "tone";
+import { Destination, InputNode } from "tone";
 import { useReverb, useDelay, usePitchShift } from ".";
 import { Reverber, Delay, PitchShifter, NoFx } from "@/components/Track/Fx";
 import { array } from "@/utils";
@@ -23,7 +23,7 @@ function useTrackFx(trackId: number, channel: Channel, trackFx: TrackFx) {
     array(2).forEach((_, fxId) => {
       switch (currentFx[fxId]) {
         case "nofx":
-          trackFx.nofx = new Gain();
+          trackFx.nofx = null;
 
           // fxComponents.current = {
           //   ...fxComponents.current,
