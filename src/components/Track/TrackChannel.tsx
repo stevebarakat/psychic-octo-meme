@@ -47,9 +47,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     (state) => state.context.currentTracks[trackId].fxNames
   );
 
-  const disabled = currentTracks[trackId].fxNames.every(
-    (item: string) => item === "nofx"
-  );
+  const disabled = currentTracks[trackId].fxNames.every((item: string) => {
+    console.log("item", item);
+    return item === "nofx";
+  });
 
   function handleClick() {
     dispatch({
@@ -102,10 +103,20 @@ function TrackChannel({ track, trackId, channels }: Props) {
   }
 
   console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
-  const showNofx = trackFxNames.some((name) => name === "nofx");
-  const showReverb = trackFxNames.some((name) => name === "reverb");
-  const showDelay = trackFxNames.some((name) => name === "delay");
-  const showPitchShift = trackFxNames.some((name) => name === "pitchShift");
+  const showNofx = currentTracks[trackId].fxNames.some(
+    (name: string) => name === "nofx"
+  );
+  const showReverb = currentTracks[trackId].fxNames.some(
+    (name: string) => name === "reverb"
+  );
+  const showDelay = currentTracks[trackId].fxNames.some(
+    (name: string) => name === "delay"
+  );
+
+  const showPitchShift = currentTracks[trackId].fxNames.some(
+    (name: string) => name === "pitchShift"
+  );
+
   return (
     <div className="flex-y gap2">
       {/* <TrackFxSelect trackId={trackId} channels={channels} /> */}
@@ -142,13 +153,13 @@ function TrackChannel({ track, trackId, channels }: Props) {
             : "Open "}
           FX
         </ChannelButton>
-        {array(1).map((_: void, fxId: number) => (
+        {array(2).map((_: void, fxId: number) => (
           <select
             key={fxId}
             id={`track${trackId}fx${fxId}`}
             className="fx-select"
             onChange={saveTrackFx}
-            value={trackFxNames[trackId] || ""}
+            value={currentTracks[trackId].fxNames[fxId]}
           >
             <option value={"nofx"}>{`FX ${fxId + 1}`}</option>
             <option value={"reverb"}>Reverb</option>

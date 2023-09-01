@@ -51,7 +51,7 @@ declare global {
     soloMuteMode: string;
 
     // FX
-    fxNames: string[][];
+    fxNames: string[];
     delaySettings: DelaySettings;
     reverbSettings: ReverbSettings;
     pitchShiftSettings: PitchShiftSettings;
