@@ -1,6 +1,13 @@
 import { useState } from "react";
 import TrackFxSelect from "./TrackFxSelect";
-import { Destination, FeedbackDelay, Gain, PitchShift, Reverb } from "tone";
+import {
+  Destination,
+  FeedbackDelay,
+  Volume,
+  PitchShift,
+  Reverb,
+  Gain,
+} from "tone";
 import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
@@ -16,11 +23,11 @@ import {
   Delay,
   Reverber,
   PitchShifter,
+  useNoFx,
   useDelay,
   useReverb,
   usePitchShift,
 } from "./Fx";
-import useNoFx from "./Fx/useNoFx";
 
 type Props = {
   track: SourceTrack;
@@ -34,16 +41,22 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const currentTracks = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks
   );
-  const fxNodes = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId].fxNodes
-  );
-
+  const ct = currentTracks[trackId];
+  // const options = {
+  //   wet: ct.delaySettings.delayMix[0],
+  //   delayTime: ct.delaySettings.delayTime[0],
+  //   feedback: ct.delaySettings.delayFeedback[0],
+  // };
   const nofx = useNoFx();
   const delay = useDelay();
   const reverb = useReverb();
   const pitchShift = usePitchShift();
   // const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
+  const [currentTrackFx, setCurrentTrackFx] = useState<
+    (Volume | Reverb | FeedbackDelay | PitchShift)[]
+  >([new Volume(), new Volume()]);
+  console.log("currentTrackFx", currentTrackFx);
 
   const trackFxNames = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId].fxNames
@@ -70,39 +83,23 @@ function TrackChannel({ track, trackId, channels }: Props) {
 
     switch (fxName) {
       case "nofx":
-        send({
-          type: "SET_TRACK_FX_NODES",
-          trackId,
-          fxId,
-          value: nofx,
-        });
+        currentTrackFx[fxId] = nofx;
+        setCurrentTrackFx(currentTrackFx);
         break;
 
       case "reverb":
-        send({
-          type: "SET_TRACK_FX_NODES",
-          trackId,
-          fxId,
-          value: reverb,
-        });
+        currentTrackFx[fxId] = reverb;
+        setCurrentTrackFx(currentTrackFx);
         break;
 
       case "delay":
-        send({
-          type: "SET_TRACK_FX_NODES",
-          trackId,
-          fxId,
-          value: delay,
-        });
+        currentTrackFx[fxId] = delay;
+        setCurrentTrackFx(currentTrackFx);
         break;
 
       case "pitchShift":
-        send({
-          type: "SET_TRACK_FX_NODES",
-          trackId,
-          fxId,
-          value: pitchShift,
-        });
+        currentTrackFx[fxId] = pitchShift;
+        setCurrentTrackFx(currentTrackFx);
         break;
 
       default:
@@ -119,9 +116,15 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
 
     // localStorageSet("currentTracks", currentTracks);
-    console.log("fxNodes", fxNodes);
-    fxNodes[0] && channels[trackId].chain(fxNodes[0], Destination);
-    fxNodes[1] && channels[trackId].chain(fxNodes[1], Destination);
+    // currentTrackFx[0] &&
+    //   channels[trackId].chain(currentTrackFx[0], Destination);
+    // currentTrackFx[1] &&
+    //   channels[trackId].chain(currentTrackFx[1], Destination);
+
+    channels[trackId].disconnect();
+    channels[trackId]
+      .chain(currentTrackFx[0], currentTrackFx[1], Destination)
+      .toDestination();
   }
 
   // console.log("trackFxNames", trackFxNames);

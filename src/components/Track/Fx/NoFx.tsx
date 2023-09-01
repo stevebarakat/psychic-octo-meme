@@ -1,7 +1,7 @@
-import { Gain } from "tone";
+import { Volume } from "tone";
 
 type Props = {
-  nofx?: Gain | null;
+  nofx?: Volume | null;
 };
 
 export default function NoFx({ nofx }: Props) {

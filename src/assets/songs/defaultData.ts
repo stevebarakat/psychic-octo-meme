@@ -9,7 +9,6 @@ export const defaultTrackData = {
 
   // FX
   fxNames: ["nofx", "nofx"],
-  fxNodes: [],
   delaySettings: {
     playbackMode: "static",
     delayBypass: [false, false],

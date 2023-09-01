@@ -1,4 +1,4 @@
-import { FeedbackDelay, Gain, PitchShift, Reverb, Gain } from "tone";
+import { FeedbackDelay, PitchShift, Reverb, Volume } from "tone";
 import type { Destination as ToneDestination } from "tone/build/esm/core/context/Destination";
 
 declare global {
@@ -8,7 +8,7 @@ declare global {
   type Fx = [JSX.Element, JSX.Element];
 
   type TrackFx = {
-    nofx: null;
+    nofx: Volume | null;
     reverb: Reverb | null;
     delay: FeedbackDelay | null;
     pitchShift: PitchShift | null;
@@ -53,7 +53,6 @@ declare global {
 
     // FX
     fxNames: string[];
-    fxNodes: (Gain | Reverb | FeedbackDelay | PitchShift)[] | [];
     delaySettings: DelaySettings;
     reverbSettings: ReverbSettings;
     pitchShiftSettings: PitchShiftSettings;

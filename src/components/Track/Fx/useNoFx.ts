@@ -1,13 +1,13 @@
 import { useRef, useEffect } from "react";
-import { Gain } from "tone";
+import { Volume } from "tone";
 
-type Options = ConstructorParameters<typeof Gain>[0];
+type Options = ConstructorParameters<typeof Volume>[0];
 
-export default function useNoFx(options?: Options): Gain {
-  const nofx = useRef<Gain | null>(null);
+export default function useNoFx(options?: Options): Volume {
+  const nofx = useRef<Volume | null>(null);
 
   useEffect(() => {
-    nofx.current = new Gain(options).toDestination();
+    nofx.current = new Volume(options).toDestination();
 
     return () => {
       nofx.current?.dispose();
