@@ -49,7 +49,7 @@ export const Mixer = () => {
           <div className="channels">
             {tracks.map((track, i) => (
               <TrackChannel
-                key={track.path}
+                key={track.id}
                 track={track}
                 trackId={i}
                 channels={channels}

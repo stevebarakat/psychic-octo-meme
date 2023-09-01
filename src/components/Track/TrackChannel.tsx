@@ -43,6 +43,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
 
+  const trackFxNames = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks[trackId].fxNames
+  );
+
   const disabled = currentTracks[trackId].fxNames.every(
     (item: string) => item === "nofx"
   );
@@ -53,10 +57,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
       trackId,
     });
   }
-
-  const trackFxNames = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId].fxNames
-  );
 
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const fxName = e.currentTarget.value;
@@ -92,6 +92,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     send({
       type: "SET_TRACK_FX_NAMES",
       trackId,
+      fxId,
       value: [...trackFxNames],
     });
 
@@ -99,6 +100,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     currentTracks[trackId].fxNames[fxId] = e.currentTarget.value;
     localStorageSet("currentTracks", currentTracks);
   }
+
   console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
   const showNofx = trackFxNames.some((name) => name === "nofx");
   const showReverb = trackFxNames.some((name) => name === "reverb");
@@ -111,7 +113,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
       <>
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
-            {showNofx ? <NoFx nofx={nofx} trackId={trackId} fxId={0} /> : null}
+            {showNofx ? <NoFx nofx={nofx} /> : null}
             {showDelay ? (
               <Delay delay={delay} trackId={trackId} fxId={0} />
             ) : null}
@@ -140,7 +142,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
             : "Open "}
           FX
         </ChannelButton>
-        {array(1).map((name: string, fxId: number) => (
+        {array(1).map((_: void, fxId: number) => (
           <select
             key={fxId}
             id={`track${trackId}fx${fxId}`}
