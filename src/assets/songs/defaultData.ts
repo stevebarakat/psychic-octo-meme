@@ -8,7 +8,7 @@ export const defaultTrackData = {
   soloMute: { solo: false, mute: false },
 
   // FX
-  fxNames: ["nofx", "nofx"],
+  fxNames: [],
   delaySettings: {
     playbackMode: "static",
     delayBypass: [false, false],
