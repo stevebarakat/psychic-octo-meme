@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TrackFxSelect from "./TrackFxSelect";
-import { Zero } from "tone";
+import { Destination, FeedbackDelay, Gain, PitchShift, Reverb } from "tone";
 import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
@@ -20,6 +20,7 @@ import {
   useReverb,
   usePitchShift,
 } from "./Fx";
+import useNoFx from "./Fx/useNoFx";
 
 type Props = {
   track: SourceTrack;
@@ -29,33 +30,31 @@ type Props = {
 
 function TrackChannel({ track, trackId, channels }: Props) {
   useAutomationData({ trackId, channels });
-  const currentTracks = localStorageGet("currentTracks");
-  // const ct = currentTracks[trackId];
-  // const options = {
-  //   wet: ct.delaySettings.delayMix[0],
-  //   delayTime: ct.delaySettings.delayTime[0],
-  //   feedback: ct.delaySettings.delayFeedback[0],
-  // };
-  const nofx = null;
+  // const currentTracks = localStorageGet("currentTracks");
+  const currentTracks = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks
+  );
+  const fxNodes = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks[trackId].fxNodes
+  );
+
+  const nofx = useNoFx();
   const delay = useDelay();
   const reverb = useReverb();
   const pitchShift = usePitchShift();
-  const [, dispatch] = MixerMachineContext.useActor();
+  // const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
 
-  // const trackFxNames = MixerMachineContext.useSelector(
-  //   (state) => state.context.currentTracks[trackId].fxNames
-  // );
+  const trackFxNames = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks[trackId].fxNames
+  );
 
-  const disabled = currentTracks[trackId].fxNames.every((item: string) => {
-    console.log("fxNames", currentTracks[trackId].fxNames);
-    console.log("item", item);
+  const disabled = trackFxNames.every((item: string) => {
     return item === "nofx";
   });
-  console.log("disabled", disabled);
 
   function handleClick() {
-    dispatch({
+    send({
       type: "SET_ACTIVE_TRACK_PANELS",
       trackId,
     });
@@ -64,27 +63,46 @@ function TrackChannel({ track, trackId, channels }: Props) {
   function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
     const fxName = e.currentTarget.value;
     const id = e.currentTarget.id.at(-1);
-    const fxId = (id && parseInt(id, 10)) || 0;
+    const fxId = parseInt(id!, 10);
+
+    console.log("fxId", fxId);
+    console.log("fxName", fxName);
 
     switch (fxName) {
       case "nofx":
-        channels[trackId].disconnect();
-        channels[trackId].toDestination();
+        send({
+          type: "SET_TRACK_FX_NODES",
+          trackId,
+          fxId,
+          value: nofx,
+        });
         break;
 
       case "reverb":
-        channels[trackId].disconnect();
-        reverb && channels[trackId].connect(reverb).toDestination();
+        send({
+          type: "SET_TRACK_FX_NODES",
+          trackId,
+          fxId,
+          value: reverb,
+        });
         break;
 
       case "delay":
-        channels[trackId].disconnect();
-        delay && channels[trackId].connect(delay).toDestination();
+        send({
+          type: "SET_TRACK_FX_NODES",
+          trackId,
+          fxId,
+          value: delay,
+        });
         break;
 
       case "pitchShift":
-        channels[trackId].disconnect();
-        pitchShift && channels[trackId].connect(pitchShift).toDestination();
+        send({
+          type: "SET_TRACK_FX_NODES",
+          trackId,
+          fxId,
+          value: pitchShift,
+        });
         break;
 
       default:
@@ -101,19 +119,16 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
 
     // localStorageSet("currentTracks", currentTracks);
+    console.log("fxNodes", fxNodes);
+    fxNodes[0] && channels[trackId].chain(fxNodes[0], Destination);
+    fxNodes[1] && channels[trackId].chain(fxNodes[1], Destination);
   }
 
-  console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
-  const showNofx = currentTracks[trackId].fxNames.some(
-    (name: string) => name === "nofx"
-  );
-  const showReverb = currentTracks[trackId].fxNames.some(
-    (name: string) => name === "reverb"
-  );
-  const showDelay = currentTracks[trackId].fxNames.some(
-    (name: string) => name === "delay"
-  );
-  const showPitchShift = currentTracks[trackId].fxNames.some(
+  // console.log("trackFxNames", trackFxNames);
+  const showNofx = trackFxNames.some((name: string) => name === "nofx");
+  const showReverb = trackFxNames.some((name: string) => name === "reverb");
+  const showDelay = trackFxNames.some((name: string) => name === "delay");
+  const showPitchShift = trackFxNames.some(
     (name: string) => name === "pitchShift"
   );
 

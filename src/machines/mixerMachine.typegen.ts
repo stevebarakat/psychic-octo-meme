@@ -28,6 +28,7 @@ export interface Typegen0 {
     setTrackDelayMix: "SET_TRACK_DELAY_MIX";
     setTrackDelayTime: "SET_TRACK_DELAY_TIME";
     setTrackFxNames: "SET_TRACK_FX_NAMES";
+    setTrackFxNodes: "SET_TRACK_FX_NODES";
     setTrackPanelPosition: "SET_TRACK_PANEL_POSITON";
     setTrackPanelSize: "SET_TRACK_PANEL_SIZE";
     setTrackPitchShiftBypass: "SET_TRACK_PITCHSHIFT_BYPASS";

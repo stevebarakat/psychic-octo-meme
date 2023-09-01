@@ -1,3 +1,4 @@
+import { FeedbackDelay, Gain, PitchShift, Reverb, Gain } from "tone";
 import type { Destination as ToneDestination } from "tone/build/esm/core/context/Destination";
 
 declare global {
@@ -52,6 +53,7 @@ declare global {
 
     // FX
     fxNames: string[];
+    fxNodes: (Gain | Reverb | FeedbackDelay | PitchShift)[] | [];
     delaySettings: DelaySettings;
     reverbSettings: ReverbSettings;
     pitchShiftSettings: PitchShiftSettings;
