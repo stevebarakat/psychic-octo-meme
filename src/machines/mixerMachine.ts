@@ -2,6 +2,7 @@ import { createMachine, assign } from "xstate";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { setSourceSong } from "./init";
 import { dbToPercent, log } from "../utils/scale";
+import { defaultTrackData } from "@/assets/songs/defaultData";
 import { produce } from "immer";
 import {
   start as initializeAudio,
@@ -35,6 +36,7 @@ export const mixerMachine = createMachine(
     tsTypes: {} as import("./mixerMachine.typegen").Typegen0,
     context: initialContext,
     on: {
+      LOAD_SONG: { actions: "loadSong" },
       RESET: { actions: "reset", target: "stopped" },
       REWIND: { actions: "rewind" },
       FF: { actions: "fastForward" },
@@ -80,6 +82,7 @@ export const mixerMachine = createMachine(
     schema: {
       context: {} as typeof initialContext,
       events: {} as
+        | { type: "LOAD_SONG" }
         | { type: "LOADED" }
         | { type: "PLAY" }
         | { type: "PAUSE" }
@@ -143,6 +146,19 @@ export const mixerMachine = createMachine(
           t.seconds > 10 + sourceSong.start
             ? t.seconds - 10
             : sourceSong.start),
+
+      loadSong: assign((context, { value }: any): any => {
+        window.location.reload();
+        localStorageSet("sourceSong", value);
+        const currentTracks = value.tracks.map((track: TrackSettings) => ({
+          id: crypto.randomUUID(),
+          name: track.name,
+          path: track.path,
+          ...defaultTrackData,
+        }));
+        context.currentTracks = currentTracks;
+        localStorageSet("currentTracks", currentTracks);
+      }),
 
       setMainVolume: assign((context, { value }: any): any => {
         context.currentMain.volume = value;

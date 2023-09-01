@@ -7,68 +7,45 @@ import {
 } from "@/assets/songs";
 import { localStorageSet } from "@/utils";
 import { defaultTrackData } from "@/assets/songs/defaultData";
+import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 function SongSelect() {
+  const { send } = MixerMachineContext.useActorRef();
   function onChange(e: React.FormEvent<HTMLSelectElement>): void {
     switch (e.currentTarget.value) {
       case "ninteenOne": {
-        window.location.reload();
-        localStorageSet("sourceSong", ninteenOne);
-        const currentTracks = ninteenOne.tracks.map((track) => ({
-          id: crypto.randomUUID(),
-          name: track.name,
-          path: track.path,
-          ...defaultTrackData,
-        }));
-        localStorageSet("currentTracks", currentTracks);
+        send({
+          type: "LOAD_SONG",
+          value: ninteenOne,
+        });
         break;
       }
       case "roxanne": {
-        window.location.reload();
-        localStorageSet("sourceSong", roxanne);
-        const currentTracks = roxanne.tracks.map((track) => ({
-          id: crypto.randomUUID(),
-          name: track.name,
-          path: track.path,
-          ...defaultTrackData,
-        }));
-        localStorageSet("currentTracks", currentTracks);
+        send({
+          type: "LOAD_SONG",
+          value: roxanne,
+        });
         break;
       }
       case "aDayInTheLife": {
-        window.location.reload();
-        localStorageSet("sourceSong", aDayInTheLife);
-        const currentTracks = aDayInTheLife.tracks.map((track) => ({
-          id: crypto.randomUUID(),
-          name: track.name,
-          path: track.path,
-          ...defaultTrackData,
-        }));
-        localStorageSet("currentTracks", currentTracks);
+        send({
+          type: "LOAD_SONG",
+          value: aDayInTheLife,
+        });
         break;
       }
       case "blueMonday": {
-        window.location.reload();
-        localStorageSet("sourceSong", blueMonday);
-        const currentTracks = blueMonday.tracks.map((track) => ({
-          id: crypto.randomUUID(),
-          name: track.name,
-          path: track.path,
-          ...defaultTrackData,
-        }));
-        localStorageSet("currentTracks", currentTracks);
+        send({
+          type: "LOAD_SONG",
+          value: blueMonday,
+        });
         break;
       }
       case "justDance": {
-        window.location.reload();
-        localStorageSet("sourceSong", justDance);
-        const currentTracks = justDance.tracks.map((track) => ({
-          id: crypto.randomUUID(),
-          name: track.name,
-          path: track.path,
-          ...defaultTrackData,
-        }));
-        localStorageSet("currentTracks", currentTracks);
+        send({
+          type: "LOAD_SONG",
+          value: justDance,
+        });
         break;
       }
 

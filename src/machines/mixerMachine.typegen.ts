@@ -14,6 +14,7 @@ export interface Typegen0 {
   };
   eventsCausingActions: {
     fastForward: "FF";
+    loadSong: "LOAD_SONG";
     pause: "PAUSE";
     play: "PLAY";
     reset: "RESET";

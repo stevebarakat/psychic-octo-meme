@@ -16,8 +16,7 @@ function useTracks({ tracks }: Props) {
     });
 
     players.current?.forEach((player, i) => {
-      channels.current &&
-        player.connect(channels.current[i]).sync().start("+0.5");
+      channels.current && player.connect(channels.current[i]).sync().start(0);
     });
 
     return () => {
