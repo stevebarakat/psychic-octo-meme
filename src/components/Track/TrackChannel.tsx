@@ -43,14 +43,16 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
 
-  const trackFxNames = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId].fxNames
-  );
+  // const trackFxNames = MixerMachineContext.useSelector(
+  //   (state) => state.context.currentTracks[trackId].fxNames
+  // );
 
   const disabled = currentTracks[trackId].fxNames.every((item: string) => {
+    console.log("fxNames", currentTracks[trackId].fxNames);
     console.log("item", item);
     return item === "nofx";
   });
+  console.log("disabled", disabled);
 
   function handleClick() {
     dispatch({
@@ -89,17 +91,16 @@ function TrackChannel({ track, trackId, channels }: Props) {
         break;
     }
 
-    trackFxNames[trackId] = fxName;
+    // const currentTracks = localStorageGet("currentTracks");
+    // currentTracks[trackId].fxNames[fxId] = fxName;
     send({
       type: "SET_TRACK_FX_NAMES",
       trackId,
       fxId,
-      value: [...trackFxNames],
+      value: fxName,
     });
 
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].fxNames[fxId] = e.currentTarget.value;
-    localStorageSet("currentTracks", currentTracks);
+    // localStorageSet("currentTracks", currentTracks);
   }
 
   console.log("currentTracks[trackId].fxNames", currentTracks[trackId].fxNames);
@@ -112,7 +113,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const showDelay = currentTracks[trackId].fxNames.some(
     (name: string) => name === "delay"
   );
-
   const showPitchShift = currentTracks[trackId].fxNames.some(
     (name: string) => name === "pitchShift"
   );
