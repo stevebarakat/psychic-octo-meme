@@ -151,7 +151,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
         >
           {disabled
             ? "No "
-            : currentTracks[trackId].panelActive !== false
+            : currentTracks[trackId].panelActive === false
             ? "Close "
             : "Open "}
           FX
