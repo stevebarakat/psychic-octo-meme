@@ -284,14 +284,15 @@ export const mixerMachine = createMachine(
             return produce(context, (draft) => {
               draft.currentTracks[trackId].fxNames.splice(fxId, 1);
               currentTracks[trackId].fxNames.splice(fxId, 1);
+              localStorageSet("currentTracks", currentTracks);
             });
           } else {
             return produce(context, (draft) => {
               draft.currentTracks[trackId].fxNames[fxId] = value;
               currentTracks[trackId].fxNames[fxId] = value;
+              localStorageSet("currentTracks", currentTracks);
             });
           }
-          localStorageSet("currentTracks", currentTracks);
         }
       ),
 
