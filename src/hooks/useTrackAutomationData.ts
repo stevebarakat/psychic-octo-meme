@@ -16,14 +16,8 @@ function useTrackAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].volume;
   });
-
-  useWrite({
-    id: trackId,
-    value,
-  });
-
+  useWrite({ id: trackId, value });
   useRead({ trackId, channels });
-
   return null;
 }
 
@@ -88,7 +82,7 @@ function useRead({ trackId }: Props) {
   );
 
   let queryData = [];
-  const paramData = useLiveQuery(async () => {
+  const volumeData = useLiveQuery(async () => {
     queryData = await db.volumeData
       .where("id")
       .equals(`volumeData${trackId}`)
@@ -99,12 +93,11 @@ function useRead({ trackId }: Props) {
   useEffect(() => {
     if (playbackMode !== "read") return;
 
-    for (const value of paramData!.data.values()) {
+    for (const value of volumeData!.data.values()) {
       setParam(value.id, value);
     }
-  }, [paramData, setParam, playbackMode]);
+  }, [volumeData, setParam, playbackMode]);
 
   return null;
 }
-
 export default useTrackAutomationData;

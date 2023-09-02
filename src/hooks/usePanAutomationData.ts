@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useRef, useEffect, useCallback } from "react";
-import { ToneEvent, Loop, Transport as t } from "tone";
+import { useEffect, useCallback } from "react";
+import { Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
@@ -16,11 +16,8 @@ function usePanAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pan;
   });
-
   useWrite({ id: trackId, value });
-
   useRead({ trackId, channels });
-
   return null;
 }
 
@@ -28,30 +25,35 @@ const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
 function useWrite({ id, value }: WriteProps) {
-  const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context["currentTracks"][id].panMode
+    (state) => state.context["currentTracks"][id]["panMode"]
   );
 
   useEffect(() => {
     if (playbackMode !== "write") return;
-    writeLoop.current = new Loop(() => {
-      const time: number = roundFourth(t.seconds);
-      data.set(time, { id, time, value });
-      db.panData.put({
-        id: `panData${id}`,
-        data,
-      });
-    }, 0.25).start(0);
+
+    const loop = t.scheduleRepeat(
+      () => {
+        const time: number = roundFourth(t.seconds);
+        data.set(time, { id, time, value });
+        db.panData.put({
+          id: `panData${id}`,
+          data,
+        });
+      },
+      0.25,
+      0
+    );
 
     return () => {
-      writeLoop.current?.dispose();
+      t.clear(loop);
     };
   }, [id, value, playbackMode]);
 
-  return null;
+  return data;
 }
 
+// !!! --- READ --- !!! //
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
@@ -79,10 +81,8 @@ function useRead({ trackId }: Props) {
     [playbackMode, send]
   );
 
-  const readEvent = useRef<ToneEvent | null>(null);
-
   let queryData = [];
-  const paramData = useLiveQuery(async () => {
+  const panData = useLiveQuery(async () => {
     queryData = await db.panData
       .where("id")
       .equals(`panData${trackId}`)
@@ -90,23 +90,14 @@ function useRead({ trackId }: Props) {
     return queryData[0];
   });
 
-  // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
-    if (!paramData) return;
 
-    for (const value of paramData!.data.values()) {
+    for (const value of panData!.data.values()) {
       setParam(value.id, value);
     }
-
-    return () => {
-      readEvent.current?.dispose();
-      readEvent.current = null;
-      t.cancel();
-    };
-  }, [paramData, setParam, playbackMode]);
+  }, [panData, setParam, playbackMode]);
 
   return null;
 }
-
 export default usePanAutomationData;
