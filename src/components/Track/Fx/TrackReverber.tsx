@@ -139,7 +139,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
         trackId: number,
         data: {
           time: number;
-          reverbSettings: ReverbSettings;
+          value: ReverbSettings;
         }
       ) => {
         t.schedule(() => {
@@ -147,7 +147,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
           send({
             type: "SET_TRACK_REVERB_MIX",
-            value: data.reverbSettings.reverbMix[fxId],
+            value: data.value.reverbMix[fxId],
             reverb: reverb!,
             trackId,
             fxId,
@@ -155,7 +155,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
           send({
             type: "SET_TRACK_REVERB_PREDELAY",
-            value: data.reverbSettings.reverbPreDelay[fxId],
+            value: data.value.reverbPreDelay[fxId],
             reverb: reverb!,
             trackId,
             fxId,
@@ -163,7 +163,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
           send({
             type: "SET_TRACK_REVERB_DECAY",
-            value: data.reverbSettings.reverbDecay[fxId],
+            value: data.value.reverbDecay[fxId],
             reverb: reverb!,
             trackId,
             fxId,
@@ -183,8 +183,8 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     });
 
     useEffect(() => {
-      if (playbackMode !== "read") return;
-      for (const value of reverbData!.data.values()) {
+      if (playbackMode !== "read" || !reverbData) return;
+      for (const value of reverbData.data.values()) {
         setParam(value.id, value);
       }
     }, [reverbData, setParam, playbackMode]);
