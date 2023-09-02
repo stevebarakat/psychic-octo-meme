@@ -23,6 +23,8 @@ export type MixerContext = {
   sourceSong: SourceSong;
 };
 
+type SoloMuteType = { solo: boolean; mute: boolean };
+
 const initialContext: MixerContext = {
   currentMain,
   currentTracks,
@@ -92,11 +94,7 @@ export const mixerMachine = createMachine(
         | { type: "SET_MAIN_VOLUME"; value: number }
         | { type: "SET_TRACK_VOLUME"; value: number; trackId: number }
         | { type: "SET_TRACK_PAN"; value: number; trackId: number }
-        | {
-            type: "SET_TRACK_SOLOMUTE";
-            value: { solo: boolean; mute: boolean };
-            trackId: number;
-          }
+        | { type: "SET_TRACK_SOLOMUTE"; value: SoloMuteType; trackId: number }
         | { type: "SET_TRACK_FX_NAMES" }
         | { type: "SET_TRACK_FX_NODES" }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
