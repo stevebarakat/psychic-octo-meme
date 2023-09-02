@@ -32,6 +32,6 @@ export const defaultTrackData = {
 
   // PANELS
   panelPosition: { x: 0, y: 0 },
-  panelActive: true,
+  panelActive: false,
   panelSize: { width: "325px", height: "auto" },
 };

@@ -126,22 +126,28 @@ function TrackChannel({ track, trackId, channels }: Props) {
     <div className="flex-y gap2">
       <>
         {currentTracks[trackId].panelActive === false && (
-          <TrackPanel trackId={trackId}>
+          <>
             {showNofx ? <NoFx nofx={nofx} /> : null}
             {showDelay ? (
-              <Delay delay={delay} trackId={trackId} fxId={0} />
+              <TrackPanel trackId={trackId}>
+                <Delay delay={delay} trackId={trackId} fxId={0} />
+              </TrackPanel>
             ) : null}
             {showReverb ? (
-              <Reverber reverb={reverb} trackId={trackId} fxId={0} />
+              <TrackPanel trackId={trackId}>
+                <Reverber reverb={reverb} trackId={trackId} fxId={0} />
+              </TrackPanel>
             ) : null}
             {showPitchShift ? (
-              <PitchShifter
-                pitchShift={pitchShift}
-                trackId={trackId}
-                fxId={0}
-              />
+              <TrackPanel trackId={trackId}>
+                <PitchShifter
+                  pitchShift={pitchShift}
+                  trackId={trackId}
+                  fxId={0}
+                />
+              </TrackPanel>
             ) : null}
-          </TrackPanel>
+          </>
         )}
 
         <ChannelButton
