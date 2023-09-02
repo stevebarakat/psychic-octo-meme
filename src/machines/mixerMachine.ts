@@ -306,24 +306,26 @@ export const mixerMachine = createMachine(
 
       setTrackReverbPreDelay: assign(
         (context, { value, reverb, trackId, fxId }) => {
-          context.currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] =
-            value;
           reverb.preDelay = value;
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] =
+              value;
+          });
         }
       ),
 
       setTrackReverbDecay: assign(
         (context, { value, reverb, trackId, fxId }) => {
-          context.currentTracks[trackId].reverbSettings.reverbDecay[fxId] =
-            value;
           reverb.decay = value;
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].reverbSettings.reverbDecay[fxId] =
+              value;
+          });
         }
       ),
 
       setTrackDelayBypass: assign(
         (context, { checked, delay, trackId, fxId }) => {
-          context.currentTracks[trackId].delaySettings.delayBypass[fxId] =
-            checked;
           if (checked) {
             delay?.disconnect();
           } else {
@@ -332,6 +334,10 @@ export const mixerMachine = createMachine(
           const currentTracks = localStorageGet("currentTracks");
           currentTracks[trackId].delaySettings.delayBypass[fxId] = checked;
           localStorageSet("currentTracks", currentTracks);
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].delaySettings.delayBypass[fxId] =
+              checked;
+          });
         }
       ),
 
