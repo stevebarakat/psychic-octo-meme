@@ -26,7 +26,7 @@ const data = new Map<number, object>();
 // !!! --- WRITE --- !!! //
 function useWrite({ id, value }: WriteProps) {
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context["currentTracks"][id]["volumeMode"]
+    (state) => state.context.currentTracks[id].volumeMode
   );
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useRef, useEffect, useCallback } from "react";
-import { ToneEvent, Loop, Transport as t } from "tone";
+import { useEffect, useCallback } from "react";
+import { Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
@@ -9,54 +9,56 @@ type Props = { trackId: number; channels: Channel[] };
 
 type WriteProps = {
   id: number;
-  value: number | string | boolean;
+  value: { solo: boolean; mute: boolean };
 };
 
 function useSoloMuteAutomationData({ trackId, channels }: Props) {
-  const value: number | boolean = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].soloMute;
-  });
-
-  // !!! --- WRITE --- !!! //
-  useWrite({
-    id: trackId,
-    value,
-  });
-
-  // !!! --- READ --- !!! //
+  const value: { solo: boolean; mute: boolean } =
+    MixerMachineContext.useSelector(
+      (state) => state.context.currentTracks[trackId].soloMute
+    );
+  useWrite({ id: trackId, value });
   useRead({ trackId, channels });
-
   return null;
 }
 
-const data = new Map<number, object>();
+const data = new Map<
+  number,
+  { id: number; value: { solo: boolean; mute: boolean }; time: number }
+>();
 
 // !!! --- WRITE --- !!! //
+
 function useWrite({ id, value }: WriteProps) {
-  const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[id].soloMuteMode
   );
 
   useEffect(() => {
     if (playbackMode !== "write") return;
-    writeLoop.current = new Loop(() => {
-      const time: number = roundFourth(t.seconds);
-      data.set(time, { id, time, value });
-      console.log("data", data);
-      db.soloMuteData.put({
-        id: `soloMuteData${id}`,
-        data,
-      });
-    }, 0.25).start(0);
+
+    const loop = t.scheduleRepeat(
+      () => {
+        const time: number = roundFourth(t.seconds);
+        data.set(time, { id, time, value });
+        db.soloMuteData.put({
+          id: `soloMuteData${id}`,
+          data,
+        });
+      },
+      0.25,
+      0
+    );
 
     return () => {
-      writeLoop.current?.dispose();
+      t.clear(loop);
     };
   }, [id, value, playbackMode]);
 
   return data;
 }
+
+// !!! --- READ --- !!! //
 
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
@@ -85,10 +87,8 @@ function useRead({ trackId }: Props) {
     [playbackMode, send]
   );
 
-  const readEvent = useRef<ToneEvent | null>(null);
-
   let queryData = [];
-  const paramData = useLiveQuery(async () => {
+  const soloMuteData = useLiveQuery(async () => {
     queryData = await db.soloMuteData
       .where("id")
       .equals(`soloMuteData${trackId}`)
@@ -96,23 +96,13 @@ function useRead({ trackId }: Props) {
     return queryData[0];
   });
 
-  // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
-    if (!paramData) return;
-
-    for (const value of paramData!.data.values()) {
+    for (const value of soloMuteData!.data.values()) {
       setParam(value.id, value);
     }
-
-    return () => {
-      readEvent.current?.dispose();
-      readEvent.current = null;
-      t.cancel();
-    };
-  }, [paramData, setParam, playbackMode]);
+  }, [soloMuteData, setParam, playbackMode]);
 
   return null;
 }
-
 export default useSoloMuteAutomationData;

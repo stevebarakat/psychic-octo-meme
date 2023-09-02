@@ -13,9 +13,9 @@ type WriteProps = {
 };
 
 function usePanAutomationData({ trackId, channels }: Props) {
-  const value: number | boolean = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].pan;
-  });
+  const value: number | boolean = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks[trackId].pan
+  );
   useWrite({ id: trackId, value });
   useRead({ trackId, channels });
   return null;
@@ -24,9 +24,10 @@ function usePanAutomationData({ trackId, channels }: Props) {
 const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
+
 function useWrite({ id, value }: WriteProps) {
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context["currentTracks"][id]["panMode"]
+    (state) => state.context.currentTracks[id].panMode
   );
 
   useEffect(() => {
@@ -54,6 +55,7 @@ function useWrite({ id, value }: WriteProps) {
 }
 
 // !!! --- READ --- !!! //
+
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
@@ -92,7 +94,6 @@ function useRead({ trackId }: Props) {
 
   useEffect(() => {
     if (playbackMode !== "read") return;
-
     for (const value of panData!.data.values()) {
       setParam(value.id, value);
     }

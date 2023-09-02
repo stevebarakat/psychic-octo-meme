@@ -1,13 +1,11 @@
-import type { Channel } from "tone";
 import { Toggle } from "@/components/Buttons";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 type Props = {
   trackId: number;
-  channels: Channel[];
 };
 
-function Mute({ trackId, channels }: Props) {
+function Mute({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const soloMute = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].soloMute;

@@ -11,8 +11,11 @@ type PanData = {
 };
 
 type SoloMuteData = {
-  id?: string[];
-  data: Map<number, { id: number; value: TrackSettings; time: number }>;
+  id?: string;
+  data: Map<
+    number,
+    { id: number; value: { solo: boolean; mute: boolean }; time: number }
+  >;
 };
 
 type DelayData = {
