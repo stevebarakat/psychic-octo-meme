@@ -1,9 +1,9 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { useRef, useEffect, useCallback } from "react";
-import { ToneEvent, Transport as t } from "tone";
+import { useEffect, useCallback } from "react";
+import { Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import { DexieDb, db } from "@/db";
+import { db } from "@/db";
 
 type Props = { trackId: number; channels: Channel[] };
 
@@ -87,8 +87,6 @@ function useRead({ trackId }: Props) {
     [playbackMode, send]
   );
 
-  const readEvent = useRef<ToneEvent | null>(null);
-
   let queryData = [];
   const paramData = useLiveQuery(async () => {
     queryData = await db["volumeData"]
@@ -104,12 +102,6 @@ function useRead({ trackId }: Props) {
     for (const value of paramData!.data.values()) {
       setParam(value.id, value);
     }
-
-    return () => {
-      t.clear(readEvent.current);
-      readEvent.current?.dispose();
-      readEvent.current = null;
-    };
   }, [paramData, setParam, playbackMode]);
 
   return null;

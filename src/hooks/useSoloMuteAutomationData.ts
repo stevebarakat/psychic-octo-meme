@@ -3,7 +3,7 @@ import { useRef, useEffect, useCallback } from "react";
 import { ToneEvent, Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import { DexieDb, db } from "@/db";
+import { db } from "@/db";
 
 type Props = { trackId: number; channels: Channel[] };
 

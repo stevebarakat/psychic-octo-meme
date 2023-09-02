@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
@@ -6,9 +6,9 @@ import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/FxPlaybackMode";
 import type { Reverb } from "tone";
 import { Toggle } from "@/components/Buttons";
-import { Draw, ToneEvent, Transport as t } from "tone";
+import { Transport as t } from "tone";
 import { useLiveQuery } from "dexie-react-hooks";
-import { DexieDb, db } from "@/db";
+import { db } from "@/db";
 
 type Props = {
   reverb: Reverb | null;
@@ -22,8 +22,6 @@ type ReadProps = {
 
 export default function Reverber({ reverb, trackId, fxId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
-
-  const readEvent = useRef<ToneEvent | null>(null);
 
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
@@ -127,7 +125,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   }
 
   // !!! --- WRITE --- !!! //
-  const data = useWrite({
+  useWrite({
     id: trackId,
     fxParam: "reverb",
     fxId,
@@ -145,12 +143,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   // !!! --- READ --- !!! //
   function useRead({ trackId }: ReadProps) {
     const { send } = MixerMachineContext.useActorRef();
-    const playbackMode = MixerMachineContext.useSelector(
-      (state) =>
-        state.context.currentTracks[trackId][
-          "reverbMode" as keyof TrackSettings
-        ]
-    );
 
     const setParam = useCallback(
       (
@@ -192,10 +184,8 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
           });
         }, 0.25);
       },
-      [playbackMode, send]
+      [send]
     );
-
-    const readEvent = useRef<ToneEvent | null>(null);
 
     let queryData = [];
     const paramData = useLiveQuery(async () => {
@@ -210,16 +200,10 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       if (playbackMode !== "read") return;
 
       for (const value of paramData!.data.values()) {
+        console.log("value", value);
         setParam(value.id, value);
       }
-
-      return () => {
-        t.clear(readEvent.current);
-        readEvent.current?.dispose();
-        readEvent.current = null;
-        t.cancel();
-      };
-    }, [paramData, setParam, playbackMode]);
+    }, [paramData, setParam]);
 
     return null;
   }

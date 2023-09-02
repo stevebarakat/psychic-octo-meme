@@ -2,32 +2,32 @@ import Dexie, { Table } from "dexie";
 
 type VolumeData = {
   id?: string;
-  data: Map<number, object>;
+  data: Map<number, { id: number; value: TrackSettings; time: number }>;
 };
 
 type PanData = {
   id?: string;
-  data: Map<number, object>;
+  data: Map<number, { id: number; value: TrackSettings; time: number }>;
 };
 
 type SoloMuteData = {
   id?: string[];
-  data: Map<number, object>;
+  data: Map<number, { id: number; value: TrackSettings; time: number }>;
 };
 
 type DelayData = {
   id?: string;
-  data: Map<number, object>;
+  data: Map<number, { id: number; value: DelaySettings; time: number }>;
 };
 
 type ReverbData = {
   id?: string;
-  data: Map<number, object>;
+  data: Map<number, { id: number; value: ReverbSettings; time: number }>;
 };
 
 type PitchShiftData = {
   id?: string;
-  data: Map<number, object>;
+  data: Map<number, { id: number; value: PitchShiftSettings; time: number }>;
 };
 
 export class DexieDb extends Dexie {

@@ -3,7 +3,7 @@ import { useRef, useEffect, useCallback } from "react";
 import { ToneEvent, Loop, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import { DexieDb, db } from "@/db";
+import { db } from "@/db";
 
 type Props = { trackId: number; channels: Channel[] };
 
@@ -17,13 +17,8 @@ function usePanAutomationData({ trackId, channels }: Props) {
     return state.context.currentTracks[trackId].pan;
   });
 
-  // !!! --- WRITE --- !!! //
-  useWrite({
-    id: trackId,
-    value,
-  });
+  useWrite({ id: trackId, value });
 
-  // !!! --- READ --- !!! //
   useRead({ trackId, channels });
 
   return null;
@@ -54,7 +49,7 @@ function useWrite({ id, value }: WriteProps) {
     };
   }, [id, value, playbackMode]);
 
-  return data;
+  return null;
 }
 
 function useRead({ trackId }: Props) {
