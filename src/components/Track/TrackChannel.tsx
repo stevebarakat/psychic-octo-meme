@@ -131,9 +131,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     // currentTrackFx[1] &&
     //   channels[trackId].chain(currentTrackFx[1], Destination);
 
+    channels[trackId].disconnect();
+    channels[trackId].connect(Destination);
     currentTrackFx.forEach((ctf) => {
-      channels[trackId].chain(Destination);
-      channels[trackId].chain(ctf, Destination).toDestination();
+      ctf && channels[trackId].chain(ctf, Destination);
     });
   });
 
@@ -191,7 +192,9 @@ function TrackChannel({ track, trackId, channels }: Props) {
               onChange={saveTrackFx}
               value={trackFxNames[fxId]}
             >
-              <option value={"nofx"}>{"Add FX"}</option>
+              <option value={"nofx"}>
+                {trackFxNames !== undefined ? "Add FX" : "Remove Fx"}
+              </option>
               <option value={"reverb"}>Reverb</option>
               <option value={"delay"}>Delay</option>
               <option value={"pitchShift"}>Pitch Shift</option>
