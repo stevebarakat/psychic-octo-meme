@@ -124,7 +124,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   }
 
-  const ubu = () => {
+  const getPanel = () => {
     if (!showDelay && !showPitchShift && !showReverb) return;
     return (
       <TrackPanel trackId={trackId}>
@@ -151,8 +151,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
   return (
     <div className="flex-y gap2">
       <>
-        {ubu()}
-
+        {getPanel()}
         <ChannelButton
           className="fx-select"
           disabled={disabled}
