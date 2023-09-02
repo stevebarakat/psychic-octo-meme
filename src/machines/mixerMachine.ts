@@ -342,28 +342,31 @@ export const mixerMachine = createMachine(
       ),
 
       setTrackDelayMix: assign((context, { value, delay, trackId, fxId }) => {
-        context.currentTracks[trackId].delaySettings.delayMix[fxId] = value;
         delay.wet.value = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].delaySettings.delayMix[fxId] = value;
+        });
       }),
 
       setTrackDelayTime: assign((context, { value, delay, trackId, fxId }) => {
-        context.currentTracks[trackId].delaySettings.delayTime[fxId] = value;
         delay.delayTime.value = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].delaySettings.delayTime[fxId] = value;
+        });
       }),
 
       setTrackDelayFeedback: assign(
         (context, { value, delay, trackId, fxId }) => {
-          context.currentTracks[trackId].delaySettings.delayFeedback[fxId] =
-            value;
           delay.feedback.value = value;
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].delaySettings.delayFeedback[fxId] =
+              value;
+          });
         }
       ),
 
       setTrackPitchShiftBypass: assign(
         (context, { checked, pitchShift, trackId, fxId }) => {
-          context.currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[
-            fxId
-          ] = checked;
           if (checked) {
             pitchShift?.disconnect();
           } else {
@@ -373,24 +376,33 @@ export const mixerMachine = createMachine(
           currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[fxId] =
             checked;
           localStorageSet("currentTracks", currentTracks);
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[
+              fxId
+            ] = checked;
+          });
         }
       ),
 
       setTrackPitchShiftMix: assign(
         (context, { value, pitchShift, trackId, fxId }) => {
-          context.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
-            fxId
-          ] = value;
           pitchShift.wet.value = value;
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
+              fxId
+            ] = value;
+          });
         }
       ),
 
       setTrackPitchShiftPitch: assign(
         (context, { value, pitchShift, trackId, fxId }) => {
-          context.currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[
-            fxId
-          ] = value;
           pitchShift.pitch = value;
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[
+              fxId
+            ] = value;
+          });
         }
       ),
 
