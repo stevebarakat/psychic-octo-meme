@@ -10,6 +10,8 @@ import {
   Transport as t,
   Destination,
   Reverb,
+  FeedbackDelay,
+  PitchShift,
 } from "tone";
 
 setSourceSong();
@@ -117,15 +119,69 @@ export const mixerMachine = createMachine(
             trackId: number;
             fxId: number;
           }
-        | { type: "SET_TRACK_REVERB_PREDELAY" }
-        | { type: "SET_TRACK_REVERB_DECAY" }
-        | { type: "SET_TRACK_DELAY_BYPASS" }
-        | { type: "SET_TRACK_DELAY_MIX" }
-        | { type: "SET_TRACK_DELAY_TIME" }
-        | { type: "SET_TRACK_DELAY_FEEDBACK" }
-        | { type: "SET_TRACK_PITCHSHIFT_BYPASS" }
-        | { type: "SET_TRACK_PITCHSHIFT_MIX" }
-        | { type: "SET_TRACK_PITCHSHIFT_PITCH" }
+        | {
+            type: "SET_TRACK_REVERB_PREDELAY";
+            value: number;
+            reverb: Reverb;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_REVERB_DECAY";
+            value: number;
+            reverb: Reverb;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_DELAY_BYPASS";
+            checked: boolean;
+            delay: FeedbackDelay;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_DELAY_MIX";
+            value: number;
+            delay: FeedbackDelay;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_DELAY_TIME";
+            value: number;
+            delay: FeedbackDelay;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_DELAY_FEEDBACK";
+            value: number;
+            delay: FeedbackDelay;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_PITCHSHIFT_BYPASS";
+            checked: boolean;
+            pitchShift: PitchShift;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_PITCHSHIFT_MIX";
+            value: number;
+            pitchShift: PitchShift;
+            trackId: number;
+            fxId: number;
+          }
+        | {
+            type: "SET_TRACK_PITCHSHIFT_PITCH";
+            value: number;
+            pitchShift: PitchShift;
+            trackId: number;
+            fxId: number;
+          }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
         | { type: "SET_TRACK_PANEL_SIZE" }
         | { type: "SET_TRACK_PANEL_POSITON" }
