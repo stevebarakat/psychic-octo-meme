@@ -63,7 +63,7 @@ function useWrite({ id, value }: WriteProps) {
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId]["volumeMode"]
+    (state) => state.context.currentTracks[trackId].volumeMode
   );
 
   const setParam = useCallback(
@@ -89,7 +89,7 @@ function useRead({ trackId }: Props) {
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db["volumeData"]
+    queryData = await db.volumeData
       .where("id")
       .equals(`volumeData${trackId}`)
       .toArray();

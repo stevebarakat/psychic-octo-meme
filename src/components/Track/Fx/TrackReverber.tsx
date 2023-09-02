@@ -23,20 +23,6 @@ type ReadProps = {
 export default function Reverber({ reverb, trackId, fxId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
-  const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context.currentTracks[trackId].reverbSettings.playbackMode[fxId]
-  );
-
-  let queryData = [];
-  const paramData = useLiveQuery(async () => {
-    queryData = await db["reverbData"]
-      .where("id")
-      .equals(`reverbData${trackId}`)
-      .toArray();
-    return queryData[0];
-  });
-
   const reverbBypass = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].reverbSettings.reverbBypass[
       fxId
@@ -143,21 +129,22 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   // !!! --- READ --- !!! //
   function useRead({ trackId }: ReadProps) {
     const { send } = MixerMachineContext.useActorRef();
+    const playbackMode = MixerMachineContext.useSelector(
+      (state) =>
+        state.context.currentTracks[trackId].reverbSettings.playbackMode
+    );
 
     const setParam = useCallback(
       (
         trackId: number,
         data: {
-          id: number;
-          reverbSettings: ReverbSettings;
           time: number;
+          reverbSettings: ReverbSettings;
         }
       ) => {
-        t.scheduleRepeat(() => {
+        t.schedule(() => {
+          console.log("HLOLKEL");
           if (playbackMode !== "read") return;
-
-          console.log("HELLO!");
-          console.log("data", data);
 
           send({
             type: "SET_TRACK_REVERB_MIX",
@@ -182,14 +169,14 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
             trackId,
             fxId,
           });
-        }, 0.25);
+        }, data.time);
       },
-      [send]
+      [send, playbackMode]
     );
 
     let queryData = [];
-    const paramData = useLiveQuery(async () => {
-      queryData = await db["reverbData"]
+    const reverbData = useLiveQuery(async () => {
+      queryData = await db.reverbData
         .where("id")
         .equals(`reverbData${trackId}`)
         .toArray();
@@ -198,12 +185,14 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
     useEffect(() => {
       if (playbackMode !== "read") return;
+      console.log("HLOLKEL");
 
-      for (const value of paramData!.data.values()) {
+      console.log("reverbData", reverbData);
+      for (const value of reverbData!.data.values()) {
         console.log("value", value);
         setParam(value.id, value);
       }
-    }, [paramData, setParam]);
+    }, [reverbData, setParam, playbackMode]);
 
     return null;
   }

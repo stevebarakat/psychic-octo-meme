@@ -27,7 +27,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
 
   let queryData = [];
   const trackData = useLiveQuery(async () => {
-    queryData = await db["delayData"]
+    queryData = await db.delayData
       .where("id")
       .equals(`delayData${trackId}`)
       .toArray();
