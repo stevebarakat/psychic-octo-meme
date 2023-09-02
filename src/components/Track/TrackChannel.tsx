@@ -112,6 +112,8 @@ function TrackChannel({ track, trackId, channels }: Props) {
     const id = e.currentTarget.id.at(-1);
     const fxId = parseInt(id!, 10);
 
+    currentTrackFx.splice(fxId, 1);
+
     send({
       type: "SET_TRACK_FX_NAMES",
       trackId,
