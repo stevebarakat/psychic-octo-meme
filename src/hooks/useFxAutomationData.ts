@@ -5,10 +5,10 @@ import useRead from "@/hooks/useRead";
 type Props = {
   trackId: number;
   channels: Channel[];
-  param: "volume" | "pan" | "soloMute";
+  param: "delay" | "reverb" | "pitchShift";
 };
 
-function useAutomationData({ trackId, channels, param }: Props) {
+function useFxAutomationData({ trackId, channels, param }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].soloMute[0];
   });
@@ -31,4 +31,4 @@ function useAutomationData({ trackId, channels, param }: Props) {
   return null;
 }
 
-export default useAutomationData;
+export default useFxAutomationData;

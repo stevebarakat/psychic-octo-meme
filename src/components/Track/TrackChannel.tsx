@@ -5,7 +5,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
 import ChannelLabel from "../ChannelLabel";
-import useAutomationData from "@/hooks/useTrackAutomationData";
+import useTrackAutomationData from "@/hooks/useTrackAutomationData";
 import { ChannelButton } from "../Buttons";
 import { array, localStorageGet, localStorageSet } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
@@ -28,7 +28,7 @@ type Props = {
 };
 
 function TrackChannel({ track, trackId, channels }: Props) {
-  useAutomationData({ trackId, channels });
+  useTrackAutomationData({ trackId, channels });
   const currentTracks = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks
   );

@@ -12,7 +12,7 @@ type WriteProps = {
   value: number | string | boolean;
 };
 
-function useAutomationData({ trackId, channels }: Props) {
+function useSoloMuteAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].soloMute;
   });
@@ -119,4 +119,4 @@ function useRead({ trackId }: Props) {
   return null;
 }
 
-export default useAutomationData;
+export default useSoloMuteAutomationData;

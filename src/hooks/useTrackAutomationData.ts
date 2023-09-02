@@ -1,6 +1,6 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useRef, useEffect, useCallback } from "react";
-import { ToneEvent, Loop, Transport as t } from "tone";
+import { ToneEvent, Transport as t } from "tone";
 import { roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { DexieDb, db } from "@/db";
@@ -12,7 +12,7 @@ type WriteProps = {
   value: number | string | boolean;
 };
 
-function useAutomationData({ trackId, channels }: Props) {
+function useTrackAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].volume;
   });
@@ -33,7 +33,6 @@ const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
 function useWrite({ id, value }: WriteProps) {
-  // const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
       state.context["currentTracks"][id][`volumeMode` as keyof TrackSettings]
@@ -41,15 +40,6 @@ function useWrite({ id, value }: WriteProps) {
 
   useEffect(() => {
     if (playbackMode !== "write") return;
-    // writeLoop.current = new Loop(() => {
-    //   const time: number = roundFourth(t.seconds);
-    //   data.set(time, { id, time, value });
-    //   console.log("data", data);
-    //   db[`volumeData` as keyof typeof db].put({
-    //     id: `volumeData${id}`,
-    //     data,
-    //   });
-    // }, 0.25).start(0);
 
     const loop = t.scheduleRepeat(
       () => {
@@ -66,7 +56,6 @@ function useWrite({ id, value }: WriteProps) {
 
     return () => {
       t.clear(loop);
-      // writeLoop.current?.dispose();
     };
   }, [id, value, playbackMode]);
 
@@ -131,4 +120,4 @@ function useRead({ trackId }: Props) {
   return null;
 }
 
-export default useAutomationData;
+export default useTrackAutomationData;

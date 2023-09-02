@@ -1,7 +1,7 @@
 import Solo from "./Solo";
 import Mute from "./Mute";
 import PlaybackMode from "../../PlaybackMode";
-import useAutomationData from "@/hooks/useSoloMuteAutomationData";
+import useSoloMuteAutomationData from "@/hooks/useSoloMuteAutomationData";
 
 type Props = {
   trackId: number;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 function SoloMute({ trackId, channels }: Props) {
-  useAutomationData({ trackId, channels, param: "soloMute" });
+  useSoloMuteAutomationData({ trackId, channels });
 
   return (
     <div>

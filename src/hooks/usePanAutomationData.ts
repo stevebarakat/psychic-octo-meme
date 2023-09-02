@@ -12,7 +12,7 @@ type WriteProps = {
   value: number | string | boolean;
 };
 
-function useAutomationData({ trackId, channels }: Props) {
+function usePanAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pan;
   });
@@ -117,4 +117,4 @@ function useRead({ trackId }: Props) {
   return null;
 }
 
-export default useAutomationData;
+export default usePanAutomationData;
