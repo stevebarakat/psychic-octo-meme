@@ -110,7 +110,13 @@ export const mixerMachine = createMachine(
             trackId: number;
             fxId: number;
           }
-        | { type: "SET_TRACK_REVERB_MIX" }
+        | {
+            type: "SET_TRACK_REVERB_MIX";
+            value: number;
+            reverb: Reverb;
+            trackId: number;
+            fxId: number;
+          }
         | { type: "SET_TRACK_REVERB_PREDELAY" }
         | { type: "SET_TRACK_REVERB_DECAY" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
@@ -236,8 +242,10 @@ export const mixerMachine = createMachine(
       ),
 
       setTrackReverbMix: assign((context, { value, reverb, trackId, fxId }) => {
-        context.currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
         reverb.wet.value = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
+        });
       }),
 
       setTrackReverbPreDelay: assign(
