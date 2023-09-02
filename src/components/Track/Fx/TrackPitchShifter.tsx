@@ -1,14 +1,23 @@
+import { useEffect, useCallback } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
+import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/FxPlaybackMode";
-import { Toggle } from "@/components/Buttons";
 import type { PitchShift } from "tone";
+import { Toggle } from "@/components/Buttons";
+import { Transport as t } from "tone";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/db";
 
 type Props = {
-  pitchShift: PitchShift;
+  pitchShift: PitchShift | null;
   trackId: number;
   fxId: number;
+};
+
+type ReadProps = {
+  trackId: number;
 };
 
 export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
@@ -34,7 +43,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_PITCHSHIFT_BYPASS",
       checked,
-      pitchShift,
+      pitchShift: pitchShift!,
       trackId,
       fxId,
     });
@@ -48,7 +57,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_PITCHSHIFT_MIX",
       value,
-      pitchShift,
+      pitchShift: pitchShift!,
       trackId,
       fxId,
     });
@@ -65,7 +74,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_PITCHSHIFT_PITCH",
       value,
-      pitchShift,
+      pitchShift: pitchShift!,
       trackId,
       fxId,
     });
@@ -76,6 +85,78 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     const currentTracks = localStorageGet("currentTracks");
     currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[fxId] = value;
     localStorageSet("currentTracks", currentTracks);
+  }
+  // !!! --- WRITE --- !!! //
+  useWrite({
+    id: trackId,
+    fxParam: "pitchShift",
+    fxId,
+    value: {
+      playbackMode: "static",
+      pitchShiftBypass: [pitchShiftBypass],
+      pitchShiftMix: [pitchShiftMix],
+      pitchShiftPitch: [pitchShiftPitch],
+    },
+  });
+
+  useRead({ trackId });
+
+  // !!! --- READ --- !!! //
+  function useRead({ trackId }: ReadProps) {
+    const { send } = MixerMachineContext.useActorRef();
+    const playbackMode = MixerMachineContext.useSelector(
+      (state) =>
+        state.context.currentTracks[trackId].pitchShiftSettings.playbackMode
+    );
+
+    const setParam = useCallback(
+      (
+        trackId: number,
+        data: {
+          time: number;
+          value: PitchShiftSettings;
+        }
+      ) => {
+        t.schedule(() => {
+          if (playbackMode !== "read") return;
+
+          send({
+            type: "SET_TRACK_PITCHSHIFT_MIX",
+            value: data.value.pitchShiftMix[fxId],
+            pitchShift: pitchShift!,
+            trackId,
+            fxId,
+          });
+
+          send({
+            type: "SET_TRACK_PITCHSHIFT_PITCH",
+            value: data.value.pitchShiftPitch[fxId],
+            pitchShift: pitchShift!,
+            trackId,
+            fxId,
+          });
+        }, data.time);
+      },
+      [send, playbackMode]
+    );
+
+    let queryData = [];
+    const pitchShiftData = useLiveQuery(async () => {
+      queryData = await db.pitchShiftData
+        .where("id")
+        .equals(`pitchShiftData${trackId}`)
+        .toArray();
+      return queryData[0];
+    });
+
+    useEffect(() => {
+      if (playbackMode !== "read" || !pitchShiftData) return;
+      for (const value of pitchShiftData.data.values()) {
+        setParam(value.id, value);
+      }
+    }, [pitchShiftData, setParam, playbackMode]);
+
+    return null;
   }
 
   return (
@@ -93,7 +174,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <PlaybackMode trackId={trackId} param="pitchShift" />
+        <PlaybackMode trackId={trackId} fxId={fxId} param="pitchShift" />
         <label htmlFor={`track${trackId}pitchShiftMix`}>Mix:</label>
         <input
           type="range"
