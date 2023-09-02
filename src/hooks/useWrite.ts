@@ -14,9 +14,11 @@ type Props = {
 
 const data = new Map<number, object>();
 function useWrite({ id, fxParam, reverbSettings }: Props) {
-  const playbackMode = MixerMachineContext.useSelector(
+  const { playbackMode } = MixerMachineContext.useSelector(
     (state) =>
-      state.context.currentTracks[id][`${fxParam}Mode` as keyof TrackSettings]
+      state.context.currentTracks[id][
+        `${fxParam}Settings` as keyof TrackSettings
+      ]
   );
 
   useEffect(() => {
