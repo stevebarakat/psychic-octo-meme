@@ -78,7 +78,7 @@ function PlaybackMode({ trackId, param }: Props) {
       >
         <MinusCircle />
       </Toggle>
-      <Button onClick={clearData}>
+      <Button className="button" onClick={clearData}>
         <XCircle />
       </Button>
     </div>

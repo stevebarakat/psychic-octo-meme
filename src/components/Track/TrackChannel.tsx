@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import TrackFxSelect from "./TrackFxSelect";
-import {
-  Destination,
-  FeedbackDelay,
-  Volume,
-  PitchShift,
-  Reverb,
-  Gain,
-} from "tone";
+import { Destination, Volume } from "tone";
 import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
@@ -37,7 +29,6 @@ type Props = {
 
 function TrackChannel({ track, trackId, channels }: Props) {
   useAutomationData({ trackId, channels });
-  // const currentTracks = localStorageGet("currentTracks");
   const currentTracks = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks
   );
@@ -79,20 +70,19 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   }
 
-  function saveTrackFx(e: React.FormEvent<HTMLSelectElement>) {
+  function setTrackFxNames(
+    e: React.FormEvent<HTMLSelectElement>,
+    action: string
+  ) {
     const fxName = e.currentTarget.value;
     const id = e.currentTarget.id.at(-1);
     const fxId = parseInt(id!, 10);
 
-    console.log("fxId", fxId);
-    console.log("fxName", fxName);
-
-    // const currentTracks = localStorageGet("currentTracks");
-    // currentTracks[trackId].fxNames[fxId] = fxName;
     send({
       type: "SET_TRACK_FX_NAMES",
       trackId,
       fxId,
+      action,
       value: fxName,
     });
   }
@@ -125,12 +115,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
       }
     }, []);
 
-    // localStorageSet("currentTracks", currentTracks);
-    // currentTrackFx[0] &&
-    //   channels[trackId].chain(currentTrackFx[0], Destination);
-    // currentTrackFx[1] &&
-    //   channels[trackId].chain(currentTrackFx[1], Destination);
-
     channels[trackId].disconnect();
     channels[trackId].connect(Destination);
     currentTrackFx.forEach((ctf) => {
@@ -138,7 +122,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   });
 
-  // console.log("trackFxNames", trackFxNames);
   const showNofx = trackFxNames.some((name: string) => name === "nofx");
   const showReverb = trackFxNames.some((name: string) => name === "reverb");
   const showDelay = trackFxNames.some((name: string) => name === "delay");
@@ -148,8 +131,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
 
   return (
     <div className="flex-y gap2">
-      {/* <TrackFxSelect trackId={trackId} channels={channels} /> */}
-
       <>
         {currentTracks[trackId].panelActive === false && (
           <TrackPanel trackId={trackId}>
@@ -183,22 +164,36 @@ function TrackChannel({ track, trackId, channels }: Props) {
           FX
         </ChannelButton>
         {array(trackFxNames.length + 1).map((_: void, fxId: number) => {
-          console.log("trackFxNames[fxId]", trackFxNames[fxId - 1]);
+          console.log("trackFxNames[fxId]", trackFxNames[fxId]);
           return (
-            <select
-              key={fxId}
-              id={`track${trackId}fx${fxId}`}
-              className="fx-select"
-              onChange={saveTrackFx}
-              value={trackFxNames[fxId]}
-            >
-              <option value={"nofx"}>
-                {trackFxNames !== undefined ? "Add FX" : "Remove Fx"}
-              </option>
-              <option value={"reverb"}>Reverb</option>
-              <option value={"delay"}>Delay</option>
-              <option value={"pitchShift"}>Pitch Shift</option>
-            </select>
+            <>
+              {/* {trackFxNames[fxId] !== undefined ? (
+                <button
+                  onClick={(e) => setTrackFxNames(e, "remove")}
+                  style={{ background: "red" }}
+                >
+                  x
+                </button>
+              ) : null} */}
+              <select
+                key={fxId}
+                id={`track${trackId}fx${fxId}`}
+                className="fx-select"
+                onChange={(e) =>
+                  e.target.value !== "nofx"
+                    ? setTrackFxNames(e, "add")
+                    : setTrackFxNames(e, "remove")
+                }
+                value={trackFxNames[fxId]}
+              >
+                <option value={"nofx"}>
+                  {trackFxNames[fxId] === undefined ? "Add Fx" : "Remove Fx"}
+                </option>
+                <option value={"reverb"}>Reverb</option>
+                <option value={"delay"}>Delay</option>
+                <option value={"pitchShift"}>Pitch Shift</option>
+              </select>
+            </>
           );
         })}
       </>

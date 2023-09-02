@@ -14,9 +14,9 @@ type Props = {
     | ((e: React.MouseEvent<HTMLButtonElement>) => void);
 };
 
-function Button({ children, ...props }: Props) {
+function Button({ children, className, ...props }: Props) {
   return (
-    <button className="button" {...props}>
+    <button className={className} {...props}>
       {children}
     </button>
   );
