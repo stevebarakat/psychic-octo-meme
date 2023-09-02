@@ -8,11 +8,11 @@ type Props = {
   id: number;
   fxParam: "reverb" | "delay" | "pitchShift";
   fxId: number;
-  reverbSettings: ReverbSettings;
+  value: ReverbSettings | DelaySettings | PitchShiftSettings;
 };
 
 const data = new Map<number, object>();
-function useWrite({ id, fxParam, reverbSettings }: Props) {
+function useWrite({ id, fxParam, value }: Props) {
   const { playbackMode } = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[id][`${fxParam}Settings`]
   );
@@ -23,7 +23,7 @@ function useWrite({ id, fxParam, reverbSettings }: Props) {
     const loop = t.scheduleRepeat(
       () => {
         const time: number = roundFourth(t.seconds);
-        data.set(time, { id, time, reverbSettings });
+        data.set(time, { id, time, value });
         db[`${fxParam}Data`].put({
           id: `${fxParam}Data${id}`,
           data,
@@ -36,7 +36,7 @@ function useWrite({ id, fxParam, reverbSettings }: Props) {
     return () => {
       t.clear(loop);
     };
-  }, [fxParam, id, reverbSettings, playbackMode]);
+  }, [fxParam, id, value, playbackMode]);
 
   return data;
 }

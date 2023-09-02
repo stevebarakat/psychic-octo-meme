@@ -115,7 +115,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     id: trackId,
     fxParam: "reverb",
     fxId,
-    reverbSettings: {
+    value: {
       playbackMode: "static",
       reverbBypass: [reverbBypass],
       reverbMix: [reverbMix],
@@ -143,7 +143,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
         }
       ) => {
         t.schedule(() => {
-          console.log("HLOLKEL");
           if (playbackMode !== "read") return;
 
           send({
@@ -185,11 +184,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
     useEffect(() => {
       if (playbackMode !== "read") return;
-      console.log("HLOLKEL");
-
-      console.log("reverbData", reverbData);
       for (const value of reverbData!.data.values()) {
-        console.log("value", value);
         setParam(value.id, value);
       }
     }, [reverbData, setParam, playbackMode]);
