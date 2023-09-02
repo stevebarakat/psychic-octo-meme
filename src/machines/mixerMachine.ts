@@ -160,29 +160,31 @@ export const mixerMachine = createMachine(
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      setMainVolume: assign((context, { value }: any): any => {
-        context.currentMain.volume = value;
-        const scaled = dbToPercent(log(value));
-        Destination.volume.value = scaled;
+      setMainVolume: assign((context, { value }) => {
+        return produce(context, (draft) => {
+          draft.currentMain.volume = value;
+        });
       }),
 
-      setTrackVolume: assign((context, { value, trackId }: any): any => {
-        context.currentTracks[trackId].volume = value;
-        // const scaled = dbToPercent(log(value));
-        // channels[trackId].volume.value = scaled;
+      setTrackVolume: assign((context, { value, trackId }) => {
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].volume = value;
+        });
       }),
 
-      setPan: assign((context, { value, trackId, channels }: any): any => {
-        // channels[trackId].pan.value = value;
-        context.currentTracks[trackId].pan = value;
+      setPan: assign((context, { value, trackId }) => {
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].pan = value;
+        });
       }),
 
-      toggleSoloMute: assign((context, { trackId, value }) => {
-        console.log("value", value);
-        context.currentTracks[trackId].soloMute = value;
+      toggleSoloMute: assign((context, { value, trackId }) => {
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].soloMute = value;
         localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].soloMute = value;
+        });
       }),
 
       setTrackFxNames: assign(
