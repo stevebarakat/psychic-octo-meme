@@ -35,8 +35,7 @@ const data = new Map<number, object>();
 function useWrite({ id, value }: WriteProps) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context["currentTracks"][id][`panMode` as keyof TrackSettings]
+    (state) => state.context["currentTracks"][id].panMode
   );
 
   useEffect(() => {
@@ -44,8 +43,7 @@ function useWrite({ id, value }: WriteProps) {
     writeLoop.current = new Loop(() => {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, value });
-      console.log("data", data);
-      db[`panData` as keyof typeof db].put({
+      db.panData.put({
         id: `panData${id}`,
         data,
       });
@@ -62,8 +60,7 @@ function useWrite({ id, value }: WriteProps) {
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context.currentTracks[trackId][`panMode` as keyof TrackSettings]
+    (state) => state.context.currentTracks[trackId].panMode
   );
 
   const setParam = useCallback(
@@ -91,7 +88,7 @@ function useRead({ trackId }: Props) {
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db[`panData` as keyof DexieDb]
+    queryData = await db.panData
       .where("id")
       .equals(`panData${trackId}`)
       .toArray();

@@ -17,13 +17,11 @@ function useTrackAutomationData({ trackId, channels }: Props) {
     return state.context.currentTracks[trackId].volume;
   });
 
-  // !!! --- WRITE --- !!! //
   useWrite({
     id: trackId,
     value,
   });
 
-  // !!! --- READ --- !!! //
   useRead({ trackId, channels });
 
   return null;
@@ -34,8 +32,7 @@ const data = new Map<number, object>();
 // !!! --- WRITE --- !!! //
 function useWrite({ id, value }: WriteProps) {
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context["currentTracks"][id][`volumeMode` as keyof TrackSettings]
+    (state) => state.context["currentTracks"][id]["volumeMode"]
   );
 
   useEffect(() => {
@@ -45,7 +42,7 @@ function useWrite({ id, value }: WriteProps) {
       () => {
         const time: number = roundFourth(t.seconds);
         data.set(time, { id, time, value });
-        db["volumeData" as keyof typeof db].put({
+        db.volumeData.put({
           id: `volumeData${id}`,
           data,
         });
@@ -62,11 +59,11 @@ function useWrite({ id, value }: WriteProps) {
   return data;
 }
 
+// !!! --- READ --- !!! //
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context.currentTracks[trackId][`volumeMode` as keyof TrackSettings]
+    (state) => state.context.currentTracks[trackId]["volumeMode"]
   );
 
   const setParam = useCallback(
@@ -94,26 +91,24 @@ function useRead({ trackId }: Props) {
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db[`volumeData` as keyof DexieDb]
+    queryData = await db["volumeData"]
       .where("id")
       .equals(`volumeData${trackId}`)
       .toArray();
     return queryData[0];
   });
 
-  // !!! --- READ --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
-    if (!paramData) return;
 
     for (const value of paramData!.data.values()) {
       setParam(value.id, value);
     }
 
     return () => {
+      t.clear(readEvent.current);
       readEvent.current?.dispose();
       readEvent.current = null;
-      t.cancel();
     };
   }, [paramData, setParam, playbackMode]);
 

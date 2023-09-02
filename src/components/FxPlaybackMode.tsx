@@ -8,7 +8,7 @@ import {
   CircleDot,
   MinusCircle,
 } from "lucide-react";
-import { DexieDb, db } from "@/db";
+import { db } from "@/db";
 
 type Props = {
   trackId: number;
@@ -20,9 +20,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
-      state.context.currentTracks[trackId][
-        `${param}Settings` as keyof TrackSettings
-      ].playbackMode
+      state.context.currentTracks[trackId][`${param}Settings`].playbackMode
   );
 
   console.log("playbackMode", playbackMode);
@@ -38,10 +36,7 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
   }
 
   function clearData() {
-    db[`${param}Data` as keyof DexieDb]
-      .where("id")
-      .equals(`${param}Data${trackId}`)
-      .delete();
+    db[`${param}Data`].where("id").equals(`${param}Data${trackId}`).delete();
   }
 
   return (

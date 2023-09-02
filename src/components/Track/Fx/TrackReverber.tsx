@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
@@ -6,9 +6,9 @@ import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/FxPlaybackMode";
 import type { Reverb } from "tone";
 import { Toggle } from "@/components/Buttons";
-import { Loop, Draw, Transport as t } from "tone";
+import { Draw, ToneEvent, Transport as t } from "tone";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
+import { DexieDb, db } from "@/db";
 
 type Props = {
   reverb: Reverb | null;
@@ -16,17 +16,22 @@ type Props = {
   fxId: number;
 };
 
+type ReadProps = {
+  trackId: number;
+};
+
 export default function Reverber({ reverb, trackId, fxId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
-  const playbackLoop = useRef<Loop | null>(null);
+  const readEvent = useRef<ToneEvent | null>(null);
+
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>
       state.context.currentTracks[trackId].reverbSettings.playbackMode[fxId]
   );
 
   let queryData = [];
-  const trackData = useLiveQuery(async () => {
+  const paramData = useLiveQuery(async () => {
     queryData = await db["reverbData"]
       .where("id")
       .equals(`reverbData${trackId}`)
@@ -121,7 +126,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     localStorageSet("currentTracks", currentTracks);
   }
 
-  // !!! --- RECORD --- !!! //
+  // !!! --- WRITE --- !!! //
   const data = useWrite({
     id: trackId,
     fxParam: "reverb",
@@ -135,53 +140,89 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     },
   });
 
-  // !!! --- PLAYBACK --- !!! //
-  useEffect(() => {
-    if (playbackMode !== "read") return;
-    playbackLoop.current = new Loop(() => {
-      if (!trackData?.data) return;
+  useRead({ trackId });
 
-      function assignParam(trackId: number, data) {
-        t.schedule((time) => {
+  // !!! --- READ --- !!! //
+  function useRead({ trackId }: ReadProps) {
+    const { send } = MixerMachineContext.useActorRef();
+    const playbackMode = MixerMachineContext.useSelector(
+      (state) =>
+        state.context.currentTracks[trackId][
+          "reverbMode" as keyof TrackSettings
+        ]
+    );
+
+    const setParam = useCallback(
+      (
+        trackId: number,
+        data: {
+          id: number;
+          reverbSettings: ReverbSettings;
+          time: number;
+        }
+      ) => {
+        t.scheduleRepeat(() => {
           if (playbackMode !== "read") return;
 
-          Draw.schedule(() => {
-            send({
-              type: "SET_TRACK_REVERB_MIX",
-              value: data.reverbSettings.reverbMix,
-              reverb: reverb!,
-              trackId,
-              fxId,
-            });
+          console.log("HELLO!");
+          console.log("data", data);
 
-            send({
-              type: "SET_TRACK_REVERB_PREDELAY",
-              value: data.reverbSettings.reverbPreDelay,
-              reverb: reverb!,
-              trackId,
-              fxId,
-            });
+          send({
+            type: "SET_TRACK_REVERB_MIX",
+            value: data.reverbSettings.reverbMix[fxId],
+            reverb: reverb!,
+            trackId,
+            fxId,
+          });
 
-            send({
-              type: "SET_TRACK_REVERB_DECAY",
-              value: data.reverbSettings.reverbDecay,
-              reverb: reverb!,
-              trackId,
-              fxId,
-            });
-          }, time);
-        }, data.time);
+          send({
+            type: "SET_TRACK_REVERB_PREDELAY",
+            value: data.reverbSettings.reverbPreDelay[fxId],
+            reverb: reverb!,
+            trackId,
+            fxId,
+          });
+
+          send({
+            type: "SET_TRACK_REVERB_DECAY",
+            value: data.reverbSettings.reverbDecay[fxId],
+            reverb: reverb!,
+            trackId,
+            fxId,
+          });
+        }, 0.25);
+      },
+      [playbackMode, send]
+    );
+
+    const readEvent = useRef<ToneEvent | null>(null);
+
+    let queryData = [];
+    const paramData = useLiveQuery(async () => {
+      queryData = await db["reverbData"]
+        .where("id")
+        .equals(`reverbData${trackId}`)
+        .toArray();
+      return queryData[0];
+    });
+
+    useEffect(() => {
+      if (playbackMode !== "read") return;
+
+      for (const value of paramData!.data.values()) {
+        setParam(value.id, value);
       }
 
-      trackData.data?.forEach((data) => {
-        assignParam(trackId, data);
-      });
-    }, 1).start(0);
+      return () => {
+        t.clear(readEvent.current);
+        readEvent.current?.dispose();
+        readEvent.current = null;
+        t.cancel();
+      };
+    }, [paramData, setParam, playbackMode]);
 
-    return () => {
-      playbackLoop.current?.dispose();
-    };
-  }, [send, trackId, trackData, reverb, fxId, data, playbackMode]);
+    return null;
+  }
 
   return (
     <div>

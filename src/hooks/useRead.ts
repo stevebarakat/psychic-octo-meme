@@ -22,15 +22,12 @@ function useRead({ trackId, channels, param }: Props) {
 
   const readEvent = useRef<ToneEvent | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context.currentTracks[trackId][
-        `${param}Mode` as keyof TrackSettings
-      ]
+    (state) => state.context.currentTracks[trackId][`${param}Mode`]
   );
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db[`${param}Data` as keyof DexieDb]
+    queryData = await db[`${param}Data`]
       .where("id")
       .equals(`${param}Data${trackId}`)
       .toArray();

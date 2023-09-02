@@ -35,8 +35,7 @@ const data = new Map<number, object>();
 function useWrite({ id, value }: WriteProps) {
   const writeLoop = useRef<Loop | null>(null);
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context["currentTracks"][id][`soloMuteMode` as keyof TrackSettings]
+    (state) => state.context.currentTracks[id].soloMuteMode
   );
 
   useEffect(() => {
@@ -45,7 +44,7 @@ function useWrite({ id, value }: WriteProps) {
       const time: number = roundFourth(t.seconds);
       data.set(time, { id, time, value });
       console.log("data", data);
-      db[`soloMuteData` as keyof typeof db].put({
+      db.soloMuteData.put({
         id: `soloMuteData${id}`,
         data,
       });
@@ -62,10 +61,7 @@ function useWrite({ id, value }: WriteProps) {
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
-    (state) =>
-      state.context.currentTracks[trackId][
-        `soloMuteMode` as keyof TrackSettings
-      ]
+    (state) => state.context.currentTracks[trackId].soloMuteMode
   );
 
   const setParam = useCallback(
@@ -93,7 +89,7 @@ function useRead({ trackId }: Props) {
 
   let queryData = [];
   const paramData = useLiveQuery(async () => {
-    queryData = await db[`soloMuteData` as keyof DexieDb]
+    queryData = await db.soloMuteData
       .where("id")
       .equals(`soloMuteData${trackId}`)
       .toArray();
