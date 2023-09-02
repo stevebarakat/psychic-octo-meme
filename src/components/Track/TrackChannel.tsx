@@ -124,33 +124,34 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   }
 
+  const ubu = () => {
+    if (!showDelay && !showPitchShift && !showReverb) return;
+    return (
+      <TrackPanel trackId={trackId}>
+        {showNofx ? <NoFx nofx={nofx} /> : null}
+        {showDelay ? (
+          // <TrackPanel trackId={trackId}>
+          <Delay delay={delay} trackId={trackId} fxId={0} />
+        ) : // </TrackPanel>
+        null}
+        {showReverb ? (
+          // <TrackPanel trackId={trackId}>
+          <Reverber reverb={reverb} trackId={trackId} fxId={0} />
+        ) : // </TrackPanel>
+        null}
+        {showPitchShift ? (
+          // <TrackPanel trackId={trackId}>
+          <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
+        ) : // </TrackPanel>
+        null}
+      </TrackPanel>
+    );
+  };
+
   return (
     <div className="flex-y gap2">
       <>
-        {currentTracks[trackId].panelActive === false && (
-          <>
-            {showNofx ? <NoFx nofx={nofx} /> : null}
-            {showDelay ? (
-              <TrackPanel trackId={trackId}>
-                <Delay delay={delay} trackId={trackId} fxId={0} />
-              </TrackPanel>
-            ) : null}
-            {showReverb ? (
-              <TrackPanel trackId={trackId}>
-                <Reverber reverb={reverb} trackId={trackId} fxId={0} />
-              </TrackPanel>
-            ) : null}
-            {showPitchShift ? (
-              <TrackPanel trackId={trackId}>
-                <PitchShifter
-                  pitchShift={pitchShift}
-                  trackId={trackId}
-                  fxId={0}
-                />
-              </TrackPanel>
-            ) : null}
-          </>
-        )}
+        {ubu()}
 
         <ChannelButton
           className="fx-select"
