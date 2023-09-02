@@ -6,7 +6,7 @@ import { db } from "@/db";
 
 type Props = {
   id: number;
-  param: string;
+  param: "volume" | "pan" | "soloMute";
   value: number;
 };
 

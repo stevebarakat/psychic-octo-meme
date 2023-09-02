@@ -12,7 +12,7 @@ import { DexieDb, db } from "@/db";
 
 type Props = {
   trackId: number;
-  param: string;
+  param: "volume" | "pan" | "soloMute";
 };
 
 function PlaybackMode({ trackId, param }: Props) {

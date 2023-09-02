@@ -14,7 +14,7 @@ function Pan({ trackId, channels }: Props) {
     return state.context.currentTracks[trackId].pan;
   });
 
-  useAutomationData({ trackId, channels, param: "pan" });
+  useAutomationData({ trackId, channels });
 
   function setPan(e: React.FormEvent<HTMLInputElement>): void {
     send({

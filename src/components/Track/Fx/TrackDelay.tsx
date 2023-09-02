@@ -3,7 +3,7 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import useWrite from "@/hooks/useWrite";
-import PlaybackMode from "@/components/PlaybackMode";
+import PlaybackMode from "@/components/FxPlaybackMode";
 import type { FeedbackDelay } from "tone";
 import { Toggle } from "@/components/Buttons";
 import { Loop, Draw, Transport as t } from "tone";
@@ -136,7 +136,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     playbackLoop.current = new Loop(() => {
       if (!trackData?.data) return;
 
-      function assignParam(trackId, data) {
+      function assignParam(trackId: number, data) {
         t.schedule((time) => {
           if (playbackMode !== "read") return;
 

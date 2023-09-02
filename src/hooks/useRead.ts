@@ -4,7 +4,11 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useLiveQuery } from "dexie-react-hooks";
 import { DexieDb, db } from "@/db";
 
-type Props = { trackId: number; channels: Channel[]; param: string };
+type Props = {
+  trackId: number;
+  channels: Channel[];
+  param: "volume" | "pan" | "soloMute";
+};
 
 type SoloMuteType = {
   solo: boolean;

@@ -1,14 +1,12 @@
 import { createMachine, assign } from "xstate";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { setSourceSong } from "./init";
-import { dbToPercent, log } from "../utils/scale";
 import { defaultTrackData } from "@/assets/songs/defaultData";
 import { produce } from "immer";
 import {
   start as initializeAudio,
   getContext as getAudioContext,
   Transport as t,
-  Destination,
   Reverb,
   FeedbackDelay,
   PitchShift,
@@ -182,11 +180,30 @@ export const mixerMachine = createMachine(
             trackId: number;
             fxId: number;
           }
-        | { type: "SET_ACTIVE_TRACK_PANELS" }
-        | { type: "SET_TRACK_PANEL_SIZE" }
-        | { type: "SET_TRACK_PANEL_POSITON" }
-        | { type: "SET_PLAYBACK_MODE" }
-        | { type: "SET_FX_PLAYBACK_MODE" },
+        | { type: "SET_ACTIVE_TRACK_PANELS"; trackId: number }
+        | {
+            type: "SET_TRACK_PANEL_SIZE";
+            trackId: number;
+            width: string;
+          }
+        | {
+            type: "SET_TRACK_PANEL_POSITON";
+            trackId: number;
+            x: number;
+            y: number;
+          }
+        | {
+            type: "SET_PLAYBACK_MODE";
+            value: string;
+            param: "volume" | "pan" | "soloMute";
+            trackId: number;
+          }
+        | {
+            type: "SET_FX_PLAYBACK_MODE";
+            value: string;
+            param: "volume" | "pan" | "soloMute";
+            trackId: number;
+          },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -406,42 +423,51 @@ export const mixerMachine = createMachine(
         }
       ),
 
-      setTrackPanelSize: assign((context, { width, trackId }) => {
-        context.currentTracks[trackId].panelSize.width = width;
-        const currentTracks = localStorageGet("currentTracks");
-        currentTracks[trackId].panelSize.width = width;
-        localStorageSet("currentTracks", currentTracks);
-      }),
-
-      setTrackPanelPosition: assign((context, { x, y, trackId }) => {
-        context.currentTracks[trackId].panelPosition = { x, y };
-        const currentTracks = localStorageGet("currentTracks");
-        currentTracks[trackId].panelPosition = { x, y };
-        localStorageSet("currentTracks", currentTracks);
-      }),
-
       setActiveTrackPanels: assign((context, { trackId }) => {
-        console.log("message");
-        context.currentTracks[trackId].panelActive =
-          !context.currentTracks[trackId].panelActive;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId].panelActive =
           !currentTracks[trackId].panelActive;
         localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].panelActive =
+            !draft.currentTracks[trackId].panelActive;
+        });
+      }),
+
+      setTrackPanelSize: assign((context, { width, trackId }) => {
+        const currentTracks = localStorageGet("currentTracks");
+        currentTracks[trackId].panelSize.width = width;
+        localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].panelSize.width = width;
+        });
+      }),
+
+      setTrackPanelPosition: assign((context, { x, y, trackId }) => {
+        const currentTracks = localStorageGet("currentTracks");
+        currentTracks[trackId].panelPosition = { x, y };
+        localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].panelPosition = { x, y };
+        });
       }),
 
       setPlaybackMode: assign((context, { value, param, trackId }) => {
-        context.currentTracks[trackId][`${param}Mode`] = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId][`${param}Mode`] = value;
         localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId][`${param}Mode`] = value;
+        });
       }),
 
       setFxPlaybackMode: assign((context, { value, param, trackId }) => {
-        context.currentTracks[trackId][`${param}Settings`].playbackMode = value;
         const currentTracks = localStorageGet("currentTracks");
         currentTracks[trackId][`${param}Settings`].playbackMode = value;
         localStorageSet("currentTracks", currentTracks);
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId][`${param}Settings`].playbackMode = value;
+        });
       }),
     },
   }
