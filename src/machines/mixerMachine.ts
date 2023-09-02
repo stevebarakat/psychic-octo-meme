@@ -47,7 +47,6 @@ export const mixerMachine = createMachine(
       SET_TRACK_PAN: { actions: "setPan" },
       SET_TRACK_SOLOMUTE: { actions: "toggleSoloMute" },
       SET_TRACK_FX_NAMES: { actions: "setTrackFxNames" },
-      SET_TRACK_FX_NODES: { actions: "setTrackFxNodes" },
       SET_ACTIVE_TRACK_PANELS: { actions: "setActiveTrackPanels" },
       SET_TRACK_DELAY_BYPASS: { actions: "setTrackDelayBypass" },
       SET_TRACK_DELAY_MIX: { actions: "setTrackDelayMix" },
@@ -95,8 +94,14 @@ export const mixerMachine = createMachine(
         | { type: "SET_TRACK_VOLUME"; value: number; trackId: number }
         | { type: "SET_TRACK_PAN"; value: number; trackId: number }
         | { type: "SET_TRACK_SOLOMUTE"; value: SoloMuteType; trackId: number }
-        | { type: "SET_TRACK_FX_NAMES" }
-        | { type: "SET_TRACK_FX_NODES" }
+        | {
+            type: "SET_TRACK_FX_NAMES";
+            trackId: number;
+            fxId: number;
+            action: string;
+            channels: Channel[];
+            value: string;
+          }
         | { type: "SET_ACTIVE_TRACK_PANELS" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
         | { type: "SET_TRACK_DELAY_MIX" }
@@ -190,19 +195,19 @@ export const mixerMachine = createMachine(
           const currentTracks = localStorageGet("currentTracks");
           if (action === "remove") {
             channels[trackId].disconnect();
-            context.currentTracks[trackId].fxNames.splice(fxId, 1);
-            currentTracks[trackId].fxNames.splice(fxId, 1);
+            return produce(context, (draft) => {
+              draft.currentTracks[trackId].fxNames.splice(fxId, 1);
+              currentTracks[trackId].fxNames.splice(fxId, 1);
+            });
           } else {
-            context.currentTracks[trackId].fxNames[fxId] = value;
-            currentTracks[trackId].fxNames[fxId] = value;
+            return produce(context, (draft) => {
+              draft.currentTracks[trackId].fxNames[fxId] = value;
+              currentTracks[trackId].fxNames[fxId] = value;
+            });
           }
           localStorageSet("currentTracks", currentTracks);
         }
       ),
-
-      setTrackFxNodes: assign((context, { trackId, fxId, value }) => {
-        context.currentTracks[trackId].fxNodes[fxId] = value;
-      }),
 
       setTrackReverbBypass: assign(
         (context, { checked, reverb, trackId, fxId }) => {
