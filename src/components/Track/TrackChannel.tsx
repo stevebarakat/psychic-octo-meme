@@ -42,7 +42,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const delay = useDelay();
   const reverb = useReverb();
   const pitchShift = usePitchShift();
-  // const [, dispatch] = MixerMachineContext.useActor();
   const { send } = MixerMachineContext.useActorRef();
 
   const trackFxNames = MixerMachineContext.useSelector(
@@ -51,13 +50,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const [currentTrackFx, setCurrentTrackFx] = useState(
     Array(trackFxNames.length).fill(new Volume())
   );
-  console.log("currentTrackFx", currentTrackFx);
-
-  useEffect(() => {
-    currentTrackFx;
-  });
-
-  console.log("trackFxNames", trackFxNames);
 
   const disabled = trackFxNames.every((item: string) => {
     return item === "nofx";
@@ -67,23 +59,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
     send({
       type: "SET_ACTIVE_TRACK_PANELS",
       trackId,
-    });
-  }
-
-  function setTrackFxNames(
-    e: React.FormEvent<HTMLSelectElement>,
-    action: string
-  ) {
-    const fxName = e.currentTarget.value;
-    const id = e.currentTarget.id.at(-1);
-    const fxId = parseInt(id!, 10);
-
-    send({
-      type: "SET_TRACK_FX_NAMES",
-      trackId,
-      fxId,
-      action,
-      value: fxName,
     });
   }
 
@@ -129,6 +104,24 @@ function TrackChannel({ track, trackId, channels }: Props) {
     (name: string) => name === "pitchShift"
   );
 
+  function setTrackFxNames(
+    e: React.FormEvent<HTMLSelectElement>,
+    action: string
+  ) {
+    const fxName = e.currentTarget.value;
+    const id = e.currentTarget.id.at(-1);
+    const fxId = parseInt(id!, 10);
+
+    send({
+      type: "SET_TRACK_FX_NAMES",
+      trackId,
+      fxId,
+      action,
+      channels,
+      value: fxName,
+    });
+  }
+
   return (
     <div className="flex-y gap2">
       <>
@@ -166,34 +159,24 @@ function TrackChannel({ track, trackId, channels }: Props) {
         {array(trackFxNames.length + 1).map((_: void, fxId: number) => {
           console.log("trackFxNames[fxId]", trackFxNames[fxId]);
           return (
-            <>
-              {/* {trackFxNames[fxId] !== undefined ? (
-                <button
-                  onClick={(e) => setTrackFxNames(e, "remove")}
-                  style={{ background: "red" }}
-                >
-                  x
-                </button>
-              ) : null} */}
-              <select
-                key={fxId}
-                id={`track${trackId}fx${fxId}`}
-                className="fx-select"
-                onChange={(e) =>
-                  e.target.value !== "nofx"
-                    ? setTrackFxNames(e, "add")
-                    : setTrackFxNames(e, "remove")
-                }
-                value={trackFxNames[fxId]}
-              >
-                <option value={"nofx"}>
-                  {trackFxNames[fxId] === undefined ? "Add Fx" : "Remove Fx"}
-                </option>
-                <option value={"reverb"}>Reverb</option>
-                <option value={"delay"}>Delay</option>
-                <option value={"pitchShift"}>Pitch Shift</option>
-              </select>
-            </>
+            <select
+              key={fxId}
+              id={`track${trackId}fx${fxId}`}
+              className="fx-select"
+              onChange={(e) =>
+                e.target.value !== "nofx"
+                  ? setTrackFxNames(e, "add")
+                  : setTrackFxNames(e, "remove")
+              }
+              value={trackFxNames[fxId]}
+            >
+              <option value={"nofx"}>
+                {trackFxNames[fxId] === undefined ? "Add Fx" : "Remove Fx"}
+              </option>
+              <option value={"reverb"}>Reverb</option>
+              <option value={"delay"}>Delay</option>
+              <option value={"pitchShift"}>Pitch Shift</option>
+            </select>
           );
         })}
       </>

@@ -185,17 +185,20 @@ export const mixerMachine = createMachine(
         localStorageSet("currentTracks", currentTracks);
       }),
 
-      setTrackFxNames: assign((context, { trackId, fxId, action, value }) => {
-        const currentTracks = localStorageGet("currentTracks");
-        if (action === "remove") {
-          context.currentTracks[trackId].fxNames.splice(fxId, 1);
-          currentTracks[trackId].fxNames.splice(fxId, 1);
-        } else {
-          context.currentTracks[trackId].fxNames[fxId] = value;
-          currentTracks[trackId].fxNames[fxId] = value;
+      setTrackFxNames: assign(
+        (context, { trackId, fxId, action, channels, value }) => {
+          const currentTracks = localStorageGet("currentTracks");
+          if (action === "remove") {
+            channels[trackId].disconnect();
+            context.currentTracks[trackId].fxNames.splice(fxId, 1);
+            currentTracks[trackId].fxNames.splice(fxId, 1);
+          } else {
+            context.currentTracks[trackId].fxNames[fxId] = value;
+            currentTracks[trackId].fxNames[fxId] = value;
+          }
+          localStorageSet("currentTracks", currentTracks);
         }
-        localStorageSet("currentTracks", currentTracks);
-      }),
+      ),
 
       setTrackFxNodes: assign((context, { trackId, fxId, value }) => {
         context.currentTracks[trackId].fxNodes[fxId] = value;
