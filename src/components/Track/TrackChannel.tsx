@@ -97,7 +97,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   });
 
-  const showNofx = trackFxNames.some((name: string) => name === "nofx");
   const showReverb = trackFxNames.some((name: string) => name === "reverb");
   const showDelay = trackFxNames.some((name: string) => name === "delay");
   const showPitchShift = trackFxNames.some(
@@ -128,22 +127,11 @@ function TrackChannel({ track, trackId, channels }: Props) {
     if (!showDelay && !showPitchShift && !showReverb) return;
     return (
       <TrackPanel trackId={trackId}>
-        {showNofx ? <NoFx nofx={nofx} /> : null}
-        {showDelay ? (
-          // <TrackPanel trackId={trackId}>
-          <Delay delay={delay} trackId={trackId} fxId={0} />
-        ) : // </TrackPanel>
-        null}
-        {showReverb ? (
-          // <TrackPanel trackId={trackId}>
-          <Reverber reverb={reverb} trackId={trackId} fxId={0} />
-        ) : // </TrackPanel>
-        null}
-        {showPitchShift ? (
-          // <TrackPanel trackId={trackId}>
+        {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
+        {showReverb && <Reverber reverb={reverb} trackId={trackId} fxId={0} />}
+        {showPitchShift && (
           <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
-        ) : // </TrackPanel>
-        null}
+        )}
       </TrackPanel>
     );
   };
