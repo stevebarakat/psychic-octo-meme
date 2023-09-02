@@ -14,11 +14,7 @@ type Props = {
 };
 
 function ChannelButton({ children, ...props }: Props) {
-  return (
-    <button className="button" {...props}>
-      {children}
-    </button>
-  );
+  return <button {...props}>{children}</button>;
 }
 
 export default ChannelButton;

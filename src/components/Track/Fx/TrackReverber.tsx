@@ -3,7 +3,7 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import useWrite from "@/hooks/useWrite";
-import PlaybackMode from "@/components/PlaybackMode";
+import PlaybackMode from "@/components/FxPlaybackMode";
 import type { Reverb } from "tone";
 import { Toggle } from "@/components/Buttons";
 import { Loop, Draw, Transport as t } from "tone";
@@ -61,7 +61,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_BYPASS",
       checked,
-      reverb,
+      reverb: reverb!,
       trackId,
       fxId,
     });
@@ -72,7 +72,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_MIX",
       value,
-      reverb,
+      reverb: reverb!,
       trackId,
       fxId,
     });
@@ -90,7 +90,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_PREDELAY",
       value,
-      reverb,
+      reverb: reverb!,
       trackId,
       fxId,
     });
@@ -108,7 +108,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_DECAY",
       value,
-      reverb,
+      reverb: reverb!,
       trackId,
       fxId,
     });
@@ -124,44 +124,48 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   // !!! --- RECORD --- !!! //
   const data = useWrite({
     id: trackId,
+    fxParam: "reverb",
     fxId,
-    param: "reverb",
-    param1: reverbMix,
-    param2: reverbPreDelay,
-    param3: reverbDecay,
+    reverbSettings: {
+      playbackMode: "static",
+      reverbBypass: [reverbBypass],
+      reverbMix: [reverbMix],
+      reverbPreDelay: [reverbPreDelay],
+      reverbDecay: [reverbDecay],
+    },
   });
 
   // !!! --- PLAYBACK --- !!! //
   useEffect(() => {
     if (playbackMode !== "read") return;
     playbackLoop.current = new Loop(() => {
-      if (!trackData.data) return;
+      if (!trackData?.data) return;
 
-      function assignParam(trackId, data) {
+      function assignParam(trackId: number, data) {
         t.schedule((time) => {
           if (playbackMode !== "read") return;
 
           Draw.schedule(() => {
             send({
               type: "SET_TRACK_REVERB_MIX",
-              value: data.param1,
-              reverb,
+              value: data.reverbSettings.reverbMix,
+              reverb: reverb!,
               trackId,
               fxId,
             });
 
             send({
               type: "SET_TRACK_REVERB_PREDELAY",
-              value: data.param2,
-              reverb,
+              value: data.reverbSettings.reverbPreDelay,
+              reverb: reverb!,
               trackId,
               fxId,
             });
 
             send({
               type: "SET_TRACK_REVERB_DECAY",
-              value: data.param3,
-              reverb,
+              value: data.reverbSettings.reverbDecay,
+              reverb: reverb!,
               trackId,
               fxId,
             });

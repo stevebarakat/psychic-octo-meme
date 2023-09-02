@@ -16,7 +16,7 @@ type Props = {
 
 function Button({ children, className, ...props }: Props) {
   return (
-    <button className={className} {...props}>
+    <button className={`button ${className}`} {...props}>
       {children}
     </button>
   );
