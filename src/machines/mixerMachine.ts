@@ -9,6 +9,7 @@ import {
   getContext as getAudioContext,
   Transport as t,
   Destination,
+  Reverb,
 } from "tone";
 
 setSourceSong();
@@ -48,14 +49,14 @@ export const mixerMachine = createMachine(
       SET_TRACK_SOLOMUTE: { actions: "toggleSoloMute" },
       SET_TRACK_FX_NAMES: { actions: "setTrackFxNames" },
       SET_ACTIVE_TRACK_PANELS: { actions: "setActiveTrackPanels" },
-      SET_TRACK_DELAY_BYPASS: { actions: "setTrackDelayBypass" },
-      SET_TRACK_DELAY_MIX: { actions: "setTrackDelayMix" },
-      SET_TRACK_DELAY_TIME: { actions: "setTrackDelayTime" },
-      SET_TRACK_DELAY_FEEDBACK: { actions: "setTrackDelayFeedback" },
       SET_TRACK_REVERB_BYPASS: { actions: "setTrackReverbBypass" },
       SET_TRACK_REVERB_MIX: { actions: "setTrackReverbMix" },
       SET_TRACK_REVERB_PREDELAY: { actions: "setTrackReverbPreDelay" },
       SET_TRACK_REVERB_DECAY: { actions: "setTrackReverbDecay" },
+      SET_TRACK_DELAY_BYPASS: { actions: "setTrackDelayBypass" },
+      SET_TRACK_DELAY_MIX: { actions: "setTrackDelayMix" },
+      SET_TRACK_DELAY_TIME: { actions: "setTrackDelayTime" },
+      SET_TRACK_DELAY_FEEDBACK: { actions: "setTrackDelayFeedback" },
       SET_TRACK_PITCHSHIFT_BYPASS: {
         actions: "setTrackPitchShiftBypass",
       },
@@ -102,18 +103,24 @@ export const mixerMachine = createMachine(
             channels: Channel[];
             value: string;
           }
-        | { type: "SET_ACTIVE_TRACK_PANELS" }
+        | {
+            type: "SET_TRACK_REVERB_BYPASS";
+            checked: boolean;
+            reverb: Reverb;
+            trackId: number;
+            fxId: number;
+          }
+        | { type: "SET_TRACK_REVERB_MIX" }
+        | { type: "SET_TRACK_REVERB_PREDELAY" }
+        | { type: "SET_TRACK_REVERB_DECAY" }
         | { type: "SET_TRACK_DELAY_BYPASS" }
         | { type: "SET_TRACK_DELAY_MIX" }
         | { type: "SET_TRACK_DELAY_TIME" }
         | { type: "SET_TRACK_DELAY_FEEDBACK" }
-        | { type: "SET_TRACK_REVERB_BYPASS" }
-        | { type: "SET_TRACK_REVERB_MIX" }
-        | { type: "SET_TRACK_REVERB_PREDELAY" }
-        | { type: "SET_TRACK_REVERB_DECAY" }
         | { type: "SET_TRACK_PITCHSHIFT_BYPASS" }
         | { type: "SET_TRACK_PITCHSHIFT_MIX" }
         | { type: "SET_TRACK_PITCHSHIFT_PITCH" }
+        | { type: "SET_ACTIVE_TRACK_PANELS" }
         | { type: "SET_TRACK_PANEL_SIZE" }
         | { type: "SET_TRACK_PANEL_POSITON" }
         | { type: "SET_PLAYBACK_MODE" }
@@ -211,16 +218,20 @@ export const mixerMachine = createMachine(
 
       setTrackReverbBypass: assign(
         (context, { checked, reverb, trackId, fxId }) => {
-          context.currentTracks[trackId].reverbSettings.reverbBypass[fxId] =
-            checked;
           if (checked) {
             reverb?.disconnect();
           } else {
             reverb?.toDestination();
           }
+
           const currentTracks = localStorageGet("currentTracks");
           currentTracks[trackId].reverbSettings.reverbBypass[fxId] = checked;
           localStorageSet("currentTracks", currentTracks);
+
+          return produce(context, (draft) => {
+            draft.currentTracks[trackId].reverbSettings.reverbBypass[fxId] =
+              checked;
+          });
         }
       ),
 
