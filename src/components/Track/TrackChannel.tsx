@@ -32,6 +32,9 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const currentTracks = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks
   );
+  const fxNames = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks[trackId].fxNames
+  );
   const ct = currentTracks[trackId];
   // const options = {
   //   wet: ct.delaySettings.delayMix[0],
@@ -42,16 +45,14 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const delay = useDelay();
   const reverb = useReverb();
   const pitchShift = usePitchShift();
+
   const { send } = MixerMachineContext.useActorRef();
 
-  // const currentTracks[trackId].fxNames = MixerMachineContext.useSelector(
-  //   (state) => state.context.currentTracks[trackId].fxNames
-  // );
   const [currentTrackFx, setCurrentTrackFx] = useState(
-    Array(currentTracks[trackId].fxNames.length).fill(new Volume())
+    Array(fxNames.length).fill(new Volume())
   );
 
-  const disabled = currentTracks[trackId].fxNames.every((item: string) => {
+  const disabled = fxNames.every((item: string) => {
     return item === "nofx";
   });
 
@@ -61,7 +62,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
       trackId,
     });
   }
-
   useEffect(() => {
     currentTracks[trackId].fxNames.forEach((name, fxId) => {
       switch (name) {
