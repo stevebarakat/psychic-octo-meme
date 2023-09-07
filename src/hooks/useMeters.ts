@@ -1,11 +1,13 @@
 import { useEffect, useCallback, useRef, useState } from "react";
 import { Meter } from "tone";
 
-export default function useMeter(channels: (Destination | Channel)[]) {
+export default function useMeters(
+  channels: (Destination | Channel)[],
+  meters: React.MutableRefObject<Meter[]>
+) {
   const [meterVals, setMeterVals] = useState<Float32Array>(
     () => new Float32Array(channels.length)
   );
-  const meters = useRef<Meter[]>([]);
   const animation = useRef<number | null>(null);
 
   // loop recursively to amimateMeters
@@ -18,12 +20,12 @@ export default function useMeter(channels: (Destination | Channel)[]) {
       }
     });
     animation.current = requestAnimationFrame(animateMeter);
-  }, [meterVals]);
+  }, [meterVals, meters]);
 
   // create meter and trigger animateMeter
   useEffect(() => {
     channels.map((channel, i) => {
-      meters.current[i] = new Meter();
+      console.log("channel", channel);
       return channel?.connect(meters.current[i]);
     });
     requestAnimationFrame(animateMeter);

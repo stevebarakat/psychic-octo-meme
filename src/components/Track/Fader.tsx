@@ -1,7 +1,7 @@
 import { localStorageGet, localStorageSet } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import VuMeter from "../VuMeter";
-import useMeter from "@/hooks/useMeter";
+import useMeters from "@/hooks/useMeters";
 import { Meter } from "tone";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 };
 
 function Fader({ trackId, channels, meters }: Props) {
-  const meterVal = useMeter([channels[trackId]], meters);
+  const meterVal = useMeters([channels[trackId]], meters);
   const { send } = MixerMachineContext.useActorRef();
   const { volume } = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId]
