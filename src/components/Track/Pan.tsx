@@ -39,7 +39,7 @@ function Pan({ trackId, channels }: Props) {
         className="range-x"
         min={-1}
         max={1}
-        step={0.01}
+        step={0.25}
         value={pan}
         onChange={setPan}
         onPointerUp={savePan}

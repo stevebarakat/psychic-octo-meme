@@ -23,8 +23,6 @@ function PlaybackMode({ trackId, fxId, param }: Props) {
       state.context.currentTracks[trackId][`${param}Settings`].playbackMode
   );
 
-  console.log("playbackMode", playbackMode);
-
   function setPlaybackMode(e: React.FormEvent<HTMLInputElement>): void {
     send({
       type: "SET_FX_PLAYBACK_MODE",

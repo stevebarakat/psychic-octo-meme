@@ -48,7 +48,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const pitchShift = usePitchShift();
 
   const meters = useRef(Array(channels.length).fill(new Meter()));
-  console.log("meters", meters);
 
   const { send } = MixerMachineContext.useActorRef();
 
@@ -138,6 +137,8 @@ function TrackChannel({ track, trackId, channels }: Props) {
     );
   };
 
+  console.log("currentTrackFx", currentTrackFx);
+
   return (
     <div className="flex-y gap2">
       <>
@@ -155,7 +156,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
           FX
         </ChannelButton>
         {array(fxNames.length + 1).map((_: void, fxId: number) => {
-          console.log("fxNames[fxId]", fxNames[fxId]);
           return (
             <select
               key={fxId}
