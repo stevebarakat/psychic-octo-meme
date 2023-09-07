@@ -5,6 +5,7 @@ import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
 import ChannelLabel from "../ChannelLabel";
+import { upperFirst } from "lodash";
 import useTrackAutomationData from "@/hooks/useTrackAutomationData";
 import { ChannelButton } from "../Buttons";
 import { array, localStorageGet, localStorageSet } from "@/utils";
@@ -66,7 +67,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   }
   useEffect(() => {
-    currentTracks[trackId].fxNames.forEach((name, fxId) => {
+    fxNames.forEach((name, fxId) => {
       switch (name) {
         case "nofx":
           currentTrackFx[fxId] = nofx;
@@ -100,15 +101,9 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   });
 
-  const showReverb = currentTracks[trackId].fxNames.some(
-    (name: string) => name === "reverb"
-  );
-  const showDelay = currentTracks[trackId].fxNames.some(
-    (name: string) => name === "delay"
-  );
-  const showPitchShift = currentTracks[trackId].fxNames.some(
-    (name: string) => name === "pitchShift"
-  );
+  const showReverb = fxNames.some((name: string) => name === "reverb");
+  const showDelay = fxNames.some((name: string) => name === "delay");
+  const showPitchShift = fxNames.some((name: string) => name === "pitchShift");
 
   function setTrackFxNames(
     e: React.FormEvent<HTMLSelectElement>,
@@ -159,36 +154,37 @@ function TrackChannel({ track, trackId, channels }: Props) {
             : "Open "}
           FX
         </ChannelButton>
-        {array(currentTracks[trackId].fxNames.length + 1).map(
-          (_: void, fxId: number) => {
-            console.log(
-              "currentTracks[trackId].fxNames[fxId]",
-              currentTracks[trackId].fxNames[fxId]
-            );
-            return (
-              <select
-                key={fxId}
-                id={`track${trackId}fx${fxId}`}
-                className="fx-select"
-                onChange={(e) =>
-                  e.target.value !== "nofx"
-                    ? setTrackFxNames(e, "add")
-                    : setTrackFxNames(e, "remove")
-                }
-                value={currentTracks[trackId].fxNames[fxId]}
-              >
-                <option value={"nofx"}>
-                  {currentTracks[trackId].fxNames[fxId] === undefined
-                    ? "Add Fx"
-                    : "Remove Fx"}
-                </option>
-                <option value={"reverb"}>Reverb</option>
-                <option value={"delay"}>Delay</option>
-                <option value={"pitchShift"}>Pitch Shift</option>
-              </select>
-            );
-          }
-        )}
+        {array(fxNames.length + 1).map((_: void, fxId: number) => {
+          console.log("fxNames[fxId]", fxNames[fxId]);
+          return (
+            <select
+              key={fxId}
+              id={`track${trackId}fx${fxId}`}
+              className="fx-select"
+              onChange={(e) =>
+                e.target.value !== "nofx"
+                  ? setTrackFxNames(e, "add")
+                  : setTrackFxNames(e, "remove")
+              }
+              value={fxNames[fxId]}
+            >
+              <option value={"nofx"}>
+                {fxNames[fxId] === undefined
+                  ? "Add Fx"
+                  : `- ${upperFirst(fxNames[fxId])}`}
+              </option>
+              <option value={"reverb"} disabled={showReverb}>
+                Reverb
+              </option>
+              <option value={"delay"} disabled={showDelay}>
+                Delay
+              </option>
+              <option value={"pitchShift"} disabled={showPitchShift}>
+                Pitch Shift
+              </option>
+            </select>
+          );
+        })}
       </>
 
       <div className="channel">
