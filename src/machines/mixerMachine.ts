@@ -360,14 +360,14 @@ export const mixerMachine = createMachine(
       ),
 
       setTrackDelayMix: assign((context, { value, delay, trackId, fxId }) => {
-        delay.wet.value = value;
+        if (delay) delay.wet.value = value;
         return produce(context, (draft) => {
           draft.currentTracks[trackId].delaySettings.delayMix[fxId] = value;
         });
       }),
 
       setTrackDelayTime: assign((context, { value, delay, trackId, fxId }) => {
-        delay.delayTime.value = value;
+        if (delay) delay.delayTime.value = value;
         return produce(context, (draft) => {
           draft.currentTracks[trackId].delaySettings.delayTime[fxId] = value;
         });
@@ -375,7 +375,7 @@ export const mixerMachine = createMachine(
 
       setTrackDelayFeedback: assign(
         (context, { value, delay, trackId, fxId }) => {
-          delay.feedback.value = value;
+          if (delay) delay.feedback.value = value;
           return produce(context, (draft) => {
             draft.currentTracks[trackId].delaySettings.delayFeedback[fxId] =
               value;
