@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Destination, Volume } from "tone";
+import { useEffect, useState, useRef } from "react";
+import { Destination, Meter, Volume } from "tone";
 import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
@@ -46,6 +46,9 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const reverb = useReverb();
   const pitchShift = usePitchShift();
 
+  const meters = useRef(Array(channels.length).fill(new Meter()));
+  console.log("meters", meters);
+
   const { send } = MixerMachineContext.useActorRef();
 
   const [currentTrackFx, setCurrentTrackFx] = useState(
@@ -91,7 +94,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     }, []);
 
     channels[trackId].disconnect();
-    channels[trackId].connect(Destination);
+    channels[trackId].connect(meters.current[2].toDestination());
     currentTrackFx.forEach((ctf) => {
       ctf && channels[trackId].chain(ctf, Destination);
     });
@@ -190,7 +193,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
 
       <div className="channel">
         <Pan trackId={trackId} channels={channels} />
-        <Fader trackId={trackId} channels={channels} />
+        <Fader trackId={trackId} channels={channels} meters={meters} />
         <SoloMute trackId={trackId} channels={channels} />
         <ChannelLabel channelName={track.name} />
       </div>

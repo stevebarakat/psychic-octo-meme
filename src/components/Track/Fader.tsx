@@ -2,14 +2,16 @@ import { localStorageGet, localStorageSet } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import VuMeter from "../VuMeter";
 import useMeter from "@/hooks/useMeter";
+import { Meter } from "tone";
 
 type Props = {
   trackId: number;
   channels: Channel[];
+  meters: React.MutableRefObject<Meter[]>;
 };
 
-function Fader({ trackId, channels }: Props) {
-  const meterVal = useMeter([channels[trackId]]);
+function Fader({ trackId, channels, meters }: Props) {
+  const meterVal = useMeter([channels[trackId]], meters);
   const { send } = MixerMachineContext.useActorRef();
   const { volume } = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId]
