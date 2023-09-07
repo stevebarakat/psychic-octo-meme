@@ -316,7 +316,7 @@ export const mixerMachine = createMachine(
       ),
 
       setTrackReverbMix: assign((context, { value, reverb, trackId, fxId }) => {
-        reverb.wet.value = value;
+        if (reverb) reverb.wet.value = value;
         return produce(context, (draft) => {
           draft.currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
         });
@@ -324,7 +324,7 @@ export const mixerMachine = createMachine(
 
       setTrackReverbPreDelay: assign(
         (context, { value, reverb, trackId, fxId }) => {
-          reverb.preDelay = value;
+          if (reverb) reverb.preDelay = value;
           return produce(context, (draft) => {
             draft.currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] =
               value;
@@ -334,7 +334,7 @@ export const mixerMachine = createMachine(
 
       setTrackReverbDecay: assign(
         (context, { value, reverb, trackId, fxId }) => {
-          reverb.decay = value;
+          if (reverb) reverb.decay = value;
           return produce(context, (draft) => {
             draft.currentTracks[trackId].reverbSettings.reverbDecay[fxId] =
               value;
@@ -404,7 +404,7 @@ export const mixerMachine = createMachine(
 
       setTrackPitchShiftMix: assign(
         (context, { value, pitchShift, trackId, fxId }) => {
-          pitchShift.wet.value = value;
+          if (pitchShift) pitchShift.wet.value = value;
           return produce(context, (draft) => {
             draft.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
               fxId
@@ -415,7 +415,7 @@ export const mixerMachine = createMachine(
 
       setTrackPitchShiftPitch: assign(
         (context, { value, pitchShift, trackId, fxId }) => {
-          pitchShift.pitch = value;
+          if (pitchShift) pitchShift.pitch = value;
           return produce(context, (draft) => {
             draft.currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[
               fxId
