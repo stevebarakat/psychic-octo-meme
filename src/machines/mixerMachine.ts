@@ -252,7 +252,6 @@ export const mixerMachine = createMachine(
             : sourceSong.start),
 
       loadSong: assign(async (context, { value }: any): any => {
-        // window.location.reload();
         // localStorageSet("sourceSong", value);
         console.log("context", context);
         await db.sourceSong.put({
@@ -271,6 +270,7 @@ export const mixerMachine = createMachine(
           id: "currentTracks",
           data: currentTracks,
         });
+        window.location.reload();
       }),
 
       setMainVolume: assign((context, { value }) => {
