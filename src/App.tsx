@@ -5,15 +5,19 @@ import { db } from "./db";
 import download from "downloadjs";
 import "dexie-export-import";
 
-function progressCallback({ totalRows, completedRows }) {
+type ProgressProps = {
+  totalRows: number;
+  completedRows: number;
+};
+
+function progressCallback({ totalRows, completedRows }: ProgressProps) {
   console.log(`Progress: ${completedRows} of ${totalRows} rows completed`);
 }
 
-async function importDb(e) {
-  console.log("e", e);
-  const file = e.target.files[0];
-  console.log("file", file);
-  db.import(file);
+async function importDb(e: React.FormEvent<HTMLInputElement>): Promise<void> {
+  const file: Blob | null = e.currentTarget.files && e.currentTarget.files[0];
+  if (file === null) return;
+  await db.import(file).then(() => window.location.reload());
 }
 
 function App() {
