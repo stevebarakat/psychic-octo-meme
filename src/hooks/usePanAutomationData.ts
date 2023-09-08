@@ -93,8 +93,8 @@ function useRead({ trackId }: Props) {
   });
 
   useEffect(() => {
-    if (playbackMode !== "read") return;
-    for (const value of panData!.data.values()) {
+    if (playbackMode !== "read" || !panData) return;
+    for (const value of panData.data.values()) {
       setParam(value.id, value);
     }
   }, [panData, setParam, playbackMode]);

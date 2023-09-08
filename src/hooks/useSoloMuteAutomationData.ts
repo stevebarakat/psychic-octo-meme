@@ -97,8 +97,8 @@ function useRead({ trackId }: Props) {
   });
 
   useEffect(() => {
-    if (playbackMode !== "read") return;
-    for (const value of soloMuteData!.data.values()) {
+    if (playbackMode !== "read" || !soloMuteData) return;
+    for (const value of soloMuteData.data.values()) {
       setParam(value.id, value);
     }
   }, [soloMuteData, setParam, playbackMode]);
