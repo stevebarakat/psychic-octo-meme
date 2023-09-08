@@ -1,4 +1,3 @@
-import { localStorageGet, localStorageSet } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import VuMeter from "../VuMeter";
 import useMeters from "@/hooks/useMeters";
@@ -25,14 +24,6 @@ function Fader({ trackId, channels, meters }: Props) {
     });
   }
 
-  function saveVolume(e: React.FormEvent<HTMLInputElement>): void {
-    const currentTracks = localStorageGet("currentTracks");
-    const value = parseFloat(e.currentTarget.value);
-    currentTracks[trackId].volume = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
-  // console.log("volume", volume);
   return (
     <div className="fader-wrap">
       {/* <div className="window">{`${volume.toFixed(0)} dB`}</div> */}
@@ -48,7 +39,6 @@ function Fader({ trackId, channels, meters }: Props) {
           max={12}
           step={0.1}
           value={volume}
-          onPointerUp={saveVolume}
           onChange={setVolume}
         />
       </div>

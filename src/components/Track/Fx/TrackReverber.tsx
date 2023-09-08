@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/FxPlaybackMode";
@@ -67,13 +66,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     });
   }
 
-  function saveMix(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
   function setPreDelay(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     send({
@@ -85,13 +77,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     });
   }
 
-  function savePreDelay(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
   function setDecay(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     send({
@@ -101,13 +86,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       trackId,
       fxId,
     });
-  }
-
-  function saveDecay(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].reverbSettings.reverbDecay[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
   }
 
   // !!! --- WRITE --- !!! //
@@ -218,7 +196,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
           disabled={reverbBypass}
           value={reverbMix}
           onChange={setMix}
-          onPointerUp={saveMix}
         />
       </div>
       <div className="flex-y">
@@ -232,7 +209,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
           disabled={reverbBypass}
           value={reverbPreDelay}
           onChange={setPreDelay}
-          onPointerUp={savePreDelay}
         />
       </div>
       <div className="flex-y">
@@ -246,7 +222,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
           disabled={reverbBypass}
           value={reverbDecay}
           onChange={setDecay}
-          onPointerUp={saveDecay}
         />
       </div>
     </div>

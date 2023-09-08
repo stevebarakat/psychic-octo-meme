@@ -1,6 +1,5 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import usePanAutomationData from "@/hooks/usePanAutomationData";
-import { localStorageSet, localStorageGet } from "@/utils";
 import PlaybackMode from "../PlaybackMode";
 
 type Props = {
@@ -24,13 +23,6 @@ function Pan({ trackId, channels }: Props) {
     });
   }
 
-  function savePan(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pan = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
   return (
     <>
       <input
@@ -42,7 +34,6 @@ function Pan({ trackId, channels }: Props) {
         step={0.25}
         value={pan}
         onChange={setPan}
-        onPointerUp={savePan}
       />
       <PlaybackMode trackId={trackId} param="pan" />
     </>

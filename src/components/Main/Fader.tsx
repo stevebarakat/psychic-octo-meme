@@ -1,4 +1,3 @@
-import { localStorageGet, localStorageSet } from "@/utils";
 import VuMeter from "../VuMeter";
 import useMeter from "@/hooks/useMeter";
 import { Destination } from "tone";
@@ -8,22 +7,13 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 export default function Main() {
   const meterVal = useMeter([Destination]);
   const { send } = MixerMachineContext.useActorRef();
-  const volume = MixerMachineContext.useSelector((state) => {
-    return state.context.currentMain.volume;
-  });
+  const volume = 0;
 
   function setVolume(e: React.FormEvent<HTMLInputElement>): void {
     send({
       type: "SET_MAIN_VOLUME",
       value: parseFloat(e.currentTarget.value),
     });
-  }
-
-  function saveVolume(e: React.FormEvent<HTMLInputElement>): void {
-    const currentMain = localStorageGet("currentMain");
-    const value = parseFloat(e.currentTarget.value);
-    currentMain.volume = value;
-    localStorageSet("currentMain", currentMain);
   }
 
   return (
@@ -42,7 +32,6 @@ export default function Main() {
             max={0}
             step={0.1}
             value={volume}
-            onPointerUp={saveVolume}
             onChange={setVolume}
           />
         </div>

@@ -10,7 +10,7 @@ function useTracks({ tracks }: Props) {
   const players = useRef<Player[] | []>([]);
 
   useEffect(() => {
-    tracks.forEach((track) => {
+    tracks?.forEach((track) => {
       channels.current = [...channels.current, new Channel().toDestination()];
       players.current = [...players.current, new Player(track.path)];
     });

@@ -1,12 +1,10 @@
 import { useRef } from "react";
-import { localStorageGet } from "@/utils";
 import { Destination, InputNode } from "tone";
 import { useReverb, useDelay, usePitchShift } from ".";
 import { Reverber, Delay, PitchShifter, NoFx } from "@/components/Track/Fx";
 import { array } from "@/utils";
 
 function useTrackFx(trackId: number, channel: Channel, trackFx: TrackFx) {
-  const currentTracks = localStorageGet("currentTracks");
   const ct = currentTracks[trackId];
   const reverb = useReverb;
   const pitchShift = usePitchShift;

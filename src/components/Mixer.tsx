@@ -1,6 +1,6 @@
 import { Destination, Transport as t } from "tone";
 import Transport from "./Transport";
-import { log, dbToPercent } from "../utils";
+import { log, dbToPercent, localStorageGet } from "../utils";
 import SongSelect from "./SongSelect";
 import useTracks from "@/hooks/useTracks";
 import Loader from "./Loader";
@@ -10,16 +10,19 @@ import Main from "./Main";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 export const Mixer = () => {
-  const { currentTracks, currentMain, sourceSong } =
-    MixerMachineContext.useSelector((state) => state.context);
+  // const { currentTracks, sourceSong } = MixerMachineContext.useSelector(
+  //   (state) => state.context
+  // );
+  const sourceSong = localStorageGet("sourceSong");
+  const currentTracks = localStorageGet("currentTracks");
   const tracks = sourceSong.tracks;
   const { channels } = useTracks({ tracks });
 
   (function loadSettings() {
     t.bpm.value = sourceSong.bpm;
-    const volume = currentMain.volume;
-    const scaled = dbToPercent(log(volume));
-    Destination.volume.value = scaled;
+    // const volume = currentMain.volume;
+    // const scaled = dbToPercent(log(volume));
+    // Destination.volume.value = scaled;
 
     currentTracks.forEach((currentTrack: TrackSettings, trackId: number) => {
       const value = currentTrack.volume;

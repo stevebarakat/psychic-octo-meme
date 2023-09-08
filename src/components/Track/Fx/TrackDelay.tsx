@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/FxPlaybackMode";
@@ -50,9 +49,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       trackId,
       fxId,
     });
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delayBypass[fxId] = checked;
-    localStorageSet("currentTracks", currentTracks);
   }
 
   function setMix(e: React.FormEvent<HTMLInputElement>): void {
@@ -66,13 +62,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     });
   }
 
-  function saveMix(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delaySettings.delayMix[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
   function setDelayTime(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     send({
@@ -84,13 +73,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     });
   }
 
-  function saveDelayTime(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delaySettings.delayTime[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
   function setFeedback(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     send({
@@ -100,13 +82,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       trackId,
       fxId,
     });
-  }
-
-  function saveFeedback(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].delaySettings.delayFeedback[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
   }
 
   // !!! --- WRITE --- !!! //
@@ -216,7 +191,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
           disabled={delayBypass}
           value={delayMix}
           onChange={setMix}
-          onPointerUp={saveMix}
         />
       </div>
       <div className="flex-y">
@@ -230,7 +204,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
           disabled={delayBypass}
           value={delayTime}
           onChange={setDelayTime}
-          onPointerUp={saveDelayTime}
         />
       </div>
       <div className="flex-y">
@@ -244,7 +217,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
           disabled={delayBypass}
           value={delayFeedback}
           onChange={setFeedback}
-          onPointerUp={saveFeedback}
         />
       </div>
     </div>

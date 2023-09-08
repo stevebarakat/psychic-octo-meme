@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { localStorageGet, localStorageSet } from "@/utils";
 import { powerIcon } from "@/assets/icons";
 import useWrite from "@/hooks/useWrite";
 import PlaybackMode from "@/components/FxPlaybackMode";
@@ -47,9 +46,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       trackId,
       fxId,
     });
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[fxId] = checked;
-    localStorageSet("currentTracks", currentTracks);
   }
 
   function setMix(e: React.FormEvent<HTMLInputElement>): void {
@@ -62,13 +58,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       fxId,
     });
   }
-  function saveMix(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pitchShiftSettings.pitchShiftMix[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
-
   function setPitch(e: React.FormEvent<HTMLInputElement>): void {
     const value = parseFloat(e.currentTarget.value);
     send({
@@ -80,12 +69,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
     });
   }
 
-  function savePitch(e: React.FormEvent<HTMLInputElement>): void {
-    const value = parseFloat(e.currentTarget.value);
-    const currentTracks = localStorageGet("currentTracks");
-    currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
-  }
   // !!! --- WRITE --- !!! //
   useWrite({
     id: trackId,
@@ -185,7 +168,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
           disabled={pitchShiftBypass}
           value={pitchShiftMix}
           onChange={setMix}
-          onPointerUp={saveMix}
         />
       </div>
       <div className="flex-y">
@@ -199,7 +181,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
           disabled={pitchShiftBypass}
           value={pitchShiftPitch}
           onChange={setPitch}
-          onPointerUp={savePitch}
         />
       </div>
     </div>

@@ -8,11 +8,10 @@ import ChannelLabel from "../ChannelLabel";
 import { upperFirst } from "lodash";
 import useTrackAutomationData from "@/hooks/useTrackAutomationData";
 import { ChannelButton } from "../Buttons";
-import { array, localStorageGet, localStorageSet } from "@/utils";
+import { array } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { TrackPanel } from "./TrackPanels";
 import {
-  NoFx,
   Delay,
   Reverber,
   PitchShifter,

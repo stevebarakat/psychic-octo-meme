@@ -1,39 +1,39 @@
 import { roxanne } from "@/assets/songs";
-import { localStorageGet, localStorageSet } from "@/utils";
 import { defaultTrackData } from "@/assets/songs/defaultData";
+import { db } from "@/db";
 
-export function setSourceSong() {
-  const sourceSong = localStorageGet("sourceSong");
+export async function setSourceSong() {
+  // const sourceSong = localStorageGet("sourceSong");
+  const sourceSong = await db.sourceSong
+    .where("id")
+    .equals("sourceSong")
+    .toArray();
   if (!sourceSong) {
-    localStorageSet("sourceSong", roxanne);
-    setCurrentMain();
+    db.sourceSong.add({
+      ...roxanne,
+    });
     setCurrentTracks();
     window.location.reload();
   }
 }
 
-function setCurrentMain() {
-  const currentMain = localStorageGet("currentMain");
-  if (!currentMain) {
-    localStorageSet("currentMain", {
-      volume: -32,
-    });
-  }
-}
-
-function setCurrentTracks() {
-  const sourceSong = localStorageGet("sourceSong") || roxanne;
-  const currentTracks = localStorageGet("currentTracks");
+async function setCurrentTracks() {
+  // const sourceSong = localStorageGet("sourceSong") || roxanne;
+  const currentTracks = await db.currentTracks
+    .where("id")
+    .equals("currentTracks")
+    .toArray();
+  // const currentTracks = localStorageGet("currentTracks");
 
   if (!currentTracks) {
-    const defaultCurrentTracks = sourceSong.tracks.map(
-      (track: SourceTrack) => ({
-        id: track.id,
-        name: track.name,
-        path: track.path,
-        ...defaultTrackData,
-      })
-    );
-    localStorageSet("currentTracks", defaultCurrentTracks);
+    const defaultCurrentTracks = roxanne.tracks.map((track: SourceTrack) => ({
+      id: track.id,
+      name: track.name,
+      path: track.path,
+      ...defaultTrackData,
+    }));
+    db.currentTracks.add({
+      ...defaultCurrentTracks,
+    });
   }
 }

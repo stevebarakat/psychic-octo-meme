@@ -2,7 +2,6 @@ import { Fragment, type ReactNode } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { CloseButton } from "@/components/Buttons";
 import { Rnd as FxPanel } from "react-rnd";
-import { localStorageGet } from "@/utils";
 
 type PanelProps = {
   children: ReactNode;
@@ -67,7 +66,6 @@ export function TrackPanel({ children, trackId }: PanelProps) {
 }
 
 function TrackPanels({ fx, trackId }: PanelsProps) {
-  const currentTracks = localStorageGet("currentTracks");
   const ct = currentTracks[trackId];
 
   const panelsEmpty = ct.fxNames.every((name: string) => name === "nofx");
