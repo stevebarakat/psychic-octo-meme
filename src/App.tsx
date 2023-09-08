@@ -17,6 +17,14 @@ function progressCallback({ totalRows, completedRows }: ProgressProps) {
 async function importDb(e: React.FormEvent<HTMLInputElement>): Promise<void> {
   const file: Blob | null = e.currentTarget.files && e.currentTarget.files[0];
   if (file === null) return;
+  db.currentTracks.where("id").equals("currentTracks").delete();
+  db.sourceSong.where("id").equals("sourceSong").delete();
+  db.volumeData.where("id").equals("volumeData").delete();
+  db.panData.where("id").equals("panData").delete();
+  db.soloMuteData.where("id").equals("soloMuteData").delete();
+  db.delayData.where("id").equals("delayData").delete();
+  db.reverbData.where("id").equals("reverbData").delete();
+  db.pitchShiftData.where("id").equals("pitchShiftData").delete();
   await db.import(file).then(() => window.location.reload());
 }
 
