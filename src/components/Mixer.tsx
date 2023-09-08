@@ -14,6 +14,8 @@ export const Mixer = () => {
     (state) => state.context
   );
 
+  if (!sourceSong) window.location.reload();
+
   const tracks = sourceSong.tracks;
   const { channels } = useTracks({ tracks });
 
