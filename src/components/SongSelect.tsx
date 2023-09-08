@@ -5,8 +5,6 @@ import {
   blueMonday,
   ninteenOne,
 } from "@/assets/songs";
-import { localStorageSet } from "@/utils";
-import { defaultTrackData } from "@/assets/songs/defaultData";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 function SongSelect() {

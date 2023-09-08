@@ -10,11 +10,10 @@ import Main from "./Main";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 export const Mixer = () => {
-  // const { currentTracks, sourceSong } = MixerMachineContext.useSelector(
-  //   (state) => state.context
-  // );
-  const sourceSong = localStorageGet("sourceSong");
-  const currentTracks = localStorageGet("currentTracks");
+  const { currentTracks, sourceSong } = MixerMachineContext.useSelector(
+    (state) => state.context
+  );
+
   const tracks = sourceSong.tracks;
   const { channels } = useTracks({ tracks });
 

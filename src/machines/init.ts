@@ -3,7 +3,6 @@ import { defaultTrackData } from "@/assets/songs/defaultData";
 import { db } from "@/db";
 
 export async function setSourceSong() {
-  // const sourceSong = localStorageGet("sourceSong");
   const sourceSong = await db.sourceSong
     .where("id")
     .equals("sourceSong")
@@ -18,12 +17,10 @@ export async function setSourceSong() {
 }
 
 async function setCurrentTracks() {
-  // const sourceSong = localStorageGet("sourceSong") || roxanne;
   const currentTracks = await db.currentTracks
     .where("id")
     .equals("currentTracks")
     .toArray();
-  // const currentTracks = localStorageGet("currentTracks");
 
   if (!currentTracks) {
     const defaultCurrentTracks = roxanne.tracks.map((track: SourceTrack) => ({

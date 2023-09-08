@@ -11,7 +11,12 @@ import {
   PitchShift,
 } from "tone";
 import { db } from "@/db";
-import { localStorageGet, localStorageSet } from "@/utils";
+
+export type MixerContext = {
+  currentTracks: TrackSettings[];
+  sourceSong: SourceSong;
+};
+type SoloMuteType = { solo: boolean; mute: boolean };
 
 setSourceSong();
 const audioContext = getAudioContext();
@@ -31,34 +36,16 @@ async function getCurrentTracks() {
   return await db.currentTracks.where("id").equals("currentTracks").toArray();
 }
 
-// console.log("getSourceSong()", getSourceSong());
-
 const sourceSong = getSourceSong();
 const currentTracks = getCurrentTracks();
 
-sourceSong.then(sourceSongCb);
-currentTracks.then(currentTracksCb);
-
-export type MixerContext = {
-  currentTracks: TrackSettings[];
-  sourceSong: SourceSong;
-};
-type SoloMuteType = { solo: boolean; mute: boolean };
-
-function sourceSongCb(song) {
-  console.log("song", song[0].data);
-  localStorageSet("sourceSong", song[0].data);
-}
-
-function currentTracksCb(track) {
-  console.log("track", track[0].data);
-  localStorageSet("currentTracks", track[0].data);
-}
-
 const initialContext: MixerContext = {
-  currentTracks: localStorageGet("currentTracks"),
-  sourceSong: localStorageGet("sourcesong"),
+  sourceSong: await sourceSong.then((song) => song[0]?.data),
+  currentTracks: await currentTracks.then((track) => track[0]?.data),
 };
+
+console.log("initialContext", initialContext);
+// {sourceSong: Promise, currentTracks: Promise}
 
 export const mixerMachine = createMachine(
   {
@@ -265,10 +252,12 @@ export const mixerMachine = createMachine(
             : sourceSong.start),
 
       loadSong: assign(async (context, { value }: any): any => {
-        window.location.reload();
+        // window.location.reload();
         // localStorageSet("sourceSong", value);
-        await db.sourceSong.add({
-          ...value,
+        console.log("context", context);
+        await db.sourceSong.put({
+          id: "sourceSong",
+          data: { ...value },
         });
         const currentTracks = value.tracks.map((track: TrackSettings) => ({
           id: crypto.randomUUID(),
@@ -278,8 +267,9 @@ export const mixerMachine = createMachine(
         }));
         context.currentTracks = currentTracks;
         // localStorageSet("currentTracks", currentTracks);
-        await db.currentTracks.add({
-          ...value,
+        await db.currentTracks.put({
+          id: "currentTracks",
+          data: currentTracks,
         });
       }),
 
