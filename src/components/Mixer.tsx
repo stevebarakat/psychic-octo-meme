@@ -1,6 +1,6 @@
 import { Destination, Transport as t } from "tone";
 import Transport from "./Transport";
-import { log, dbToPercent, localStorageGet } from "../utils";
+import { log, dbToPercent } from "../utils";
 import SongSelect from "./SongSelect";
 import useTracks from "@/hooks/useTracks";
 import Loader from "./Loader";

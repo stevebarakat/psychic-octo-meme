@@ -25,7 +25,6 @@ export default function useMeters(
   // create meter and trigger animateMeter
   useEffect(() => {
     channels.map((channel, i) => {
-      console.log("channel", channel);
       return channel?.connect(meters.current[i]);
     });
     requestAnimationFrame(animateMeter);

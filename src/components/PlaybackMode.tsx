@@ -20,6 +20,9 @@ function PlaybackMode({ trackId, param }: Props) {
   const playbackMode = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId][`${param}Mode`]
   );
+  const currentTracks = MixerMachineContext.useSelector(
+    (state) => state.context.currentTracks
+  );
 
   function setPlaybackMode(e: React.FormEvent<HTMLInputElement>): void {
     send({

@@ -136,8 +136,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
     );
   };
 
-  console.log("currentTrackFx", currentTrackFx);
-
   return (
     <div className="flex-y gap2">
       <>
