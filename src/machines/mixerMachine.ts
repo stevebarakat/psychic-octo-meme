@@ -235,10 +235,14 @@ export const mixerMachine = createMachine(
         }
       },
       pause: () => t.pause(),
-      reset: () => {
-        t.stop();
-        t.seconds = sourceSong.start ?? 0;
-      },
+
+      reset: assign((context) => {
+        return produce(context, (draft) => {
+          const sourceSong = draft.sourceSong;
+          t.stop();
+          t.seconds = sourceSong.start ?? 0;
+        });
+      }),
 
       fastForward: assign((context) => {
         return produce(context, (draft) => {
