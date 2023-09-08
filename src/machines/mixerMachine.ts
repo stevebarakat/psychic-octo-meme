@@ -239,21 +239,28 @@ export const mixerMachine = createMachine(
         t.stop();
         t.seconds = sourceSong.start ?? 0;
       },
-      fastForward: () =>
-        (t.seconds =
-          t.seconds < sourceSong.end - 10
-            ? t.seconds + 10
-            : (t.seconds = sourceSong.end)),
 
-      rewind: () =>
-        (t.seconds =
-          t.seconds > 10 + sourceSong.start
-            ? t.seconds - 10
-            : sourceSong.start),
+      fastForward: assign((context) => {
+        return produce(context, (draft) => {
+          const sourceSong = draft.sourceSong;
+          t.seconds =
+            t.seconds < sourceSong.end - 10
+              ? t.seconds + 10
+              : (t.seconds = sourceSong.end);
+        });
+      }),
+
+      rewind: assign((context) => {
+        return produce(context, (draft) => {
+          const sourceSong = draft.sourceSong;
+          t.seconds =
+            t.seconds > 10 + sourceSong.start
+              ? t.seconds - 10
+              : sourceSong.start;
+        });
+      }),
 
       loadSong: assign(async (context, { value }: any): any => {
-        // localStorageSet("sourceSong", value);
-        console.log("context", context);
         await db.sourceSong.put({
           id: "sourceSong",
           data: { ...value },
@@ -265,7 +272,6 @@ export const mixerMachine = createMachine(
           ...defaultTrackData,
         }));
         context.currentTracks = currentTracks;
-        // localStorageSet("currentTracks", currentTracks);
         await db.currentTracks.put({
           id: "currentTracks",
           data: currentTracks,
