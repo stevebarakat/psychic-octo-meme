@@ -4,6 +4,7 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { db } from "./db";
 import download from "downloadjs";
 import "dexie-export-import";
+import { localStorageSet } from "./utils";
 
 type ProgressProps = {
   totalRows: number;
@@ -31,11 +32,14 @@ async function importDb(e: React.FormEvent<HTMLInputElement>): Promise<void> {
 function App() {
   const [fileName, setFileName] = useState("");
 
-  async function exportDb(e, fileName) {
+  async function exportDb(e) {
     e.preventDefault();
     try {
       const blob = await db.export({ prettyJson: true, progressCallback });
-      download(blob, `${fileName}.json`, "text/json");
+      // download(blob, `${fileName}.json`, "text/json");
+      const text = await blob.text();
+      const parsed = JSON.parse(text);
+      localStorageSet("blob", parsed);
     } catch (error) {
       console.error("" + error);
     }
