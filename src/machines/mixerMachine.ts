@@ -302,7 +302,6 @@ export const mixerMachine = createMachine(
       }),
 
       toggleSoloMute: assign((context, { value, trackId }) => {
-        currentTracks[trackId].soloMute = value;
         return produce(context, (draft) => {
           draft.currentTracks[trackId].soloMute = value;
         });
@@ -330,8 +329,6 @@ export const mixerMachine = createMachine(
           } else {
             reverb?.toDestination();
           }
-
-          currentTracks[trackId].reverbSettings.reverbBypass[fxId] = checked;
 
           return produce(context, (draft) => {
             draft.currentTracks[trackId].reverbSettings.reverbBypass[fxId] =
@@ -374,8 +371,6 @@ export const mixerMachine = createMachine(
           } else {
             delay?.toDestination();
           }
-          currentTracks[trackId].delaySettings.delayBypass[fxId] = checked;
-          localStorageSet("currentTracks", currentTracks);
           return produce(context, (draft) => {
             draft.currentTracks[trackId].delaySettings.delayBypass[fxId] =
               checked;
