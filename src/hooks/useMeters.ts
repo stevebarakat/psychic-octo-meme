@@ -22,7 +22,7 @@ export default function useMeters(
     animation.current = requestAnimationFrame(animateMeter);
   }, [meterLevels, meters]);
 
-  // create meter and trigger animateMeter
+  // trigger animateMeter
   useEffect(() => {
     animateMeter();
     // eslint-disable-next-line react-hooks/exhaustive-deps

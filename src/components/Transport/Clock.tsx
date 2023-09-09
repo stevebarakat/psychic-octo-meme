@@ -8,7 +8,7 @@ type Props = {
 };
 
 function Clock({ song }: Props) {
-  const requestRef = useRef<number | null>(null);
+  const animation = useRef<number | null>(null);
   const [clock, setClock] = useState(formatMilliseconds(0));
 
   // TODO - make this a guard in XState
@@ -24,17 +24,12 @@ function Clock({ song }: Props) {
   }
 
   const animateClock = useCallback(() => {
-    requestRef.current = requestAnimationFrame(animateClock);
     setClock(formatMilliseconds(t.seconds));
+    animation.current = requestAnimationFrame(animateClock);
   }, []);
 
   useEffect(() => {
-    requestAnimationFrame(animateClock);
-
-    return () => {
-      if (requestRef.current === null) return;
-      cancelAnimationFrame(requestRef.current);
-    };
+    animateClock();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
