@@ -24,10 +24,6 @@ export default function useMeters(
 
   // create meter and trigger animateMeter
   useEffect(() => {
-    channels.map((channel, i) => {
-      return channel?.connect(meters.current[i]);
-    });
-
     animateMeter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
