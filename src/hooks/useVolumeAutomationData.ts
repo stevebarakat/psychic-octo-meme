@@ -12,7 +12,7 @@ type WriteProps = {
   value: number | string | boolean;
 };
 
-function useTrackAutomationData({ trackId, channels }: Props) {
+function useVolumeAutomationData({ trackId, channels }: Props) {
   const value: number | boolean = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].volume;
   });
@@ -100,4 +100,4 @@ function useRead({ trackId }: Props) {
 
   return null;
 }
-export default useTrackAutomationData;
+export default useVolumeAutomationData;

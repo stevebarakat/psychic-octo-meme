@@ -1,5 +1,5 @@
 import VuMeter from "../VuMeter";
-import useMeter from "@/hooks/useMeter";
+import useMeter from "@/components/Main/useMeter";
 import { Destination } from "tone";
 import ChannelLabel from "../ChannelLabel";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
