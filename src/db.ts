@@ -66,7 +66,7 @@ export const db = new DexieDb();
 
 // Populate with data:
 db.on("ready", function (db) {
-  db.sourceSong.count(function (count) {
+  db.sourceSong.count(function (count: number) {
     if (count > 0) {
       return console.log(`Already populated`);
     } else {
@@ -81,7 +81,7 @@ db.on("ready", function (db) {
 
 // Populate with data:
 db.on("ready", function (db) {
-  db.currentTracks.count(function (count) {
+  db.currentTracks.count(function (count: number) {
     if (count > 0) {
       return console.log(`Already populated`);
     } else {
@@ -90,7 +90,7 @@ db.on("ready", function (db) {
       const data = [
         {
           id: "currentTracks",
-          data: roxanne.tracks.map((track: TrackSettings) => ({
+          data: roxanne.tracks.map((track: SourceTrack) => ({
             id: crypto.randomUUID(),
             name: track.name,
             path: track.path,
@@ -103,35 +103,3 @@ db.on("ready", function (db) {
     }
   });
 });
-
-// // Populate with data:
-// db.on("ready", function (db) {
-//   dbStores.forEach((storeName) => {
-//     db[`${storeName}`].count(function (count) {
-//       if (count > 0) {
-//         return console.log(`Already populated`);
-//       } else {
-//         console.log("Database is empty. Populating with default data...");
-
-//         const data = [{ id: `${storeName}`, data: [] }];
-
-//         return db[`${storeName}`].bulkAdd(data);
-//       }
-//     });
-//   });
-// });
-
-// // Queued until data finished populating:
-// dbStores.forEach((storeName) => {
-//   db[`${storeName}`]
-//     .each(function (obj) {
-//       // Log objects, limit to 100 characters.
-//       console.log(`Found object: ${JSON.stringify(obj).substring(0, 100)}`);
-//     })
-//     .then(function () {
-//       console.log("Finished.");
-//     })
-//     .catch(function (error) {
-//       console.error(error.stack || error);
-//     });
-// });

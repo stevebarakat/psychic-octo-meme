@@ -20,13 +20,6 @@ type SoloMuteType = { solo: boolean; mute: boolean };
 
 setSourceSong();
 const audioContext = getAudioContext();
-// let sourceSong;
-// let currentTracks;
-
-// async function getDefaultData() {
-//   sourceSong = await db.sourceSong.where("id").equals("sourceSong");
-//   currentTracks = await db.currentTracks.where("id").equals("currentTracks");
-// }
 
 async function getSourceSong() {
   return await db.sourceSong.where("id").equals("sourceSong").toArray();
@@ -43,9 +36,6 @@ const initialContext: MixerContext = {
   sourceSong: await sourceSong.then((song) => song[0]?.data),
   currentTracks: await currentTracks.then((track) => track[0]?.data),
 };
-
-console.log("initialContext", initialContext);
-// {sourceSong: Promise, currentTracks: Promise}
 
 export const mixerMachine = createMachine(
   {

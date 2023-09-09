@@ -24,7 +24,6 @@ function usePanAutomationData({ trackId, channels }: Props) {
 const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
-
 function useWrite({ id, value }: WriteProps) {
   const playbackMode = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[id].panMode

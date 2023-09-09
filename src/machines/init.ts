@@ -23,14 +23,13 @@ async function setCurrentTracks() {
     .toArray();
 
   if (!currentTracks) {
-    const defaultCurrentTracks = roxanne.tracks.map((track: SourceTrack) => ({
-      id: track.id,
-      name: track.name,
-      path: track.path,
-      ...defaultTrackData,
-    }));
-    db.currentTracks.add({
-      ...defaultCurrentTracks,
-    });
+    roxanne.tracks.map((track: SourceTrack) =>
+      db.currentTracks.add({
+        id: track.id,
+        name: track.name,
+        path: track.path,
+        ...defaultTrackData,
+      })
+    );
   }
 }
