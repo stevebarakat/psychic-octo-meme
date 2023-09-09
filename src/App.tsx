@@ -4,66 +4,57 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { db } from "./db";
 import download from "downloadjs";
 import "dexie-export-import";
-import { localStorageSet } from "./utils";
-
-type ProgressProps = {
-  totalRows: number;
-  completedRows: number;
-};
-
-function progressCallback({ totalRows, completedRows }: ProgressProps) {
-  console.log(`Progress: ${completedRows} of ${totalRows} rows completed`);
-}
-
-async function importDb(e: React.FormEvent<HTMLInputElement>): Promise<void> {
-  const file: Blob | null = e.currentTarget.files && e.currentTarget.files[0];
-  if (file === null) return;
-  db.currentTracks.where("id").equals("currentTracks").delete();
-  db.sourceSong.where("id").equals("sourceSong").delete();
-  db.volumeData.where("id").equals("volumeData").delete();
-  db.panData.where("id").equals("panData").delete();
-  db.soloMuteData.where("id").equals("soloMuteData").delete();
-  db.delayData.where("id").equals("delayData").delete();
-  db.reverbData.where("id").equals("reverbData").delete();
-  db.pitchShiftData.where("id").equals("pitchShiftData").delete();
-  await db.import(file).then(() => window.location.reload());
-}
+import { localStorageGet, localStorageSet } from "./utils";
 
 function App() {
-  const [fileName, setFileName] = useState("");
+  const [mixName, setMixName] = useState("");
+  const mixNames = Object.keys(window.localStorage);
 
-  async function exportDb(e) {
+  async function importDb(
+    e: React.FormEvent<HTMLSelectElement>
+  ): Promise<void> {
+    const data = localStorageGet(e.currentTarget.value);
+    await db
+      .import(data, { clearTablesBeforeImport: true })
+      .then(() => window.location.reload());
+  }
+
+  async function exportDb(
+    e: React.FormEvent<HTMLFormElement>,
+    mixName: string
+  ) {
     e.preventDefault();
     try {
-      const blob = await db.export({ prettyJson: true, progressCallback });
-      // download(blob, `${fileName}.json`, "text/json");
+      const blob = await db.export({ prettyJson: true });
+      // download(blob, `${mixName}.json`, "text/json");
       const text = await blob.text();
       const parsed = JSON.parse(text);
-      localStorageSet("blob", parsed);
+      localStorageSet(mixName, parsed);
     } catch (error) {
       console.error("" + error);
     }
-    setFileName("");
+    setMixName("");
   }
 
   return (
     <MixerMachineContext.Provider>
-      <form onSubmit={(e) => exportDb(e, fileName)}>
-        <label htmlFor="fileName">File Name: </label>
+      <form onSubmit={(e) => exportDb(e, mixName)}>
+        <label htmlFor="mixName">File Name: </label>
         <input
-          id="fileName"
-          onChange={(e) => setFileName(e.currentTarget.value)}
-          value={fileName}
+          id="mixName"
+          onChange={(e) => setMixName(e.currentTarget.value)}
+          value={mixName}
         />
         <button>Submit</button>
       </form>
-      <input
-        type="file"
-        id="mix"
-        name="mix"
-        accept="text/json"
-        onInput={importDb}
-      />
+      <select name="mixes" id="mix-select" onChange={importDb}>
+        <option value="">Choose a song:</option>
+        {mixNames.map((mixName, i) => (
+          <option key={i} value={mixName}>
+            {mixName}
+          </option>
+        ))}
+      </select>
       <Mixer />
     </MixerMachineContext.Provider>
   );
