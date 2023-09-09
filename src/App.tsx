@@ -4,10 +4,13 @@ import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { db } from "./db";
 import "dexie-export-import";
 import { localStorageGet, localStorageSet } from "./utils";
+import { setSourceSong } from "./utils/init";
 
 function App() {
   const [mixName, setMixName] = useState("");
   const mixNames = Object.keys(window.localStorage);
+
+  setSourceSong();
 
   async function importDb(
     e: React.FormEvent<HTMLSelectElement>

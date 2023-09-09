@@ -1,5 +1,4 @@
 import { createMachine, assign } from "xstate";
-import { setSourceSong } from "./init";
 import { defaultTrackData } from "@/assets/songs/defaultData";
 import { produce } from "immer";
 import {
@@ -13,16 +12,20 @@ import {
 import { db } from "@/db";
 
 export type MixerContext = {
-  currentTracks: TrackSettings[];
   sourceSong: SourceSong;
+  currentMain: MainSettings;
+  currentTracks: TrackSettings[];
 };
 type SoloMuteType = { solo: boolean; mute: boolean };
 
-setSourceSong();
 const audioContext = getAudioContext();
 
 async function getSourceSong() {
   return await db.sourceSong.where("id").equals("sourceSong").toArray();
+}
+
+async function getCurrentMain() {
+  return await db.currentMain.where("id").equals("currentMain").toArray();
 }
 
 async function getCurrentTracks() {
@@ -30,10 +33,12 @@ async function getCurrentTracks() {
 }
 
 const sourceSong = getSourceSong();
+const currentMain = getCurrentMain();
 const currentTracks = getCurrentTracks();
 
 const initialContext: MixerContext = {
   sourceSong: await sourceSong.then((song) => song[0]?.data),
+  currentMain: await currentMain.then((main) => main[0].data),
   currentTracks: await currentTracks.then((track) => track[0]?.data),
 };
 

@@ -12,7 +12,19 @@ export async function setSourceSong() {
       ...roxanne,
     });
     setCurrentTracks();
-    window.location.reload();
+  }
+}
+
+export async function setCurrentMain() {
+  const currentMain = await db.currentMain
+    .where("id")
+    .equals("currentMain")
+    .toArray();
+
+  if (!currentMain) {
+    db.currentMain.add({
+      volume: -32,
+    });
   }
 }
 

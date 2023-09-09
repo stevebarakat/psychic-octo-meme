@@ -10,9 +10,8 @@ import Main from "./Main";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 export const Mixer = () => {
-  const { currentTracks, sourceSong } = MixerMachineContext.useSelector(
-    (state) => state.context
-  );
+  const { currentTracks, currentMain, sourceSong } =
+    MixerMachineContext.useSelector((state) => state.context);
 
   if (!sourceSong) window.location.reload();
 
@@ -21,9 +20,9 @@ export const Mixer = () => {
 
   (function loadSettings() {
     t.bpm.value = sourceSong.bpm;
-    // const volume = currentMain.volume;
-    // const scaled = dbToPercent(log(volume));
-    // Destination.volume.value = scaled;
+    const volume = currentMain.volume;
+    const scaled = dbToPercent(log(volume));
+    Destination.volume.value = scaled;
 
     currentTracks.forEach((currentTrack: TrackSettings, trackId: number) => {
       const value = currentTrack.volume;

@@ -37,6 +37,7 @@ type PitchShiftData = {
 
 export class DexieDb extends Dexie {
   sourceSong!: Table<SourceSong>;
+  currentMain!: Table<MainSettings>;
   currentTracks!: Table<TrackSettings>;
   volumeData!: Table<VolumeData>;
   panData!: Table<PanData>;
@@ -49,6 +50,7 @@ export class DexieDb extends Dexie {
     super("mixerDb");
     this.version(1).stores({
       sourceSong: "++id",
+      currentMain: "++id",
       currentTracks: "++id",
       volumeData: "++id",
       panData: "++id",
@@ -62,15 +64,13 @@ export class DexieDb extends Dexie {
 
 export const db = new DexieDb();
 
-// const dbStores = db._storeNames;
-
-// Populate with data:
+// POPULATE DB WITH DEFAULT DATA
 db.on("ready", function (db) {
   db.sourceSong.count(function (count: number) {
     if (count > 0) {
       return console.log(`Already populated`);
     } else {
-      console.log("Database is empty. Populating with default data...");
+      console.log("No Source Song set. Populating with default data.");
 
       const data = [{ id: "sourceSong", data: roxanne }];
 
@@ -79,13 +79,26 @@ db.on("ready", function (db) {
   });
 });
 
-// Populate with data:
+db.on("ready", function (db) {
+  db.currentMain.count(function (count: number) {
+    if (count > 0) {
+      return console.log(`Already populated`);
+    } else {
+      console.log("Current Main set. Populating with default data.");
+
+      const data = [{ id: "currentMain", data: { volume: -32 } }];
+
+      return db.currentMain.bulkAdd(data);
+    }
+  });
+});
+
 db.on("ready", function (db) {
   db.currentTracks.count(function (count: number) {
     if (count > 0) {
       return console.log(`Already populated`);
     } else {
-      console.log("Database is empty. Populating with default data...");
+      console.log("CurrentTracks not set. Populating with default data.");
 
       const data = [
         {
@@ -98,7 +111,6 @@ db.on("ready", function (db) {
           })),
         },
       ];
-
       return db.currentTracks.bulkAdd(data);
     }
   });
