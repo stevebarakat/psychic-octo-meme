@@ -1,13 +1,14 @@
 import VuMeter from "../VuMeter";
 import useMeter from "@/components/Main/useMeter";
-import { Destination } from "tone";
 import ChannelLabel from "../ChannelLabel";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 
 export default function Main() {
-  const meterVal = useMeter([Destination]);
+  const meterVal = useMeter();
   const { send } = MixerMachineContext.useActorRef();
-  const volume = 0;
+  const { volume } = MixerMachineContext.useSelector(
+    (state) => state.context.currentMain
+  );
 
   function setVolume(e: React.FormEvent<HTMLInputElement>): void {
     send({
