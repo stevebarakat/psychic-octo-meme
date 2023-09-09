@@ -27,10 +27,8 @@ export default function useMeters(
     channels.map((channel, i) => {
       return channel?.connect(meters.current[i]);
     });
-    requestAnimationFrame(animateMeter);
-    return () => {
-      animation.current && cancelAnimationFrame(animation.current);
-    };
+
+    animateMeter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return meterLevels;
