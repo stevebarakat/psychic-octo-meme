@@ -1,10 +1,10 @@
 import { useEffect, useCallback, useRef, useState } from "react";
-import { Meter } from "tone";
+import { Destination, Meter } from "tone";
 
-export default function useMeter(channels: (Destination | Channel)[]) {
+export default function useMeter() {
   const meters = useRef<Meter[]>([]);
   const [meterLevels, setMeterLevels] = useState<Float32Array>(
-    () => new Float32Array(channels.length)
+    () => new Float32Array(1)
   );
   const animation = useRef<number | null>(null);
 
@@ -22,7 +22,7 @@ export default function useMeter(channels: (Destination | Channel)[]) {
 
   // create meter and trigger animateMeter
   useEffect(() => {
-    channels.map((channel, i) => {
+    [Destination].map((channel, i) => {
       meters.current[i] = new Meter();
       return channel?.connect(meters.current[i]);
     });
