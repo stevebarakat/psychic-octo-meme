@@ -5,7 +5,7 @@ export default function useMeters(
   channels: (Destination | Channel)[],
   meters: React.MutableRefObject<Meter[]>
 ) {
-  const [meterVals, setMeterVals] = useState<Float32Array>(
+  const [meterLevels, setMeterLevels] = useState<Float32Array>(
     () => new Float32Array(channels.length)
   );
   const animation = useRef<number | null>(null);
@@ -13,14 +13,14 @@ export default function useMeters(
   // loop recursively to amimateMeters
   const animateMeter = useCallback(() => {
     meters.current.forEach((meter, i) => {
-      const val = meter.getValue();
-      if (typeof val === "number") {
-        meterVals[i] = val;
-        setMeterVals(new Float32Array(meterVals));
+      const value = meter.getValue();
+      if (typeof value === "number") {
+        meterLevels[i] = value;
+        setMeterLevels(new Float32Array(meterLevels));
       }
     });
     animation.current = requestAnimationFrame(animateMeter);
-  }, [meterVals, meters]);
+  }, [meterLevels, meters]);
 
   // create meter and trigger animateMeter
   useEffect(() => {
@@ -33,5 +33,5 @@ export default function useMeters(
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return meterVals;
+  return meterLevels;
 }
