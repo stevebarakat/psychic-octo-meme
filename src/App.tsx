@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Mixer } from "./components/Mixer";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { db } from "./db";
-import download from "downloadjs";
 import "dexie-export-import";
 import { localStorageGet, localStorageSet } from "./utils";
 
@@ -25,8 +24,7 @@ function App() {
   ) {
     e.preventDefault();
     try {
-      const blob = await db.export({ prettyJson: true });
-      // download(blob, `${mixName}.json`, "text/json");
+      const blob = await db.export();
       const text = await blob.text();
       const parsed = JSON.parse(text);
       localStorageSet(mixName, parsed);
