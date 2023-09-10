@@ -46,7 +46,9 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const reverb = useReverb();
   const pitchShift = usePitchShift();
 
-  const meters = useRef(Array(channels.length).fill(new Meter()));
+  const meters = useRef(
+    Array(channels.length).fill(new Meter({ channels: 2 }))
+  );
 
   const { send } = MixerMachineContext.useActorRef();
 

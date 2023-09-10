@@ -13,11 +13,10 @@ export default function useMeters(
   // loop recursively to amimateMeters
   const animateMeter = useCallback(() => {
     meters.current.forEach((meter, i) => {
-      const value = meter.getValue();
-      if (typeof value === "number") {
-        meterLevels[i] = value;
-        setMeterLevels(new Float32Array(meterLevels));
-      }
+      const values = meter.getValue();
+      if (typeof values !== "object") return;
+      values.forEach((value, i) => (meterLevels[i] = value));
+      setMeterLevels(new Float32Array(meterLevels));
     });
     animation.current = requestAnimationFrame(animateMeter);
   }, [meterLevels, meters]);

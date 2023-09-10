@@ -38,7 +38,7 @@ const currentTracks = getCurrentTracks();
 
 const initialContext: MixerContext = {
   sourceSong: await sourceSong.then((song) => song[0]?.data),
-  currentMain: await currentMain.then((main) => main[0].data),
+  currentMain: await currentMain.then((main) => main[0]?.data),
   currentTracks: await currentTracks.then((track) => track[0]?.data),
 };
 
@@ -262,7 +262,7 @@ export const mixerMachine = createMachine(
       loadSong: assign(async (context, { value }: any): any => {
         await db.sourceSong.put({
           id: "sourceSong",
-          data: { ...value },
+          ...value,
         });
         const currentTracks = value.tracks.map((track: TrackSettings) => ({
           id: crypto.randomUUID(),
@@ -270,10 +270,11 @@ export const mixerMachine = createMachine(
           path: track.path,
           ...defaultTrackData,
         }));
+        context.sourceSong = sourceSong;
         context.currentTracks = currentTracks;
         await db.currentTracks.put({
           id: "currentTracks",
-          data: currentTracks,
+          ...currentTracks,
         });
         window.location.reload();
       }),
@@ -362,9 +363,9 @@ export const mixerMachine = createMachine(
       setTrackDelayBypass: assign(
         (context, { checked, delay, trackId, fxId }) => {
           if (checked) {
-            delay?.disconnect();
+            delay.disconnect();
           } else {
-            delay?.toDestination();
+            delay.toDestination();
           }
           return produce(context, (draft) => {
             draft.currentTracks[trackId].delaySettings.delayBypass[fxId] =
