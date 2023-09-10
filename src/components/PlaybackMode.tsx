@@ -23,7 +23,6 @@ function PlaybackMode({ trackId, param }: Props) {
   const currentTracks = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks
   );
-  console.log("currentTracks", currentTracks);
   function setPlaybackMode(e: React.FormEvent<HTMLInputElement>): void {
     const ubu = JSON.parse(JSON.stringify(currentTracks));
     ubu[trackId][`${param}Mode`] = e.currentTarget.value;

@@ -70,7 +70,6 @@ function TrackPanels({ fx, trackId }: PanelsProps) {
 
   const panelsEmpty = ct.fxNames.every((name: string) => name === "nofx");
 
-  console.log("fx", fx);
   return !panelsEmpty ? (
     <TrackPanel trackId={trackId}>
       {fx.map((ef, i) => (
