@@ -93,7 +93,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
     }, []);
 
     channels[trackId].disconnect();
-    channels[trackId].connect(meters.current[2].toDestination());
+    channels[trackId].connect(meters.current[trackId].toDestination());
     currentTrackFx.forEach((ctf) => {
       ctf && channels[trackId].chain(ctf, Destination);
     });
@@ -127,10 +127,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     if (!showDelay && !showPitchShift && !showReverb) return;
     return (
       <TrackPanel trackId={trackId}>
-        {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
-        {showReverb && <Reverber reverb={reverb} trackId={trackId} fxId={0} />}
+        {showDelay && <Delay delay={delay} trackId={trackId} />}
+        {showReverb && <Reverber reverb={reverb} trackId={trackId} />}
         {showPitchShift && (
-          <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
+          <PitchShifter pitchShift={pitchShift} trackId={trackId} />
         )}
       </TrackPanel>
     );

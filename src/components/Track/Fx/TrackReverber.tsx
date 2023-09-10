@@ -10,7 +10,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 
 type Props = {
-  reverb: Reverb | null;
+  reverb: Reverb;
   trackId: number;
   fxId: number;
 };
@@ -49,7 +49,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_BYPASS",
       checked,
-      reverb: reverb!,
+      reverb,
       trackId,
       fxId,
     });
@@ -60,7 +60,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_MIX",
       value,
-      reverb: reverb!,
+      reverb,
       trackId,
       fxId,
     });
@@ -71,7 +71,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_PREDELAY",
       value,
-      reverb: reverb!,
+      reverb,
       trackId,
       fxId,
     });
@@ -82,7 +82,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
     send({
       type: "SET_TRACK_REVERB_DECAY",
       value,
-      reverb: reverb!,
+      reverb,
       trackId,
       fxId,
     });
