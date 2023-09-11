@@ -129,10 +129,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     if (!showDelay && !showPitchShift && !showReverb) return;
     return (
       <TrackPanel trackId={trackId}>
-        {showDelay && <Delay delay={delay} trackId={trackId} />}
-        {showReverb && <Reverber reverb={reverb} trackId={trackId} />}
+        {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
+        {showReverb && <Reverber reverb={reverb} trackId={trackId} fxId={0} />}
         {showPitchShift && (
-          <PitchShifter pitchShift={pitchShift} trackId={trackId} />
+          <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
         )}
       </TrackPanel>
     );

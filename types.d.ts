@@ -5,7 +5,7 @@ declare global {
   type Destination = ToneDestination;
   type Channel = ToneChannel;
 
-  type Fx = [JSX.Element, JSX.Element];
+  type Fx = JSX.Element[];
 
   type TrackFx = {
     nofx: Volume | null;
