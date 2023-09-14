@@ -7,7 +7,6 @@ import { db } from "@/db";
 type Props = {
   id: number;
   fxParam: "reverb" | "delay" | "pitchShift";
-  fxId: number;
   value: ReverbSettings | DelaySettings | PitchShiftSettings;
 };
 

@@ -47,9 +47,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
 
   const { send } = MixerMachineContext.useActorRef();
 
-  const [currentTrackFx, setCurrentTrackFx] = useState(
-    Array(fxNames.length).fill(new Volume())
-  );
+  const [currentTrackFx, setCurrentTrackFx] = useState<Fx>(new Volume());
 
   const disabled = fxNames.every((item: string) => {
     return item === "nofx";
@@ -62,26 +60,22 @@ function TrackChannel({ track, trackId, channels }: Props) {
     });
   }
   useEffect(() => {
-    fxNames.forEach((name, fxId) => {
+    fxNames.forEach((name) => {
       switch (name) {
         case "nofx":
-          currentTrackFx[fxId] = nofx;
-          setCurrentTrackFx(() => currentTrackFx);
+          setCurrentTrackFx(nofx);
           break;
 
         case "reverb":
-          currentTrackFx[fxId] = reverb;
-          setCurrentTrackFx(() => currentTrackFx);
+          setCurrentTrackFx(reverb);
           break;
 
         case "delay":
-          currentTrackFx[fxId] = delay;
-          setCurrentTrackFx(() => currentTrackFx);
+          setCurrentTrackFx(delay);
           break;
 
         case "pitchShift":
-          currentTrackFx[fxId] = pitchShift;
-          setCurrentTrackFx(() => currentTrackFx);
+          setCurrentTrackFx(pitchShift);
           break;
 
         default:
@@ -91,9 +85,11 @@ function TrackChannel({ track, trackId, channels }: Props) {
 
     channels[trackId].disconnect();
     channels[trackId].connect(meters.current[trackId].toDestination());
-    currentTrackFx.forEach((ctf) => {
-      ctf && channels[trackId].chain(ctf, Destination);
-    });
+    // currentTrackFx.forEach((ctf) => {
+    //   ctf && channels[trackId].chain(ctf, Destination);
+    // });
+    console.log("currentTrackFx", currentTrackFx);
+    currentTrackFx && channels[trackId].chain(currentTrackFx, Destination);
   });
 
   const showReverb = fxNames.some((name: string) => name === "reverb");
@@ -107,8 +103,6 @@ function TrackChannel({ track, trackId, channels }: Props) {
     const fxName = e.currentTarget.value;
     const id = e.currentTarget.id.at(-1);
     const fxId = parseInt(id!, 10);
-
-    currentTrackFx.splice(fxId, 1);
 
     send({
       type: "SET_TRACK_FX_NAMES",
@@ -124,10 +118,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     if (!showDelay && !showPitchShift && !showReverb) return;
     return (
       <TrackPanel trackId={trackId}>
-        {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
-        {showReverb && <Reverber reverb={reverb} trackId={trackId} fxId={0} />}
+        {showDelay && <Delay delay={delay} trackId={trackId} />}
+        {showReverb && <Reverber reverb={reverb} trackId={trackId} />}
         {showPitchShift && (
-          <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
+          <PitchShifter pitchShift={pitchShift} trackId={trackId} />
         )}
       </TrackPanel>
     );

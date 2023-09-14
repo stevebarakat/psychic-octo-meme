@@ -5,7 +5,7 @@ declare global {
   type Destination = ToneDestination;
   type Channel = ToneChannel;
 
-  type Fx = JSX.Element[];
+  type Fx = Volume | Reverb | FeedbackDelay | PitchShift;
 
   type TrackFx = {
     nofx: Volume | null;
@@ -65,24 +65,24 @@ declare global {
 
   type DelaySettings = {
     playbackMode: string;
-    delayBypass: boolean[];
-    delayMix: number[];
-    delayTime: number[];
-    delayFeedback: number[];
+    delayBypass: boolean;
+    delayMix: number;
+    delayTime: number;
+    delayFeedback: number;
   };
 
   type ReverbSettings = {
     playbackMode: string;
-    reverbBypass: boolean[];
-    reverbMix: number[];
-    reverbPreDelay: number[];
-    reverbDecay: number[];
+    reverbBypass: boolean;
+    reverbMix: number;
+    reverbPreDelay: number;
+    reverbDecay: number;
   };
 
   type PitchShiftSettings = {
     playbackMode: string;
-    pitchShiftBypass: boolean[];
-    pitchShiftMix: number[];
-    pitchShiftPitch: number[];
+    pitchShiftBypass: boolean;
+    pitchShiftMix: number;
+    pitchShiftPitch: number;
   };
 }

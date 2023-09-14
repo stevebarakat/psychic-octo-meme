@@ -118,77 +118,66 @@ export const mixerMachine = createMachine(
             checked: boolean;
             reverb: Reverb;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_REVERB_MIX";
             value: number;
             reverb: Reverb;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_REVERB_PREDELAY";
             value: number;
             reverb: Reverb;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_REVERB_DECAY";
             value: number;
             reverb: Reverb;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_DELAY_BYPASS";
             checked: boolean;
             delay: FeedbackDelay;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_DELAY_MIX";
             value: number;
             delay: FeedbackDelay;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_DELAY_TIME";
             value: number;
             delay: FeedbackDelay;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_DELAY_FEEDBACK";
             value: number;
             delay: FeedbackDelay;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_PITCHSHIFT_BYPASS";
             checked: boolean;
             pitchShift: PitchShift;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_PITCHSHIFT_MIX";
             value: number;
             pitchShift: PitchShift;
             trackId: number;
-            fxId: number;
           }
         | {
             type: "SET_TRACK_PITCHSHIFT_PITCH";
             value: number;
             pitchShift: PitchShift;
             trackId: number;
-            fxId: number;
           }
         | { type: "SET_ACTIVE_TRACK_PANELS"; trackId: number }
         | {
@@ -318,119 +307,101 @@ export const mixerMachine = createMachine(
         }
       ),
 
-      setTrackReverbBypass: assign(
-        (context, { checked, reverb, trackId, fxId }) => {
-          if (checked) {
-            reverb?.disconnect();
-          } else {
-            reverb?.toDestination();
-          }
-
-          return produce(context, (draft) => {
-            draft.currentTracks[trackId].reverbSettings.reverbBypass[fxId] =
-              checked;
-          });
+      setTrackReverbBypass: assign((context, { checked, reverb, trackId }) => {
+        if (checked) {
+          reverb?.disconnect();
+        } else {
+          reverb?.toDestination();
         }
-      ),
 
-      setTrackReverbMix: assign((context, { value, reverb, trackId, fxId }) => {
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].reverbSettings.reverbBypass = checked;
+        });
+      }),
+
+      setTrackReverbMix: assign((context, { value, reverb, trackId }) => {
         if (reverb) reverb.wet.value = value;
         return produce(context, (draft) => {
-          draft.currentTracks[trackId].reverbSettings.reverbMix[fxId] = value;
+          draft.currentTracks[trackId].reverbSettings.reverbMix = value;
         });
       }),
 
-      setTrackReverbPreDelay: assign(
-        (context, { value, reverb, trackId, fxId }) => {
-          if (reverb) reverb.preDelay = value;
-          return produce(context, (draft) => {
-            draft.currentTracks[trackId].reverbSettings.reverbPreDelay[fxId] =
-              value;
-          });
-        }
-      ),
+      setTrackReverbPreDelay: assign((context, { value, reverb, trackId }) => {
+        if (reverb) reverb.preDelay = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].reverbSettings.reverbPreDelay = value;
+        });
+      }),
 
-      setTrackReverbDecay: assign(
-        (context, { value, reverb, trackId, fxId }) => {
-          if (reverb) reverb.decay = value;
-          return produce(context, (draft) => {
-            draft.currentTracks[trackId].reverbSettings.reverbDecay[fxId] =
-              value;
-          });
-        }
-      ),
+      setTrackReverbDecay: assign((context, { value, reverb, trackId }) => {
+        if (reverb) reverb.decay = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].reverbSettings.reverbDecay = value;
+        });
+      }),
 
-      setTrackDelayBypass: assign(
-        (context, { checked, delay, trackId, fxId }) => {
-          if (checked) {
-            delay.disconnect();
-          } else {
-            delay.toDestination();
-          }
-          return produce(context, (draft) => {
-            draft.currentTracks[trackId].delaySettings.delayBypass[fxId] =
-              checked;
-          });
+      setTrackDelayBypass: assign((context, { checked, delay, trackId }) => {
+        if (checked) {
+          delay.disconnect();
+        } else {
+          delay.toDestination();
         }
-      ),
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].delaySettings.delayBypass = checked;
+        });
+      }),
 
-      setTrackDelayMix: assign((context, { value, delay, trackId, fxId }) => {
+      setTrackDelayMix: assign((context, { value, delay, trackId }) => {
         if (delay) delay.wet.value = value;
         return produce(context, (draft) => {
-          draft.currentTracks[trackId].delaySettings.delayMix[fxId] = value;
+          draft.currentTracks[trackId].delaySettings.delayMix = value;
         });
       }),
 
-      setTrackDelayTime: assign((context, { value, delay, trackId, fxId }) => {
+      setTrackDelayTime: assign((context, { value, delay, trackId }) => {
         if (delay) delay.delayTime.value = value;
         return produce(context, (draft) => {
-          draft.currentTracks[trackId].delaySettings.delayTime[fxId] = value;
+          draft.currentTracks[trackId].delaySettings.delayTime = value;
         });
       }),
 
-      setTrackDelayFeedback: assign(
-        (context, { value, delay, trackId, fxId }) => {
-          if (delay) delay.feedback.value = value;
-          return produce(context, (draft) => {
-            draft.currentTracks[trackId].delaySettings.delayFeedback[fxId] =
-              value;
-          });
-        }
-      ),
+      setTrackDelayFeedback: assign((context, { value, delay, trackId }) => {
+        if (delay) delay.feedback.value = value;
+        return produce(context, (draft) => {
+          draft.currentTracks[trackId].delaySettings.delayFeedback = value;
+        });
+      }),
 
       setTrackPitchShiftBypass: assign(
-        (context, { checked, pitchShift, trackId, fxId }) => {
+        (context, { checked, pitchShift, trackId }) => {
           if (checked) {
             pitchShift?.disconnect();
           } else {
             pitchShift?.toDestination();
           }
           return produce(context, (draft) => {
-            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftBypass[
-              fxId
-            ] = checked;
+            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftBypass =
+              checked;
           });
         }
       ),
 
       setTrackPitchShiftMix: assign(
-        (context, { value, pitchShift, trackId, fxId }) => {
+        (context, { value, pitchShift, trackId }) => {
           if (pitchShift) pitchShift.wet.value = value;
           return produce(context, (draft) => {
-            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftMix[
-              fxId
-            ] = value;
+            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftMix =
+              value;
           });
         }
       ),
 
       setTrackPitchShiftPitch: assign(
-        (context, { value, pitchShift, trackId, fxId }) => {
+        (context, { value, pitchShift, trackId }) => {
           if (pitchShift) pitchShift.pitch = value;
           return produce(context, (draft) => {
-            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftPitch[
-              fxId
-            ] = value;
+            draft.currentTracks[trackId].pitchShiftSettings.pitchShiftPitch =
+              value;
           });
         }
       ),

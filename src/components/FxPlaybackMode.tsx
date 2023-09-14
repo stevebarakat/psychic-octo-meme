@@ -12,11 +12,10 @@ import { db } from "@/db";
 
 type Props = {
   trackId: number;
-  fxId: number;
   param: "delay" | "reverb" | "pitchShift";
 };
 
-function PlaybackMode({ trackId, fxId, param }: Props) {
+function PlaybackMode({ trackId, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
     (state) =>

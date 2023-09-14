@@ -12,32 +12,29 @@ import { db } from "@/db";
 type Props = {
   delay: FeedbackDelay | null;
   trackId: number;
-  fxId: number;
 };
 
 type ReadProps = {
   trackId: number;
 };
 
-export default function Delay({ delay, trackId, fxId }: Props) {
+export default function Delay({ delay, trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
   const delayBypass = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delaySettings.delayBypass[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayBypass;
   });
 
   const delayMix = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delaySettings.delayMix[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayMix;
   });
 
   const delayTime = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delaySettings.delayTime[fxId];
+    return state.context.currentTracks[trackId].delaySettings.delayTime;
   });
 
   const delayFeedback = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].delaySettings.delayFeedback[
-      fxId
-    ];
+    return state.context.currentTracks[trackId].delaySettings.delayFeedback;
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
@@ -47,7 +44,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       checked,
       delay: delay!,
       trackId,
-      fxId,
     });
   }
 
@@ -58,7 +54,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       value,
       delay: delay!,
       trackId,
-      fxId,
     });
   }
 
@@ -69,7 +64,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       value,
       delay: delay!,
       trackId,
-      fxId,
     });
   }
 
@@ -80,7 +74,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       value,
       delay: delay!,
       trackId,
-      fxId,
     });
   }
 
@@ -88,13 +81,12 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   useWrite({
     id: trackId,
     fxParam: "delay",
-    fxId,
     value: {
       playbackMode: "static",
-      delayBypass: [delayBypass],
-      delayMix: [delayMix],
-      delayTime: [delayTime],
-      delayFeedback: [delayFeedback],
+      delayBypass: delayBypass,
+      delayMix: delayMix,
+      delayTime: delayTime,
+      delayFeedback: delayFeedback,
     },
   });
 
@@ -120,26 +112,23 @@ export default function Delay({ delay, trackId, fxId }: Props) {
 
           send({
             type: "SET_TRACK_DELAY_MIX",
-            value: data.value.delayMix[fxId],
+            value: data.value.delayMix,
             delay: delay!,
             trackId,
-            fxId,
           });
 
           send({
             type: "SET_TRACK_DELAY_TIME",
-            value: data.value.delayTime[fxId],
+            value: data.value.delayTime,
             delay: delay!,
             trackId,
-            fxId,
           });
 
           send({
             type: "SET_TRACK_DELAY_FEEDBACK",
-            value: data.value.delayFeedback[fxId],
+            value: data.value.delayFeedback,
             delay: delay!,
             trackId,
-            fxId,
           });
         }, data.time);
       },
@@ -171,7 +160,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
         <h3>Delay</h3>
         <div className="power-button">
           <Toggle
-            id={`delayBypass-track${trackId}fx${fxId}`}
+            id={`delayBypass-track${trackId}`}
             onChange={toggleBypass}
             checked={delayBypass}
           >
@@ -180,7 +169,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <PlaybackMode trackId={trackId} fxId={fxId} param="delay" />
+        <PlaybackMode trackId={trackId} param="delay" />
         <label htmlFor={`track${trackId}delayMix`}>Mix:</label>
         <input
           type="range"

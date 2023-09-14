@@ -12,29 +12,28 @@ import { db } from "@/db";
 type Props = {
   pitchShift: PitchShift | null;
   trackId: number;
-  fxId: number;
 };
 
 type ReadProps = {
   trackId: number;
 };
 
-export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
+export default function PitchShifter({ pitchShift, trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
   const pitchShiftBypass = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pitchShiftSettings
-      .pitchShiftBypass[fxId];
+      .pitchShiftBypass;
   });
 
   const pitchShiftMix = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pitchShiftSettings
-      .pitchShiftMix[fxId];
+      .pitchShiftMix;
   });
 
   const pitchShiftPitch = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].pitchShiftSettings
-      .pitchShiftPitch[fxId];
+      .pitchShiftPitch;
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
@@ -44,7 +43,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       checked,
       pitchShift: pitchShift!,
       trackId,
-      fxId,
     });
   }
 
@@ -55,7 +53,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       value,
       pitchShift: pitchShift!,
       trackId,
-      fxId,
     });
   }
   function setPitch(e: React.FormEvent<HTMLInputElement>): void {
@@ -65,7 +62,6 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       value,
       pitchShift: pitchShift!,
       trackId,
-      fxId,
     });
   }
 
@@ -73,12 +69,11 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
   useWrite({
     id: trackId,
     fxParam: "pitchShift",
-    fxId,
     value: {
       playbackMode: "static",
-      pitchShiftBypass: [pitchShiftBypass],
-      pitchShiftMix: [pitchShiftMix],
-      pitchShiftPitch: [pitchShiftPitch],
+      pitchShiftBypass: pitchShiftBypass,
+      pitchShiftMix: pitchShiftMix,
+      pitchShiftPitch: pitchShiftPitch,
     },
   });
 
@@ -105,18 +100,16 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
 
           send({
             type: "SET_TRACK_PITCHSHIFT_MIX",
-            value: data.value.pitchShiftMix[fxId],
+            value: data.value.pitchShiftMix,
             pitchShift: pitchShift!,
             trackId,
-            fxId,
           });
 
           send({
             type: "SET_TRACK_PITCHSHIFT_PITCH",
-            value: data.value.pitchShiftPitch[fxId],
+            value: data.value.pitchShiftPitch,
             pitchShift: pitchShift!,
             trackId,
-            fxId,
           });
         }, data.time);
       },
@@ -157,7 +150,7 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <PlaybackMode trackId={trackId} fxId={fxId} param="pitchShift" />
+        <PlaybackMode trackId={trackId} param="pitchShift" />
         <label htmlFor={`track${trackId}pitchShiftMix`}>Mix:</label>
         <input
           type="range"
