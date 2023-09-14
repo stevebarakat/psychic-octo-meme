@@ -293,13 +293,24 @@ export const mixerMachine = createMachine(
       }),
 
       setTrackFxNames: assign(
-        (context, { trackId, fxId, action, channels, value }) => {
+        async (context, { trackId, fxId, action, channels, value }) => {
+          const query = await db.currentTracks
+            .where("id")
+            .equals("currentTracks")
+            .toArray();
+
+          const currentTracks = query[0].data;
+          console.log("currentTracks", currentTracks);
           if (action === "remove") {
             channels[trackId].disconnect();
             return produce(context, (draft) => {
               draft.currentTracks[trackId].fxNames.splice(fxId, 1);
             });
           } else {
+            currentTracks[trackId].fxNames[fxId] = value;
+            await db.currentTracks.update("currentTracks", {
+              data: currentTracks,
+            });
             return produce(context, (draft) => {
               draft.currentTracks[trackId].fxNames[fxId] = value;
             });

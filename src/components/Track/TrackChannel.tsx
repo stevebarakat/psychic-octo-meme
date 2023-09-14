@@ -138,10 +138,8 @@ function TrackChannel({ track, trackId, channels }: Props) {
       value: fxName,
     });
 
-    console.log("ctx", ctx[0].data);
     const currentTracks = await ctx[0].data;
     currentTracks[trackId].currentFx = currentFx;
-    console.log("currentTracks", currentTracks);
     await db.currentTracks.put({ id: "currentTracks", data: currentTracks });
   }
   const showReverb = fxNames.some((name: string) => name === "reverb");
