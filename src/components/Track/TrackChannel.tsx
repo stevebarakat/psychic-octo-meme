@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Destination, Meter, Volume } from "tone";
-import PlaybackMode from "../PlaybackMode";
+import PlaybackMode from "../PlaybackModeSelect";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
