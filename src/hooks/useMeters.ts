@@ -12,7 +12,7 @@ export default function useMeters(
 
   // loop recursively to amimateMeters
   const animateMeter = useCallback(() => {
-    meters.current.forEach((meter, i) => {
+    meters.current.forEach((meter) => {
       const values = meter.getValue();
       if (typeof values !== "object") return;
       values.forEach((value, i) => (meterLevels[i] = value));
