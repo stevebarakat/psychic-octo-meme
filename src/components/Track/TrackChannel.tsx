@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Destination, Meter, Volume } from "tone";
-import PlaybackMode from "../PlaybackModeSelect";
+import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
 import SoloMute from "./SoloMute";
 import Fader from "./Fader";
@@ -10,7 +10,7 @@ import useVolumeAutomationData from "@/hooks/useVolumeAutomationData";
 import { ChannelButton } from "../Buttons";
 import { array } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import { TrackPanel } from "./TrackPanels";
+import TrackPanel from "./TrackPanel";
 import {
   Delay,
   Reverber,
@@ -129,10 +129,10 @@ function TrackChannel({ track, trackId, channels }: Props) {
     if (!showDelay && !showPitchShift && !showReverb) return;
     return (
       <TrackPanel trackId={trackId}>
-        {showDelay && <Delay delay={delay} trackId={trackId} fxId={0} />}
-        {showReverb && <Reverber reverb={reverb} trackId={trackId} fxId={0} />}
+        {showDelay && <Delay delay={delay} trackId={trackId} />}
+        {showReverb && <Reverber reverb={reverb} trackId={trackId} />}
         {showPitchShift && (
-          <PitchShifter pitchShift={pitchShift} trackId={trackId} fxId={0} />
+          <PitchShifter pitchShift={pitchShift} trackId={trackId} />
         )}
       </TrackPanel>
     );

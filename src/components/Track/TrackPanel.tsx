@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { CloseButton } from "@/components/Buttons";
 import { Rnd as FxPanel } from "react-rnd";
@@ -8,12 +8,7 @@ type PanelProps = {
   trackId: number;
 };
 
-type PanelsProps = {
-  fx: Fx;
-  trackId: number;
-};
-
-export function TrackPanel({ children, trackId }: PanelProps) {
+export default function TrackPanel({ children, trackId }: PanelProps) {
   const { send } = MixerMachineContext.useActorRef();
   const panelPosition = MixerMachineContext.useSelector((state) => {
     return state.context.currentTracks[trackId].panelPosition;
@@ -64,19 +59,3 @@ export function TrackPanel({ children, trackId }: PanelProps) {
     </FxPanel>
   );
 }
-
-function TrackPanels({ fx, trackId }: PanelsProps) {
-  const ct = currentTracks[trackId];
-
-  const panelsEmpty = ct.fxNames.every((name: string) => name === "nofx");
-
-  return !panelsEmpty ? (
-    <TrackPanel trackId={trackId}>
-      {fx.map((ef, i) => (
-        <Fragment key={i}>{ef}</Fragment>
-      ))}
-    </TrackPanel>
-  ) : null;
-}
-
-export default TrackPanels;
