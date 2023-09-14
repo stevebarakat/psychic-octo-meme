@@ -12,36 +12,29 @@ import { db } from "@/db";
 type Props = {
   reverb: Reverb;
   trackId: number;
-  fxId: number;
 };
 
 type ReadProps = {
   trackId: number;
 };
 
-export default function Reverber({ reverb, trackId, fxId }: Props) {
+export default function Reverber({ reverb, trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
 
   const reverbBypass = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbSettings.reverbBypass[
-      fxId
-    ];
+    return state.context.currentTracks[trackId].reverbSettings.reverbBypass;
   });
 
   const reverbMix = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbSettings.reverbMix[fxId];
+    return state.context.currentTracks[trackId].reverbSettings.reverbMix;
   });
 
   const reverbPreDelay = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbSettings.reverbPreDelay[
-      fxId
-    ];
+    return state.context.currentTracks[trackId].reverbSettings.reverbPreDelay;
   });
 
   const reverbDecay = MixerMachineContext.useSelector((state) => {
-    return state.context.currentTracks[trackId].reverbSettings.reverbDecay[
-      fxId
-    ];
+    return state.context.currentTracks[trackId].reverbSettings.reverbDecay;
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
@@ -51,7 +44,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       checked,
       reverb,
       trackId,
-      fxId,
     });
   }
 
@@ -62,7 +54,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       value,
       reverb,
       trackId,
-      fxId,
     });
   }
 
@@ -73,7 +64,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       value,
       reverb,
       trackId,
-      fxId,
     });
   }
 
@@ -84,7 +74,6 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       value,
       reverb,
       trackId,
-      fxId,
     });
   }
 
@@ -92,13 +81,12 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
   useWrite({
     id: trackId,
     fxParam: "reverb",
-    fxId,
     value: {
       playbackMode: "static",
-      reverbBypass: [reverbBypass],
-      reverbMix: [reverbMix],
-      reverbPreDelay: [reverbPreDelay],
-      reverbDecay: [reverbDecay],
+      reverbBypass: reverbBypass,
+      reverbMix: reverbMix,
+      reverbPreDelay: reverbPreDelay,
+      reverbDecay: reverbDecay,
     },
   });
 
@@ -125,26 +113,23 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
 
           send({
             type: "SET_TRACK_REVERB_MIX",
-            value: data.value.reverbMix[fxId],
+            value: data.value.reverbMix,
             reverb: reverb!,
             trackId,
-            fxId,
           });
 
           send({
             type: "SET_TRACK_REVERB_PREDELAY",
-            value: data.value.reverbPreDelay[fxId],
+            value: data.value.reverbPreDelay,
             reverb: reverb!,
             trackId,
-            fxId,
           });
 
           send({
             type: "SET_TRACK_REVERB_DECAY",
-            value: data.value.reverbDecay[fxId],
+            value: data.value.reverbDecay,
             reverb: reverb!,
             trackId,
-            fxId,
           });
         }, data.time);
       },
@@ -176,7 +161,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
         <h3>Reverb</h3>
         <div className="power-button">
           <Toggle
-            id={`reverbBypass-track${trackId}fx${fxId}`}
+            id={`reverbBypass-track${trackId}`}
             onChange={toggleBypass}
             checked={reverbBypass}
           >
@@ -185,7 +170,7 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
         </div>
       </div>
       <div className="flex-y">
-        <PlaybackMode trackId={trackId} fxId={fxId} param="reverb" />
+        <PlaybackMode trackId={trackId} param="reverb" />
         <label htmlFor={`track${trackId}reverbMix`}>Mix:</label>
         <input
           type="range"
