@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Fragment } from "react";
 import { Destination, Meter, Volume } from "tone";
 import PlaybackMode from "../PlaybackMode";
 import Pan from "./Pan";
@@ -11,6 +11,8 @@ import { ChannelButton } from "../Buttons";
 import { array } from "@/utils";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import TrackPanel from "./TrackPanel";
+import { db } from "@/db";
+import { useLiveQuery } from "dexie-react-hooks";
 import {
   Delay,
   Reverber,
@@ -35,6 +37,8 @@ function TrackChannel({ track, trackId, channels }: Props) {
   const fxNames = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[trackId].fxNames
   );
+
+  const ctx = useLiveQuery(() => db.currentTracks.toArray());
 
   const fx = {
     nofx: useNoFx(),
@@ -90,7 +94,34 @@ function TrackChannel({ track, trackId, channels }: Props) {
     currentTrackFx && channels[trackId].chain(currentTrackFx, Destination);
   });
 
-  function setTrackFxNames(
+  const currentFx = [];
+  fxNames.map((fxName) => {
+    switch (fxName) {
+      case "reverb":
+        currentFx.push(
+          <Reverber key="reverb" reverb={fx.reverb} trackId={trackId} />
+        );
+        break;
+      case "delay":
+        currentFx.push(
+          <Delay key="delay" delay={fx.delay} trackId={trackId} />
+        );
+        break;
+      case "pitchShift":
+        currentFx.push(
+          <PitchShifter
+            key="pitchShift"
+            pitchShift={fx.pitchShift}
+            trackId={trackId}
+          />
+        );
+        break;
+      default:
+        break;
+    }
+  });
+
+  async function setTrackFxNames(
     e: React.FormEvent<HTMLSelectElement>,
     action: string
   ) {
@@ -106,33 +137,16 @@ function TrackChannel({ track, trackId, channels }: Props) {
       channels,
       value: fxName,
     });
+
+    console.log("ctx", ctx[0].data);
+    const currentTracks = await ctx[0].data;
+    currentTracks[trackId].currentFx = currentFx;
+    console.log("currentTracks", currentTracks);
+    await db.currentTracks.put({ id: "currentTracks", data: currentTracks });
   }
   const showReverb = fxNames.some((name: string) => name === "reverb");
   const showDelay = fxNames.some((name: string) => name === "delay");
   const showPitchShift = fxNames.some((name: string) => name === "pitchShift");
-
-  console.log("fxNames", fxNames);
-
-  const currentFx = [];
-  fxNames.map((fxName) => {
-    switch (fxName) {
-      case "reverb":
-        currentFx.push(<Reverber reverb={fx.reverb} trackId={trackId} />);
-        break;
-      case "delay":
-        currentFx.push(<Delay delay={fx.delay} trackId={trackId} />);
-        break;
-      case "pitchShift":
-        currentFx.push(
-          <PitchShifter pitchShift={fx.pitchShift} trackId={trackId} />
-        );
-        break;
-      default:
-        break;
-    }
-  });
-
-  console.log("currentFx", currentFx);
 
   const getPanel = () => {
     if (!showDelay && !showPitchShift && !showReverb) return;
