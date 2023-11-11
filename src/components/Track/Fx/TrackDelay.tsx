@@ -7,8 +7,6 @@ import PlaybackMode from "@/components/FxPlaybackMode";
 import type { FeedbackDelay } from "tone";
 import { Toggle } from "@/components/Buttons";
 import { Transport as t } from "tone";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
 
 type Props = {
   delay: FeedbackDelay | null;
@@ -70,7 +68,6 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     const value = parseFloat(e.currentTarget.value);
     const currentTracks = localStorageGet("currentTracks");
     currentTracks[trackId].delaySettings.delayMix[fxId] = value;
-    localStorageSet("currentTracks", currentTracks);
   }
 
   function setDelayTime(e: React.FormEvent<HTMLInputElement>): void {
@@ -123,7 +120,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     },
   });
 
-  // useRead({ trackId });
+  useRead({ trackId });
 
   // !!! --- READ --- !!! //
   function useRead({ trackId }: ReadProps) {
@@ -171,19 +168,15 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       [send, playbackMode]
     );
 
-    let queryData = [];
-    const delayData = useLiveQuery(async () => {
-      queryData = await db.delayData
-        .where("id")
-        .equals(`delayData${trackId}`)
-        .toArray();
-      return queryData[0];
-    });
+    const delayData = localStorageGet("delayData");
 
     useEffect(() => {
       if (playbackMode !== "read" || !delayData) return;
-      for (const value of delayData.data.values()) {
-        setParam(value.id, value);
+      const objectToMap = (obj) => new Map(Object.entries(obj));
+      const newDelaySettings = objectToMap(delayData);
+      for (const value of newDelaySettings) {
+        console.log("value[1]", value[1].value);
+        setParam(value[1].id, value[1]);
       }
     }, [delayData, setParam, playbackMode]);
 
