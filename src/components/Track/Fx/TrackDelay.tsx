@@ -123,7 +123,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
     },
   });
 
-  useRead({ trackId });
+  // useRead({ trackId });
 
   // !!! --- READ --- !!! //
   function useRead({ trackId }: ReadProps) {

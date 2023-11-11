@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { Transport as t } from "tone";
-import { roundFourth } from "@/utils";
-import { db } from "@/db";
+import { localStorageSet, roundFourth } from "@/utils";
 
 type Props = {
   id: number;
@@ -24,10 +23,10 @@ function useWrite({ id, fxParam, value }: Props) {
       () => {
         const time: number = roundFourth(t.seconds);
         data.set(time, { id, time, value });
-        db[`${fxParam}Data`].put({
-          id: `${fxParam}Data${id}`,
-          data,
-        });
+
+        const mapToObject = (map) => Object.fromEntries(map.entries());
+        const newData = mapToObject(data);
+        localStorageSet(`${fxParam}Data`, newData);
       },
       0.25,
       0
