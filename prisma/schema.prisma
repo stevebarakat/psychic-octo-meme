@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(uuid())
+  userName      String          @unique
+  passwordHash  String
+  mixSettings   MixSettings[]
+  trackSettings TrackSettings[]
+}
+
+model Song {
+  id       String  @id @default(uuid())
+  slug     String  @unique
+  title    String
+  artist   String
+  year     String
+  studio   String
+  location String
+  bpm      Int
+  start    Int
+  end      Int
+  tracks   Track[]
+}
+
+model Track {
+  id       String @id @default(uuid())
+  position Int    @default(0)
+  name     String
+  path     String
+  song     Song   @relation(fields: [songId], references: [id])
+  songId   String
+}
+
+model MixSettings {
+  id               String           @id @default(uuid())
+  songSlug         String
+  mixName          String           @unique
+  artistPhoto      String           @default("default")
+  coverArt         String           @default("0")
+  private          Boolean          @default(false)
+  likes            Int              @default(0)
+  volume           Float            @default(-32)
+  automationDataId String?
+  trackSettings    TrackSettings[]
+  user             User?            @relation(fields: [userName], references: [userName], onDelete: Cascade)
+  userId           String
+  userName         String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  automationData   AutomationData[]
+}
+
+model TrackSettings {
+  id       String @id @default(uuid())
+  position Int    @default(0)
+  songSlug String
+  name     String
+  mixName  String
+  path     String
+
+  // TRACK
+  volume       Int
+  volumeMode   String
+  pan          Int
+  panMode      String
+  soloMute     Json
+  soloMuteMode String
+
+  // FX
+  fxNames            String[] @default([])
+  delaySettings      Json
+  reverbSettings     Json
+  pitchShiftSettings Json
+
+  // PANELS
+  panelPosition Json
+  panelSize     Json
+  panelActive   Boolean
+
+  mixSettings   MixSettings @relation(fields: [mixSettingsId], references: [id], onDelete: Cascade)
+  mixSettingsId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+}
+
+model AutomationData {
+  id            String      @id @default(uuid())
+  name          String
+  data          String
+  mixSettingsId String
+  mixSettings   MixSettings @relation(fields: [mixSettingsId], references: [id], onDelete: Cascade)
+}
