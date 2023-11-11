@@ -1,9 +1,7 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useEffect, useCallback } from "react";
 import { Transport as t } from "tone";
-import { roundFourth } from "@/utils";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
+import { localStorageGet, localStorageSet, roundFourth } from "@/utils";
 
 type Props = { trackId: number; channels: Channel[] };
 
@@ -36,10 +34,9 @@ function useWrite({ id, value }: WriteProps) {
       () => {
         const time: number = roundFourth(t.seconds);
         data.set(time, { id, time, value });
-        db.volumeData.put({
-          id: `volumeData${id}`,
-          data,
-        });
+        const mapToObject = (map) => Object.fromEntries(map.entries());
+        const newData = mapToObject(data);
+        localStorageSet("volumeData", newData);
       },
       0.25,
       0
@@ -81,20 +78,14 @@ function useRead({ trackId }: Props) {
     [playbackMode, send]
   );
 
-  let queryData = [];
-  const volumeData = useLiveQuery(async () => {
-    queryData = await db.volumeData
-      .where("id")
-      .equals(`volumeData${trackId}`)
-      .toArray();
-    return queryData[0];
-  });
+  const volumeData = localStorageGet("volumeData");
 
   useEffect(() => {
     if (playbackMode !== "read") return;
-
-    for (const value of volumeData!.data.values()) {
-      setParam(value.id, value);
+    const objectToMap = (obj) => new Map(Object.entries(obj));
+    const newVolData = objectToMap(volumeData);
+    for (const value of newVolData) {
+      setParam(value[1].id, value[1]);
     }
   }, [volumeData, setParam, playbackMode]);
 
