@@ -81,7 +81,7 @@ function useRead({ trackId }: Props) {
   const volumeData = localStorageGet("volumeData");
 
   useEffect(() => {
-    if (playbackMode !== "read") return;
+    if (playbackMode !== "read" || !volumeData) return;
     const objectToMap = (obj) => new Map(Object.entries(obj));
     const newVolData = objectToMap(volumeData);
     for (const value of newVolData) {

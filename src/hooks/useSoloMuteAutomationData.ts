@@ -1,7 +1,7 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useEffect, useCallback } from "react";
 import { Transport as t } from "tone";
-import { roundFourth } from "@/utils";
+import { localStorageGet, localStorageSet, roundFourth } from "@/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 
@@ -41,10 +41,10 @@ function useWrite({ id, value }: WriteProps) {
       () => {
         const time: number = roundFourth(t.seconds);
         data.set(time, { id, time, value });
-        db.soloMuteData.put({
-          id: `soloMuteData${id}`,
-          data,
-        });
+        const mapToObject = (map: typeof data) =>
+          Object.fromEntries(map.entries());
+        const newData = mapToObject(data);
+        localStorageSet("soloMuteData", newData);
       },
       0.25,
       0
@@ -87,19 +87,15 @@ function useRead({ trackId }: Props) {
     [playbackMode, send]
   );
 
-  let queryData = [];
-  const soloMuteData = useLiveQuery(async () => {
-    queryData = await db.soloMuteData
-      .where("id")
-      .equals(`soloMuteData${trackId}`)
-      .toArray();
-    return queryData[0];
-  });
+  const soloMuteData = localStorageGet("soloMuteData");
 
   useEffect(() => {
     if (playbackMode !== "read") return;
-    for (const value of soloMuteData!.data.values()) {
-      setParam(value.id, value);
+    const objectToMap = (obj) => new Map(Object.entries(obj));
+    const newSoloMuteData = objectToMap(soloMuteData);
+    for (const value of newSoloMuteData) {
+      console.log("value", value[1]);
+      setParam(value[1].id, value[1]);
     }
   }, [soloMuteData, setParam, playbackMode]);
 
