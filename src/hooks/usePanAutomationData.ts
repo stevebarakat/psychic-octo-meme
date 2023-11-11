@@ -1,9 +1,7 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
 import { useEffect, useCallback } from "react";
 import { Transport as t } from "tone";
-import { roundFourth } from "@/utils";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
+import { localStorageGet, localStorageSet, roundFourth } from "@/utils";
 
 type Props = { trackId: number; channels: Channel[] };
 
@@ -24,7 +22,6 @@ function usePanAutomationData({ trackId, channels }: Props) {
 const data = new Map<number, object>();
 
 // !!! --- WRITE --- !!! //
-
 function useWrite({ id, value }: WriteProps) {
   const playbackMode = MixerMachineContext.useSelector(
     (state) => state.context.currentTracks[id].panMode
@@ -37,10 +34,9 @@ function useWrite({ id, value }: WriteProps) {
       () => {
         const time: number = roundFourth(t.seconds);
         data.set(time, { id, time, value });
-        db.panData.put({
-          id: `panData${id}`,
-          data,
-        });
+        const mapToObject = (map) => Object.fromEntries(map.entries());
+        const newData = mapToObject(data);
+        localStorageSet("panData", newData);
       },
       0.25,
       0
@@ -55,7 +51,6 @@ function useWrite({ id, value }: WriteProps) {
 }
 
 // !!! --- READ --- !!! //
-
 function useRead({ trackId }: Props) {
   const { send } = MixerMachineContext.useActorRef();
   const playbackMode = MixerMachineContext.useSelector(
@@ -83,19 +78,14 @@ function useRead({ trackId }: Props) {
     [playbackMode, send]
   );
 
-  let queryData = [];
-  const panData = useLiveQuery(async () => {
-    queryData = await db.panData
-      .where("id")
-      .equals(`panData${trackId}`)
-      .toArray();
-    return queryData[0];
-  });
+  const panData = localStorageGet("panData");
 
   useEffect(() => {
     if (playbackMode !== "read") return;
-    for (const value of panData!.data.values()) {
-      setParam(value.id, value);
+    const objectToMap = (obj) => new Map(Object.entries(obj));
+    const newPanData = objectToMap(panData);
+    for (const value of newPanData) {
+      setParam(value[1].id, value[1]);
     }
   }, [panData, setParam, playbackMode]);
 
