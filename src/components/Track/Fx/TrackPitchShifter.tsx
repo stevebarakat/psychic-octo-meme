@@ -7,8 +7,6 @@ import PlaybackMode from "@/components/FxPlaybackMode";
 import type { PitchShift } from "tone";
 import { Toggle } from "@/components/Buttons";
 import { Transport as t } from "tone";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
 
 type Props = {
   pitchShift: PitchShift | null;
@@ -140,19 +138,15 @@ export default function PitchShifter({ pitchShift, trackId, fxId }: Props) {
       [send, playbackMode]
     );
 
-    let queryData = [];
-    const pitchShiftData = useLiveQuery(async () => {
-      queryData = await db.pitchShiftData
-        .where("id")
-        .equals(`pitchShiftData${trackId}`)
-        .toArray();
-      return queryData[0];
-    });
+    const pitchShiftData = localStorageGet("pitchShiftData");
 
     useEffect(() => {
       if (playbackMode !== "read" || !pitchShiftData) return;
-      for (const value of pitchShiftData.data.values()) {
-        setParam(value.id, value);
+      const objectToMap = (obj) => new Map(Object.entries(obj));
+      const newDelaySettings = objectToMap(pitchShiftData);
+      for (const value of newDelaySettings) {
+        console.log("value[1]", value[1]);
+        setParam(value[1].id, value[1]);
       }
     }, [pitchShiftData, setParam, playbackMode]);
 

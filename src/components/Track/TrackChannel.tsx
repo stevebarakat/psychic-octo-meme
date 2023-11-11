@@ -158,7 +158,7 @@ function TrackChannel({ track, trackId, channels }: Props) {
         {array(fxNames.length + 1).map((_: void, fxId: number) => {
           return (
             <select
-              key={fxId}
+              key={crypto.randomUUID()}
               id={`track${trackId}fx${fxId}`}
               className="fx-select"
               onChange={(e) =>

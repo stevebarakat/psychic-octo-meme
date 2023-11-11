@@ -7,8 +7,6 @@ import PlaybackMode from "@/components/FxPlaybackMode";
 import type { Reverb } from "tone";
 import { Toggle } from "@/components/Buttons";
 import { Transport as t } from "tone";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
 
 type Props = {
   reverb: Reverb | null;
@@ -173,19 +171,15 @@ export default function Reverber({ reverb, trackId, fxId }: Props) {
       [send, playbackMode]
     );
 
-    let queryData = [];
-    const reverbData = useLiveQuery(async () => {
-      queryData = await db.reverbData
-        .where("id")
-        .equals(`reverbData${trackId}`)
-        .toArray();
-      return queryData[0];
-    });
+    const reverbData = localStorageGet("reverbData");
 
     useEffect(() => {
       if (playbackMode !== "read" || !reverbData) return;
-      for (const value of reverbData.data.values()) {
-        setParam(value.id, value);
+      const objectToMap = (obj) => new Map(Object.entries(obj));
+      const newReverbSettings = objectToMap(reverbData);
+      for (const value of newReverbSettings) {
+        console.log("value[1]", value[1]);
+        setParam(value[1].id, value[1]);
       }
     }, [reverbData, setParam, playbackMode]);
 

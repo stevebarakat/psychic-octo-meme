@@ -40,11 +40,12 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   });
 
   function toggleBypass(e: React.FormEvent<HTMLInputElement>): void {
+    if (!delay) return;
     const checked = e.currentTarget.checked;
     send({
       type: "SET_TRACK_DELAY_BYPASS",
       checked,
-      delay: delay!,
+      delay,
       trackId,
       fxId,
     });
@@ -54,11 +55,12 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   }
 
   function setMix(e: React.FormEvent<HTMLInputElement>): void {
+    if (!delay) return;
     const value = parseFloat(e.currentTarget.value);
     send({
       type: "SET_TRACK_DELAY_MIX",
       value,
-      delay: delay!,
+      delay,
       trackId,
       fxId,
     });
@@ -71,7 +73,10 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   }
 
   function setDelayTime(e: React.FormEvent<HTMLInputElement>): void {
+    if (!delay) return;
+    console.log("delay", delay);
     const value = parseFloat(e.currentTarget.value);
+    // delay.delayTime.value = value;
     send({
       type: "SET_TRACK_DELAY_TIME",
       value,
@@ -89,6 +94,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
   }
 
   function setFeedback(e: React.FormEvent<HTMLInputElement>): void {
+    if (!delay) return;
     const value = parseFloat(e.currentTarget.value);
     send({
       type: "SET_TRACK_DELAY_FEEDBACK",
@@ -138,12 +144,12 @@ export default function Delay({ delay, trackId, fxId }: Props) {
         }
       ) => {
         t.schedule(() => {
-          if (playbackMode !== "read") return;
+          if (playbackMode !== "read" || !delay) return;
 
           send({
             type: "SET_TRACK_DELAY_MIX",
             value: data.value.delayMix[fxId],
-            delay: delay!,
+            delay: delay,
             trackId,
             fxId,
           });
@@ -151,7 +157,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
           send({
             type: "SET_TRACK_DELAY_TIME",
             value: data.value.delayTime[fxId],
-            delay: delay!,
+            delay: delay,
             trackId,
             fxId,
           });
@@ -159,7 +165,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
           send({
             type: "SET_TRACK_DELAY_FEEDBACK",
             value: data.value.delayFeedback[fxId],
-            delay: delay!,
+            delay: delay,
             trackId,
             fxId,
           });
@@ -175,7 +181,7 @@ export default function Delay({ delay, trackId, fxId }: Props) {
       const objectToMap = (obj) => new Map(Object.entries(obj));
       const newDelaySettings = objectToMap(delayData);
       for (const value of newDelaySettings) {
-        console.log("value[1]", value[1].value);
+        console.log("value[1]", value[1]);
         setParam(value[1].id, value[1]);
       }
     }, [delayData, setParam, playbackMode]);
