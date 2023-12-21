@@ -33,6 +33,7 @@ function Pan({ trackId, channels }: Props) {
 
   return (
     <>
+      <PlaybackMode trackId={trackId} param="pan" />
       <input
         type="range"
         id={`trackPan${trackId}`}
@@ -44,7 +45,6 @@ function Pan({ trackId, channels }: Props) {
         onChange={setPan}
         onPointerUp={savePan}
       />
-      <PlaybackMode trackId={trackId} param="pan" />
     </>
   );
 }

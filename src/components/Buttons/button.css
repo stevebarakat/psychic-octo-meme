@@ -11,7 +11,7 @@
 }
 
 .transport-button {
-  background: ivory;
+  background: black;
   color: var(--primary-color);
   position: relative;
   display: flex;
@@ -41,12 +41,16 @@
   position: absolute;
   top: 8px;
   right: 8px;
+  background: none;
+  border: none;
+  color: inherit;
 }
 
 .solo-mute {
   display: flex;
   justify-content: space-between;
   padding-bottom: 8px;
+  gap: 16px;
 }
 
 .solo-mute label {
@@ -57,14 +61,14 @@
   user-select: none;
   cursor: pointer;
   font-weight: 900;
-  background: ivory;
+  background: black;
   color: var(--primary-color);
   transition: all 0.2s;
 }
 
 .channel input[type="checkbox"]:checked + label {
   background: var(--primary-color);
-  color: ivory;
+  color: black;
   /* padding: 2px 5px; */
   border-radius: 100%;
   height: min-content;
@@ -87,7 +91,7 @@
 .channels input[type="radio"]:checked + label svg,
 .fx-panel input[type="radio"]:checked + label svg {
   background: var(--primary-color);
-  color: ivory;
+  color: black;
   transition: all 0.2s;
   border-radius: 100%;
   padding: 0;
