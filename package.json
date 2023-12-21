@@ -12,7 +12,7 @@
   "dependencies": {
     "@xstate/react": "^3.2.2",
     "dexie": "^3.2.4",
-    "dexie-react-hooks": "^1.1.6",
+    "dexie-react-hooks": "^1.1.7",
     "immer": "^10.0.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.268.0",

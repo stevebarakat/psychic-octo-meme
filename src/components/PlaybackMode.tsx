@@ -1,14 +1,4 @@
 import { MixerMachineContext } from "@/context/MixerMachineContext";
-import Toggle from "./Buttons/Toggle";
-import { Button } from "./Buttons";
-import {
-  XCircle,
-  PlayCircle,
-  CircleDotDashed,
-  CircleDot,
-  MinusCircle,
-} from "lucide-react";
-import { db } from "@/db";
 
 type Props = {
   trackId: number;
@@ -17,64 +7,34 @@ type Props = {
 
 function PlaybackMode({ trackId, param }: Props) {
   const { send } = MixerMachineContext.useActorRef();
-  const playbackMode = MixerMachineContext.useSelector(
-    (state) => state.context.currentTracks[trackId][`${param}Mode`]
+  const { currentTracks } = MixerMachineContext.useSelector(
+    (state) => state.context
   );
+  const playbackMode = currentTracks[trackId][`${param}Mode`];
 
-  function setPlaybackMode(e: React.FormEvent<HTMLInputElement>): void {
+  function setPlaybackMode(e: React.FormEvent<HTMLSelectElement>): void {
     send({
       type: "SET_PLAYBACK_MODE",
-      checked: e.currentTarget.checked,
       value: e.currentTarget.value,
       param,
       trackId,
     });
   }
 
-  function clearData() {
-    db[`${param}Data`].where("id").equals(`${param}Data${trackId}`).delete();
-  }
-
   return (
-    <div className="flex gap4">
+    <div className="flex gap4 center">
       {/* {playbackMode} */}
-      <Toggle
-        type="radio"
-        id={`track${trackId + 1}-${param}-write`}
-        name={`track${trackId + 1}-${param}playbackMode`}
+      <select
+        style={{ textAlign: "center" }}
+        name="playbackMode"
+        id={`${param}Mode-select-${trackId}`}
         onChange={setPlaybackMode}
-        checked={playbackMode === "write"}
-        value="write"
+        value={playbackMode}
       >
-        {playbackMode === "write" ? (
-          <CircleDotDashed className="rotate" />
-        ) : (
-          <CircleDot />
-        )}
-      </Toggle>
-      <Toggle
-        type="radio"
-        id={`track${trackId + 1}-${param}-read`}
-        name={`track${trackId + 1}-${param}playbackMode`}
-        onChange={setPlaybackMode}
-        checked={playbackMode === "read"}
-        value="read"
-      >
-        <PlayCircle />
-      </Toggle>
-      <Toggle
-        type="radio"
-        id={`track${trackId + 1}-${param}-static`}
-        name={`track${trackId + 1}-${param}playbackMode`}
-        onChange={setPlaybackMode}
-        checked={playbackMode === "static"}
-        value="static"
-      >
-        <MinusCircle />
-      </Toggle>
-      <Button onClick={clearData}>
-        <XCircle />
-      </Button>
+        <option value="off">off</option>
+        <option value="read">read</option>
+        <option value="write">write</option>
+      </select>
     </div>
   );
 }
